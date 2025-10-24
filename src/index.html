@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Consulta de Endereços</title>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+        <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <main class="container">
+            <div class="painel-principal">
+                <div class="coluna-form">
+                    <section>
+                        <h2>BUSCAR POR CEP</h2>
+                        <form id="formBuscaCep" class="formu">
+                            <div class="gp-input">
+                                <label for="campoCep">CEP*</label>
+                                <input
+                                    id="campoCep"
+                                    type="text"
+                                    placeholder="Digite o CEP"
+                                    maxlength="8"
+                                    required
+                                >
+                            </div>
+                            <button type="submit">Buscar</button>
+                        </form>
+                    </section>
+                    <section>
+                        <h2>BUSCAR POR ESTADO E CIDADE</h2>
+                        <form id="formBuscaLocal" class="formu">
+                            <div class="gp-input">
+                                <label for="campoUf">UF*</label>
+                                <input
+                                    id="campoUf"
+                                    type="text"
+                                    placeholder="UF"
+                                    maxlength="2"
+                                    required
+                                >
+                            </div>
+                            <div class="gp-input">
+                                <label for="campoCidade">Cidade*</label>
+                                <input
+                                    id="campoCidade"
+                                    type="text"
+                                    placeholder="Cidade"
+                                    required
+                                >
+                            </div>
+                            <div class="gp-input">
+                                <label for="campoLogradouro">Logradouro*</label>
+                                <input
+                                    id="campoLogradouro"
+                                    type="text"
+                                    placeholder="Logradouro (mínimo 3 caracteres)"
+                                    required
+                                >
+                            </div>
+                            <button type="submit">Buscar</button>
+                        </form>
+                    </section>
+                </div>
+                <div class="coluna-resultado" id="areaResultado" role="alert"></div>
+            </div>
+        </main>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+        <script src="scriptjQ.js"></script>
+    </body>
+</html>
