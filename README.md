@@ -1,6 +1,6 @@
 # Desafio - Consulta de Endereços
 
-Aplicação web que permite buscar endereços por **CEP** ou por **Estado e Cidade**, utilizando uma interface amigável e integração com uma **API em C# (.NET)** que consome a **API ViaCEP** e **BrasilAPI**.
+Aplicação web que permite buscar endereços por **CEP** ou por **Estado e Cidade**, utilizando uma interface simples e integração com uma **API em C# (.NET)** que consome a **API ViaCEP** e **BrasilAPI**.
 
 ---
 
