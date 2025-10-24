@@ -4,36 +4,6 @@ Aplicação web que permite buscar endereços por **CEP** ou por **Estado e Cida
 
 ---
 
-## Como Executar o Projeto
-
-### 1️⃣ Clonar o repositório
-```bash
-git clone https://github.com/gauvovic/desafio-almah.git
-cd desafio-almah
-```
-
----
-
-### 2️⃣ Rodar o Backend (.NET)
-```bash
-cd api
-dotnet run
-```
-A API será iniciada em:
-http://localhost:5010
-
----
-
-### 3️⃣ Rodar o Frontend
-```bash
-cd ../
-npx serve . -p 5173
-```
-```
-Ou abra o arquivo `index.html` direto no navegador.  
-```
----
-
 ## Como Usar
 
 ### Busca por CEP
