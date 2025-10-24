@@ -1,6 +1,6 @@
 const API_BASE_URL = "http://localhost:5010";
 
-const estados = [
+const ESTADOS = [
   "AC", "AL", "AP", "AM", "BA",  "CE", "DF", "ES", "GO", "MA",
       "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
   "RS", "RO", "RR", "SC", "SP", "SE", "TO"
@@ -58,7 +58,7 @@ $(document).ready(function () {
 
   // autocomplete UF
   $("#campoUf").autocomplete({
-    source: estados,
+    source: ESTADOS,
     minLength: 0,
     select: function (event, ui) {
       loadCidades(ui.item.value);
