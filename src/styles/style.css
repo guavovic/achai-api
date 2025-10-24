@@ -31,7 +31,7 @@ body {
 
 .container {
   max-width: var(--max-width);
-  width: 92%;
+  width: 90%;
   padding: 2rem;
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -68,7 +68,7 @@ h1, h2 {
   max-height: 560px;
   overflow-y: auto;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .coluna-resultado.mostrar {
@@ -91,7 +91,7 @@ label {
   margin-bottom: 6px;
   font-weight: 500;
   color: #111111ba;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 input[type="text"],
@@ -101,7 +101,7 @@ input[type="tel"] {
   font-size: 15px;
   border: 1.5px solid #d0d3d8;
   border-radius: 10px;
-  transition: all 0.22s ease;
+  transition: all 0.2s ease;
   background: #fff;
   color: var(--text-color);
   outline: none;
@@ -254,4 +254,5 @@ section {
 
 input[required]::placeholder {
   opacity: 0.6;
+
 }
