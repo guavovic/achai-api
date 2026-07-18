@@ -1,9 +1,5 @@
 # Address Lookup API
 
-Address lookup service that searches Brazilian addresses by ZIP code (CEP) or by state and city.
-
-## About
-
 A web application with a C#/.NET back-end that consumes the ViaCEP and BrasilAPI public APIs to retrieve address data, with a simple interface for querying the results.
 
 ## Tech Stack
