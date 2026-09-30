@@ -12,16 +12,14 @@ $(document).ready(function () {
   const resultadoArea = $("#areaResultado");
 
   async function requestApi(url) {
-    try {
-      const resposta = await fetch(url);
+    const resposta = await fetch(url);
+    const corpo = await resposta.json();
 
-      // if (!resposta.ok) tirar pra debugar depois
-      //   throw new Error(`${resposta.status} - ${resposta.statusText}`);
+    // Erros da API vêm como ProblemDetails (RFC 9457): o texto pro usuário fica em "detail".
+    if (!resposta.ok)
+      throw new Error(corpo.detail || corpo.title || `Erro ${resposta.status}`);
 
-      return await resposta.json();
-    } catch (erro) {
-      throw erro;
-    }
+    return corpo;
   }
 
   function exibirLoad() {
@@ -80,7 +78,7 @@ $(document).ready(function () {
       configurarAutocompleteCidade(nomes);
       resultadoArea.html("");
     } catch (erro) {
-      resultadoArea.html(`<p style="color:red;">Erro ao carregar cidades de ${uf}: ${erro}</p>`);
+      resultadoArea.html(`<p style="color:red;">Erro ao carregar cidades de ${uf}: ${erro.message}</p>`);
     }
   }
 
@@ -108,7 +106,7 @@ $(document).ready(function () {
       const dados = await requestApi(`${API_BASE_URL}/buscar/${cep}`);
       carregarEnderecos(dados);
     } catch (erro) {
-      resultadoArea.html(`<p style="color:red;">CEP não encontrado ou erro: ${erro}</p>`);
+      resultadoArea.html(`<p style="color:red;">${erro.message}</p>`);
     }
   });
 
@@ -136,7 +134,7 @@ $(document).ready(function () {
       const dados = await requestApi(`${API_BASE_URL}/buscar/${uf}/${cidade}/${logradouro}`);
       carregarEnderecos(dados);
     } catch (erro) {
-      resultadoArea.html(`<p style="color:red;">Erro ao buscar endereços: ${erro}</p>`);
+      resultadoArea.html(`<p style="color:red;">Erro ao buscar endereços: ${erro.message}</p>`);
     }
   });
 });

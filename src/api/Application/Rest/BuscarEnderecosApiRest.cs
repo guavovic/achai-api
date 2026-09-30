@@ -1,9 +1,8 @@
-using System.Dynamic;
 using System.Net;
-using System.Text.Json;
-using BuscarEnderecos.API.DTOs;
+using BuscarEnderecos.API.Errors;
 using BuscarEnderecos.API.Interfaces;
 using BuscarEnderecos.API.Models;
+using BuscarEnderecos.API.Results;
 using BuscarEnderecos.API.Settings;
 
 namespace BuscarEnderecos.API.Rest
@@ -19,90 +18,52 @@ namespace BuscarEnderecos.API.Rest
             _ibgeHttpClient = new HttpClient { BaseAddress = new Uri(ApiUrls.IBGE) };
         }
 
-        public async Task<ResponseDTO<EnderecoModel>> BuscarEnderecoPorCEP(string cep)
+        public async Task<Result<EnderecoModel>> BuscarEnderecoPorCEP(string cep)
         {
-            var response = new ResponseDTO<EnderecoModel>();
+            using var apiResponse = await _viacephttpClient.GetAsync($"{cep}/json");
 
-            try
-            {
-                var apiResponse = await _viacephttpClient.GetAsync($"{cep}/json");
-                var contentResponse = await apiResponse.Content.ReadAsStringAsync();
+            // O ViaCEP responde 400 com uma página HTML quando o CEP está fora do formato.
+            if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
+                return EnderecoErrors.CepInvalido;
 
-                if (apiResponse.IsSuccessStatusCode)
-                {
-                    response.ResponseData = JsonSerializer.Deserialize<EnderecoModel>(contentResponse);
-                }
-                else
-                {
-                    response.ResponseError = JsonSerializer.Deserialize<ExpandoObject>(contentResponse);
-                }
+            apiResponse.EnsureSuccessStatusCode();
 
-                response.HttpCode = apiResponse.StatusCode;
-            }
-            catch (Exception ex)
-            {
+            var endereco = await apiResponse.Content.ReadFromJsonAsync<EnderecoModel>();
 
-            }
+            // CEP no formato certo, mas que não existe, volta 200 com {"erro": "true"}.
+            if (endereco is null || endereco.Erro is not null)
+                return EnderecoErrors.CepNaoEncontrado;
 
-            return response;
+            return endereco;
         }
 
-        public async Task<ResponseDTO<List<EnderecoModel>>> BuscarPorEstadoECidade(string uf, string cidade, string logradouro)
+        public async Task<Result<List<EnderecoModel>>> BuscarPorEstadoECidade(string uf, string cidade, string logradouro)
         {
-            var response = new ResponseDTO<List<EnderecoModel>>();
+            using var apiResponse = await _viacephttpClient.GetAsync($"{uf}/{cidade}/{logradouro}/json");
 
-            try
-            {
-                var apiResponse = await _viacephttpClient.GetAsync($"{uf}/{cidade}/{logradouro}/json");
-                var contentResponse = await apiResponse.Content.ReadAsStringAsync();
+            if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
+                return EnderecoErrors.BuscaInvalida;
 
-                if (apiResponse.IsSuccessStatusCode)
-                {
-                    response.ResponseData = JsonSerializer.Deserialize<List<EnderecoModel>>(contentResponse);
-                }
-                else
-                {
-                    response.ResponseError = JsonSerializer.Deserialize<ExpandoObject>(contentResponse);
-                }
+            apiResponse.EnsureSuccessStatusCode();
 
-                response.HttpCode = apiResponse.StatusCode;
-            }
-            catch (Exception ex)
-            {
-                response.HttpCode = HttpStatusCode.InternalServerError;
+            var enderecos = await apiResponse.Content.ReadFromJsonAsync<List<EnderecoModel>>();
 
-            }
-
-            return response;
+            return enderecos ?? [];
         }
 
-        public async Task<ResponseDTO<List<CidadeModel>>> BuscarCidadesPorUF(string uf)
+        public async Task<Result<List<CidadeModel>>> BuscarCidadesPorUF(string uf)
         {
-            var response = new ResponseDTO<List<CidadeModel>>();
+            using var apiResponse = await _ibgeHttpClient.GetAsync($"localidades/estados/{uf}/municipios");
 
-            try
-            {
-                var apiResponse = await _ibgeHttpClient.GetAsync($"localidades/estados/{uf}/municipios");
-                var contentResponse = await apiResponse.Content.ReadAsStringAsync();
+            apiResponse.EnsureSuccessStatusCode();
 
-                if (apiResponse.IsSuccessStatusCode)
-                {
-                    response.ResponseData = JsonSerializer.Deserialize<List<CidadeModel>>(contentResponse);
-                }
-                else
-                {
-                    response.ResponseError = JsonSerializer.Deserialize<ExpandoObject>(contentResponse);
-                }
+            var cidades = await apiResponse.Content.ReadFromJsonAsync<List<CidadeModel>>();
 
-                response.HttpCode = apiResponse.StatusCode;
-            }
-            catch (Exception ex)
-            {
-                // response.HttpCode = HttpStatusCode.InternalServerError;
-                // resp onse.ResponseError = ex.Message; // arrumar isso
-            }
+            // O IBGE devolve 200 com lista vazia para uma UF que não existe.
+            if (cidades is null || cidades.Count == 0)
+                return EnderecoErrors.UfNaoEncontrada;
 
-            return response;
+            return cidades;
         }
     }
 }

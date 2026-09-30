@@ -22,14 +22,5 @@ namespace BuscarEnderecos.API.Mapping
         {
             Nome = model.Nome
         };
-
-        public static ResponseDTO<TOut> Map<TIn, TOut>(this ResponseDTO<TIn> source, Func<TIn, TOut> map)
-            where TIn : class
-            where TOut : class => new()
-        {
-            HttpCode = source.HttpCode,
-            ResponseError = source.ResponseError,
-            ResponseData = source.ResponseData is null ? null : map(source.ResponseData)
-        };
     }
 }
