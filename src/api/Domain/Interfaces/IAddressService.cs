@@ -1,11 +1,12 @@
 using BuscarEnderecos.API.DTOs;
+using BuscarEnderecos.API.Results;
 
 namespace BuscarEnderecos.API.Interfaces
 {
     public interface IEnderecoService
     {
-        Task<ResponseDTO<EnderecoResponseDTO>> BuscarEnderecoPorCEP(string cep);
-        Task<ResponseDTO<List<EnderecoResponseDTO>>> BuscarPorEstadoECidade(string uf, string cidade, string logradouro);
-        Task<ResponseDTO<List<CidadeResponseDTO>>> BuscarCidadesPorUF(string uf);
+        Task<Result<EnderecoResponseDTO>> BuscarEnderecoPorCEP(string cep);
+        Task<Result<List<EnderecoResponseDTO>>> BuscarPorEstadoECidade(string uf, string cidade, string logradouro);
+        Task<Result<List<CidadeResponseDTO>>> BuscarCidadesPorUF(string uf);
     }
 }

@@ -1,3 +1,4 @@
+using BuscarEnderecos.API.Handlers;
 using BuscarEnderecos.API.Interfaces;
 using BuscarEnderecos.API.Rest;
 using BuscarEnderecos.API.Services;
@@ -20,11 +21,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddSingleton<IEnderecoService, EnderecoService>();
 builder.Services.AddSingleton<IApi, BuscarEnderecosApiRest>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace BuscarEnderecos.API.Models
@@ -30,5 +31,9 @@ namespace BuscarEnderecos.API.Models
         
         [JsonPropertyName("regiao")]
         public string? Regiao { get; set; }= string.Empty;
+
+        // Só vem quando o CEP não existe. Já foi booleano e hoje é a string "true".
+        [JsonPropertyName("erro")]
+        public JsonElement? Erro { get; set; }
     }
 }
