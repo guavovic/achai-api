@@ -9,7 +9,13 @@ namespace BuscarEnderecos.API.Models
 
         [JsonPropertyName("logradouro")]
         public string? Logradouro { get; set; }= string.Empty;
-        
+
+        [JsonPropertyName("complemento")]
+        public string? Complemento { get; set; }= string.Empty;
+
+        [JsonPropertyName("unidade")]
+        public string? Unidade { get; set; }= string.Empty;
+
         [JsonPropertyName("bairro")]
         public string? Bairro { get; set; }= string.Empty;
         

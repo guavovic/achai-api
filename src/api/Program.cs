@@ -1,5 +1,4 @@
 using BuscarEnderecos.API.Interfaces;
-using BuscarEnderecos.API.Mapping;
 using BuscarEnderecos.API.Rest;
 using BuscarEnderecos.API.Services;
 
@@ -24,7 +23,6 @@ builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<IEnderecoService, EnderecoService>();
 builder.Services.AddSingleton<IApi, BuscarEnderecosApiRest>();
-builder.Services.AddAutoMapper(typeof(AddressMapping));
 
 var app = builder.Build();
 
