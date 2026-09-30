@@ -8,7 +8,7 @@ C# / .NET, JavaScript, jQuery and CSS. Integrates the ViaCEP API and BrasilAPI.
 
 ## How to Run
 
-Requires the .NET 9 SDK.
+Requires the .NET 10 SDK.
 
 1. Start the API:
 
