@@ -4,6 +4,11 @@ using AddressLookup.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Hospedagens como o Render dizem em qual porta escutar pela variável PORT.
+// Sem ela, vale o padrão (8080 no container, 5010 no launchSettings).
+if (builder.Configuration["PORT"] is { Length: > 0 } port)
+    builder.WebHost.UseUrls($"http://+:{port}");
+
 builder.Services.AddFrontCors(builder.Configuration, builder.Environment);
 builder.Services.AddPerIpRateLimiting();
 builder.Services.AddEndpointsApiExplorer();
