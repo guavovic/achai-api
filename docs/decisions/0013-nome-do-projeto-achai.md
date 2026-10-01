@@ -18,9 +18,9 @@ O projeto tinha três nomes ao mesmo tempo: `address-lookup-api` no GitHub, `Add
 ## Decisão
 
 - O projeto passa a se chamar **Achaí**.
-- **Sem acento (`achai`) em tudo que é endereço ou identificador**: repositório, serviço do Render (`achai.onrender.com`), projeto da Vercel e imagem Docker. **Com acento ("Achaí")** no README e no título da página.
+- **Sem acento (`achai`) em tudo que é endereço ou identificador**: repositório, projeto da Vercel e imagem Docker. **Com acento ("Achaí")** no README e no título da página.
 - **No código também**: solução `Achai.slnx`, projeto `Achai.Api`, testes `Achai.Api.Tests` e namespaces `Achai.Api.*`, para não haver dois nomes no mesmo projeto.
-- O `achai.vercel.app` já pertence a outra pessoa, então o front fica em **`achai-app.vercel.app`**. Os links de preview da Vercel seguem o nome do projeto (`achai-<hash>-guavovic-projects.vercel.app`), e o padrão do CORS acompanha.
+- `achai.vercel.app` e `achai.onrender.com` já pertencem a outras pessoas, então o front fica em **`achai-app.vercel.app`** e a API em **`achai-api.onrender.com`** (serviço `achai-api` no `render.yaml`). Os links de preview da Vercel seguem o nome do projeto (`achai-<hash>-guavovic-projects.vercel.app`), e o padrão do CORS acompanha.
 - Os ADRs anteriores continuam com os nomes antigos, porque registram o que foi decidido na época.
 
 ## Consequências
