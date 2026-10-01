@@ -14,7 +14,7 @@ C# / .NET 10, JavaScript, jQuery e CSS.
 - **IBGE** para a lista de cidades de cada estado.
 - Timeout, retry e circuit breaker em toda chamada externa (`Microsoft.Extensions.Http.Resilience`), e cache em memória (`HybridCache`).
 
-As decisões de arquitetura ficam registradas em [`docs/decisions`](docs/decisions).
+Os guias de como a API funciona por dentro (arquitetura, erros, cache e resiliência) e as decisões de arquitetura ficam em [`docs/`](docs).
 
 ## Como rodar
 
