@@ -1,83 +1,83 @@
 # Address Lookup API
 
-A web application with a C#/.NET back-end that looks up Brazilian addresses by ZIP code (CEP) or by street, with a simple interface for querying the results.
+Aplicação web com back-end em C#/.NET que busca endereços brasileiros pelo CEP ou pelo logradouro, com uma interface simples para consultar os resultados.
 
-## Tech Stack
+## Tecnologias
 
-C# / .NET 10, JavaScript, jQuery and CSS.
+C# / .NET 10, JavaScript, jQuery e CSS.
 
-- **ViaCEP** for ZIP code and street lookups, with **BrasilAPI** as a fallback for ZIP codes when ViaCEP is down or slow.
-- **IBGE** for the list of cities in each state.
-- Timeout, retry and circuit breaker on every external call (`Microsoft.Extensions.Http.Resilience`), and an in-memory cache (`HybridCache`).
+- **ViaCEP** para as buscas por CEP e por logradouro, com a **BrasilAPI** como alternativa para CEP quando o ViaCEP está fora do ar ou lento.
+- **IBGE** para a lista de cidades de cada estado.
+- Timeout, retry e circuit breaker em toda chamada externa (`Microsoft.Extensions.Http.Resilience`), e cache em memória (`HybridCache`).
 
-Architecture decisions are recorded in [`docs/decisions`](docs/decisions).
+As decisões de arquitetura ficam registradas em [`docs/decisions`](docs/decisions).
 
-## How to Run
+## Como rodar
 
-Requires the .NET 10 SDK.
+Precisa do SDK do .NET 10.
 
-1. Start the API:
+1. Suba a API:
 
    ```bash
    cd src/api
    dotnet run
    ```
 
-   It listens on `http://localhost:5010`, and Swagger opens at `http://localhost:5010/swagger`.
+   Ela escuta em `http://localhost:5010`, e o Swagger abre em `http://localhost:5010/swagger`.
 
-2. Open `src/index.html` in the browser.
+2. Abra o `src/index.html` no navegador.
 
-### With Docker
+### Com Docker
 
 ```bash
 docker build -t address-lookup-api .
 docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development address-lookup-api
 ```
 
-The image uses the .NET 10 chiseled runtime: no shell, no package manager, running as a non-root user. Without `ASPNETCORE_ENVIRONMENT=Development`, the container runs in production mode, where CORS only allows the deployed front end. If the `PORT` environment variable is set (as hosting platforms like Render do), the API listens on it instead of 8080.
+A imagem usa o runtime chiseled do .NET 10: sem shell, sem gerenciador de pacotes e rodando sem root. Sem `ASPNETCORE_ENVIRONMENT=Development`, o container roda em modo produção, e o CORS só libera o front publicado. Se a variável de ambiente `PORT` estiver definida (como fazem hospedagens como o Render), a API escuta nela em vez da 8080.
 
-## Health and Limits
+## Saúde e limites
 
-- `GET /health`: liveness. Says only whether the API process is up, without calling anything external.
-- `GET /health/ready`: checks ViaCEP, BrasilAPI and IBGE. A source that is down makes the status `Degraded`, since the API keeps answering.
-- Each IP can make 60 requests per minute. Above that, the API answers `429` with a `Retry-After` header. `/health` is not limited.
-- In production, only the origins in `Cors:AllowedOrigins` and the Vercel preview links matched by `Cors:AllowedOriginPatterns` (`appsettings.json`) can call the API from a browser. In development, any origin can.
+- `GET /health`: liveness. Diz só se o processo da API está de pé, sem chamar nada externo.
+- `GET /health/ready`: confere ViaCEP, BrasilAPI e IBGE. Uma fonte fora do ar deixa o status `Degraded`, porque a API continua respondendo.
+- Cada IP pode fazer 60 requisições por minuto. Acima disso, a API responde `429` com o cabeçalho `Retry-After`. O `/health` não entra no limite.
+- Em produção, só as origens de `Cors:AllowedOrigins` e os links de preview da Vercel que casam com `Cors:AllowedOriginPatterns` (`appsettings.json`) podem chamar a API pelo navegador. Em desenvolvimento, qualquer origem pode.
 
-## Deployment
+## Publicação
 
-- **API:** [Render](https://render.com), free plan, described in [`render.yaml`](render.yaml). Every merge to `main` that touches the API is deployed only after the CI check passes, and Render waits for `/health` before switching traffic.
-- **Front end:** Vercel, with a preview link for each pull request.
-- The front end picks the API by its own address: opened from disk or `localhost`, it calls `http://localhost:5010`; deployed, it calls the Render URL (`src/js/config.js`).
-- On the free plan the API sleeps after 15 minutes without traffic and takes up to a minute to wake up. The front end shows a notice when a response takes longer than 3 seconds.
+- **API:** [Render](https://render.com), plano grátis, descrita no [`render.yaml`](render.yaml). Todo merge na `main` que mexe na API só é publicado depois que o CI passa, e o Render espera o `/health` responder antes de trocar o tráfego.
+- **Front:** Vercel, com um link de preview para cada pull request.
+- O front escolhe a API pelo próprio endereço: aberto do disco ou de `localhost`, chama `http://localhost:5010`; publicado, chama o endereço do Render (`src/js/config.js`).
+- No plano grátis, a API dorme depois de 15 minutos sem acesso e leva até um minuto para acordar. O front mostra um aviso quando a resposta demora mais de 3 segundos.
 
-## How to Test
+## Como testar
 
-From the repository root:
+Na raiz do repositório:
 
 ```bash
 dotnet test
 ```
 
-Unit and integration tests use xUnit v3, NSubstitute and Shouldly. ViaCEP, IBGE and BrasilAPI are replaced by fake HTTP handlers, so the tests do not need network access.
+Os testes unitários e de integração usam xUnit v3, NSubstitute e Shouldly. ViaCEP, IBGE e BrasilAPI são trocados por handlers HTTP falsos, então os testes não precisam de rede.
 
-## Project Structure
+## Estrutura do projeto
 
-The API uses Vertical Slice Architecture with Minimal APIs:
+A API usa Vertical Slice Architecture com Minimal APIs:
 
 ```
 src/api/
-  Features/         one file per endpoint (route + handler)
+  Features/         um arquivo por endpoint (rota + handler)
     Addresses/      GetAddressByZipCode, SearchAddressesByStreet
     Cities/         GetCitiesByState
-  Common/           Result, errors, validation, ProblemDetails
-  Infrastructure/   ViaCEP, IBGE and BrasilAPI clients, cache and fallback decorators
+  Common/           Result, erros, validação, ProblemDetails
+  Infrastructure/   clientes do ViaCEP, IBGE e BrasilAPI, decorators de cache e fallback
 tests/AddressLookup.Api.Tests/
-  Unit/             handlers, clients and decorators
-  Integration/      the whole API in memory (WebApplicationFactory)
+  Unit/             handlers, clientes e decorators
+  Integration/      a API inteira em memória (WebApplicationFactory)
 ```
 
-## How to Use
+## Como usar
 
-**Search by ZIP code (CEP):** enter a valid ZIP code (e.g. 88350250) and click Search. The address is displayed in the right panel.
+**Busca por CEP:** digite um CEP válido (por exemplo, 88350250) e clique em Buscar. O endereço aparece no painel da direita.
 
-**Search by State and City:** select the state and the city, enter the street name (minimum 3 characters) and click Search. Results are listed dynamically.
+**Busca por estado e cidade:** escolha o estado e a cidade, digite o logradouro (no mínimo 3 caracteres) e clique em Buscar. Os resultados aparecem em lista.
