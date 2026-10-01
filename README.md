@@ -1,21 +1,10 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-escuro.svg">
-    <img src="docs/assets/logo-claro.svg" alt="Logo do Achaí: a letra í com o acento em forma de pino de mapa" width="96" height="96">
-  </picture>
-</p>
-
-<h1 align="center">Achaí</h1>
+# Achaí
 
 Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
 **Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
-<p align="center">
-  <img src="docs/assets/achai-busca-por-cep.gif" alt="Busca pelo CEP 01310-100, que mostra a Avenida Paulista em São Paulo" width="45%">
-  &nbsp;
-  <img src="docs/assets/achai-busca-por-endereco.gif" alt="Busca pela Rua XV de Novembro, em Curitiba, que lista 12 endereços" width="45%">
-</p>
+<img src="docs/assets/achai-busca-por-endereco.gif" alt="Busca pela Rua XV de Novembro, em Curitiba, que lista 12 endereços" width="560">
 
 ## Como foi feito
 
