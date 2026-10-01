@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "AddressLookup.Api": {
+    "Achai.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

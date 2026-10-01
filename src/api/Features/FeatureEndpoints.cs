@@ -1,8 +1,8 @@
-using AddressLookup.Api.Features.Addresses;
-using AddressLookup.Api.Features.Cities;
-using AddressLookup.Api.Features.Health;
+using Achai.Api.Features.Addresses;
+using Achai.Api.Features.Cities;
+using Achai.Api.Features.Health;
 
-namespace AddressLookup.Api.Features;
+namespace Achai.Api.Features;
 
 public static class FeatureEndpoints
 {

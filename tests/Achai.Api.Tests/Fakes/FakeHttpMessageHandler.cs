@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text;
 
-namespace AddressLookup.Api.Tests.Fakes;
+namespace Achai.Api.Tests.Fakes;
 
 /// <summary>
 /// Substitui a rede nos testes: devolve a resposta configurada e guarda as requisições recebidas.

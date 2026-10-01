@@ -1,4 +1,4 @@
-namespace AddressLookup.Api.Tests.Fakes;
+namespace Achai.Api.Tests.Fakes;
 
 /// <summary>
 /// Respostas reais do ViaCEP, do IBGE e da BrasilAPI, copiadas das APIs, para os testes não dependerem da rede.

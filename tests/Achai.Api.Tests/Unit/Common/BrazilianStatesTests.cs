@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common;
+using Achai.Api.Common;
 
-namespace AddressLookup.Api.Tests.Unit.Common;
+namespace Achai.Api.Tests.Unit.Common;
 
 public class BrazilianStatesTests
 {

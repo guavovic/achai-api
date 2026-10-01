@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using AddressLookup.Api.Common.Http;
-using AddressLookup.Api.Common.Validation;
-using AddressLookup.Api.Infrastructure;
+using Achai.Api.Common.Http;
+using Achai.Api.Common.Validation;
+using Achai.Api.Infrastructure;
 
-namespace AddressLookup.Api.Features.Addresses;
+namespace Achai.Api.Features.Addresses;
 
 public static class SearchAddressesByStreet
 {

@@ -1,10 +1,10 @@
 using System.Text.Json;
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common;
+using Achai.Api.Common.Results;
 using Polly.CircuitBreaker;
 using Polly.Timeout;
 
-namespace AddressLookup.Api.Infrastructure.Fallback;
+namespace Achai.Api.Infrastructure.Fallback;
 
 /// <summary>
 /// Decorator: se a busca por CEP na fonte principal falhar (fora do ar, lenta ou com o circuito aberto),

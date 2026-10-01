@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace AddressLookup.Api.Infrastructure.HealthChecks;
+namespace Achai.Api.Infrastructure.HealthChecks;
 
 /// <summary>
 /// Confere se uma fonte de CEP responde, buscando um CEP que sempre existe.

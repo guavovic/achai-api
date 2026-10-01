@@ -1,13 +1,13 @@
-using AddressLookup.Api.Infrastructure.BrasilApi;
-using AddressLookup.Api.Infrastructure.Ibge;
-using AddressLookup.Api.Infrastructure.ViaCep;
-using AddressLookup.Api.Tests.Fakes;
+using Achai.Api.Infrastructure.BrasilApi;
+using Achai.Api.Infrastructure.Ibge;
+using Achai.Api.Infrastructure.ViaCep;
+using Achai.Api.Tests.Fakes;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AddressLookup.Api.Tests.Integration;
+namespace Achai.Api.Tests.Integration;
 
 /// <summary>
 /// Sobe a API inteira em memória, com o ViaCEP, o IBGE e a BrasilAPI trocados por handlers falsos.

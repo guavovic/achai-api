@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AddressLookup.Api.Common.Http;
+namespace Achai.Api.Common.Http;
 
 public sealed class GlobalExceptionHandler : IExceptionHandler
 {

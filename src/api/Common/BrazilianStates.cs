@@ -1,4 +1,4 @@
-namespace AddressLookup.Api.Common;
+namespace Achai.Api.Common;
 
 public sealed record BrazilianState(string Code, string Name, string Region);
 

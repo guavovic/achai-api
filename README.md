@@ -1,4 +1,4 @@
-# Address Lookup API
+# Achaí
 
 Aplicação web com back-end em C#/.NET que busca endereços brasileiros pelo CEP ou pelo logradouro, com uma interface simples para consultar os resultados.
 
@@ -30,8 +30,8 @@ Precisa do SDK do .NET 10.
 ### Com Docker
 
 ```bash
-docker build -t address-lookup-api .
-docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development address-lookup-api
+docker build -t achai .
+docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development achai
 ```
 
 A imagem usa o runtime chiseled do .NET 10: sem shell, sem gerenciador de pacotes e rodando sem root. Sem `ASPNETCORE_ENVIRONMENT=Development`, o container roda em modo produção, e o CORS só libera o front publicado. Se a variável de ambiente `PORT` estiver definida (como fazem hospedagens como o Render), a API escuta nela em vez da 8080.
@@ -71,7 +71,7 @@ src/api/
     Cities/         GetCitiesByState
   Common/           Result, erros, validação, ProblemDetails
   Infrastructure/   clientes do ViaCEP, IBGE e BrasilAPI, decorators de cache e fallback
-tests/AddressLookup.Api.Tests/
+tests/Achai.Api.Tests/
   Unit/             handlers, clientes e decorators
   Integration/      a API inteira em memória (WebApplicationFactory)
 ```

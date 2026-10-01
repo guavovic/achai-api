@@ -1,8 +1,8 @@
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common;
+using Achai.Api.Common.Results;
 using Microsoft.Extensions.Caching.Hybrid;
 
-namespace AddressLookup.Api.Infrastructure.Caching;
+namespace Achai.Api.Infrastructure.Caching;
 
 /// <summary>
 /// Decorator: consulta o cache antes da fonte de endereços.

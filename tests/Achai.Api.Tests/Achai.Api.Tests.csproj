@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\api\AddressLookup.Api.csproj" />
+    <ProjectReference Include="..\..\src\api\Achai.Api.csproj" />
   </ItemGroup>
 
 </Project>

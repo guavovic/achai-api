@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Infrastructure.Caching;
+namespace Achai.Api.Infrastructure.Caching;
 
 /// <summary>
 /// Forma serializável de um <see cref="Result{T}"/>, para guardar no cache tanto o valor quanto o erro esperado.

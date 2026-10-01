@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace AddressLookup.Api.Common.Validation;
+namespace Achai.Api.Common.Validation;
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
 public sealed class BrazilianStateAttribute : ValidationAttribute

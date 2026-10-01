@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using AddressLookup.Api.Common;
+using Achai.Api.Common;
 
-namespace AddressLookup.Api.Infrastructure.BrasilApi;
+namespace Achai.Api.Infrastructure.BrasilApi;
 
 public sealed class BrasilApiAddress
 {

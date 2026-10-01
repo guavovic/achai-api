@@ -1,8 +1,8 @@
-using AddressLookup.Api.Common.Http;
-using AddressLookup.Api.Common.Validation;
-using AddressLookup.Api.Infrastructure;
+using Achai.Api.Common.Http;
+using Achai.Api.Common.Validation;
+using Achai.Api.Infrastructure;
 
-namespace AddressLookup.Api.Features.Cities;
+namespace Achai.Api.Features.Cities;
 
 public static class GetCitiesByState
 {

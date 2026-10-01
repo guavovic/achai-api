@@ -1,8 +1,8 @@
-namespace AddressLookup.Api.Tests.Integration;
+namespace Achai.Api.Tests.Integration;
 
 public class CorsTests
 {
-    private const string FrontOrigin = "https://consultar-enderecos-api-ten.vercel.app";
+    private const string FrontOrigin = "https://achai-app.vercel.app";
     private const string OtherOrigin = "https://site-qualquer.com";
 
     private readonly CancellationToken _ct = TestContext.Current.CancellationToken;
@@ -16,8 +16,8 @@ public class CorsTests
     }
 
     [Theory]
-    [InlineData("https://consultar-enderecos-eqoznbr7t-guavovic-projects.vercel.app")]
-    [InlineData("https://consultar-enderecos-git-feat-deploy-guavovic-projects.vercel.app")]
+    [InlineData("https://achai-eqoznbr7t-guavovic-projects.vercel.app")]
+    [InlineData("https://achai-git-feat-deploy-guavovic-projects.vercel.app")]
     public async Task InProduction_VercelPreviewOriginsAreAllowed(string previewOrigin)
     {
         var allowOrigin = await GetAllowOriginAsync("Production", previewOrigin);
@@ -27,9 +27,9 @@ public class CorsTests
 
     [Theory]
     [InlineData(OtherOrigin)]
-    [InlineData("https://consultar-enderecos-abc-outra-conta.vercel.app")]
-    [InlineData("https://consultar-enderecos-abc-guavovic-projects.vercel.app.site-qualquer.com")]
-    [InlineData("http://consultar-enderecos-abc-guavovic-projects.vercel.app")]
+    [InlineData("https://achai-abc-outra-conta.vercel.app")]
+    [InlineData("https://achai-abc-guavovic-projects.vercel.app.site-qualquer.com")]
+    [InlineData("http://achai-abc-guavovic-projects.vercel.app")]
     public async Task InProduction_OtherOriginsAreNotAllowed(string origin)
     {
         var allowOrigin = await GetAllowOriginAsync("Production", origin);

@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Common;
+namespace Achai.Api.Common;
 
 // Os códigos ficam em português porque fazem parte do contrato da API (campo "code" do ProblemDetails).
 public static class AddressErrors
