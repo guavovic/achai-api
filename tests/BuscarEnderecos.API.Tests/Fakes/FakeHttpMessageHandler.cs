@@ -19,6 +19,9 @@ namespace BuscarEnderecos.API.Tests.Fakes
                 Content = new StringContent(content, Encoding.UTF8, mediaType)
             };
 
+        public void RespondWith(Func<HttpRequestMessage, HttpResponseMessage> responder) =>
+            _responder = responder;
+
         public void ThrowOnRequest(Exception exception) =>
             _responder = _ => throw exception;
 
