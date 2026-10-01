@@ -2,7 +2,7 @@
 
 Aplicação web com back-end em C#/.NET que busca endereços brasileiros pelo CEP ou pelo logradouro, com uma interface simples para consultar os resultados.
 
-**Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · API: [achai-api.onrender.com/health](https://achai-api.onrender.com/health)
+**Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · Documentação interativa da API: [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
 A API roda no plano grátis do Render e dorme depois de 15 minutos sem acesso, então a primeira busca pode levar até um minuto.
 
@@ -27,7 +27,7 @@ Precisa do SDK do .NET 10.
    dotnet run
    ```
 
-   Ela escuta em `http://localhost:5010`, e o Swagger abre em `http://localhost:5010/swagger`.
+   Ela escuta em `http://localhost:5010`, e a documentação interativa abre em `http://localhost:5010/docs`.
 
 2. Abra o `src/index.html` no navegador.
 
@@ -39,6 +39,11 @@ docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development achai
 ```
 
 A imagem usa o runtime chiseled do .NET 10: sem shell, sem gerenciador de pacotes e rodando sem root. Sem `ASPNETCORE_ENVIRONMENT=Development`, o container roda em modo produção, e o CORS só libera o front publicado. Se a variável de ambiente `PORT` estiver definida (como fazem hospedagens como o Render), a API escuta nela em vez da 8080.
+
+## Documentação da API
+
+- `GET /docs`: referência interativa ([Scalar](https://scalar.com)), com as rotas, os parâmetros, as respostas e um botão para testar cada rota no navegador. Fica aberta também em produção.
+- `GET /openapi/v1.json`: o documento OpenAPI 3.1, gerado pelo OpenAPI nativo do ASP.NET Core a partir das rotas e das validações.
 
 ## Saúde e limites
 

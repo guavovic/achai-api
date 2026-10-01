@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Achai.Api.Common.Http;
 using Achai.Api.Common.Validation;
 using Achai.Api.Infrastructure;
@@ -10,14 +11,19 @@ public static class GetCitiesByState
     {
         app.MapGet("/buscar/cidades/{uf}", HandleAsync)
             .WithName(nameof(GetCitiesByState))
-            .WithTags("Cidades");
+            .WithTags("Cidades")
+            .WithSummary("Lista as cidades de um estado")
+            .WithDescription("Consulta o IBGE. Estado que não está entre as 27 siglas devolve 400.")
+            .Produces<List<CityResponse>>()
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status429TooManyRequests);
 
         return app;
     }
 
     // O nome do parâmetro segue a rota, que faz parte do contrato da API.
     public static async Task<IResult> HandleAsync(
-        [BrazilianState] string uf,
+        [Description("Sigla do estado. Exemplo: SC.")][BrazilianState] string uf,
         ICityProvider cityProvider,
         CancellationToken cancellationToken)
     {
