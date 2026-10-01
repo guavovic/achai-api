@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
-using AddressLookup.Api.Tests.Fakes;
+using Achai.Api.Tests.Fakes;
 
-namespace AddressLookup.Api.Tests.Integration;
+namespace Achai.Api.Tests.Integration;
 
 public class HealthEndpointsTests : IDisposable
 {

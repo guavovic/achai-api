@@ -1,14 +1,14 @@
-using AddressLookup.Api.Infrastructure.BrasilApi;
-using AddressLookup.Api.Infrastructure.Caching;
-using AddressLookup.Api.Infrastructure.Fallback;
-using AddressLookup.Api.Infrastructure.HealthChecks;
-using AddressLookup.Api.Infrastructure.Ibge;
-using AddressLookup.Api.Infrastructure.ViaCep;
+using Achai.Api.Infrastructure.BrasilApi;
+using Achai.Api.Infrastructure.Caching;
+using Achai.Api.Infrastructure.Fallback;
+using Achai.Api.Infrastructure.HealthChecks;
+using Achai.Api.Infrastructure.Ibge;
+using Achai.Api.Infrastructure.ViaCep;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Http.Resilience;
 
-namespace AddressLookup.Api.Infrastructure;
+namespace Achai.Api.Infrastructure;
 
 public static class DependencyInjection
 {

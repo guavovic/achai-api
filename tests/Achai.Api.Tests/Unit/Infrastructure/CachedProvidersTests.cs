@@ -1,10 +1,10 @@
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Infrastructure;
-using AddressLookup.Api.Infrastructure.Caching;
+using Achai.Api.Common;
+using Achai.Api.Infrastructure;
+using Achai.Api.Infrastructure.Caching;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace AddressLookup.Api.Tests.Unit.Infrastructure;
+namespace Achai.Api.Tests.Unit.Infrastructure;
 
 public class CachedProvidersTests : IDisposable
 {

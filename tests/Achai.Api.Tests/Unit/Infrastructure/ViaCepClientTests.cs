@@ -1,9 +1,9 @@
 using System.Net;
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Infrastructure.ViaCep;
-using AddressLookup.Api.Tests.Fakes;
+using Achai.Api.Common;
+using Achai.Api.Infrastructure.ViaCep;
+using Achai.Api.Tests.Fakes;
 
-namespace AddressLookup.Api.Tests.Unit.Infrastructure;
+namespace Achai.Api.Tests.Unit.Infrastructure;
 
 public class ViaCepClientTests
 {

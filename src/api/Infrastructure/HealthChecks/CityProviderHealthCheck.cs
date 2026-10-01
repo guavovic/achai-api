@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace AddressLookup.Api.Infrastructure.HealthChecks;
+namespace Achai.Api.Infrastructure.HealthChecks;
 
 /// <summary>
 /// Confere se a fonte de cidades responde, buscando as cidades de uma UF.

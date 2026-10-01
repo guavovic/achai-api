@@ -1,11 +1,11 @@
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Common.Results;
-using AddressLookup.Api.Features.Addresses;
-using AddressLookup.Api.Features.Cities;
-using AddressLookup.Api.Infrastructure;
+using Achai.Api.Common;
+using Achai.Api.Common.Results;
+using Achai.Api.Features.Addresses;
+using Achai.Api.Features.Cities;
+using Achai.Api.Infrastructure;
 using Microsoft.AspNetCore.Http.HttpResults;
 
-namespace AddressLookup.Api.Tests.Unit.Features;
+namespace Achai.Api.Tests.Unit.Features;
 
 public class AddressFeaturesTests
 {

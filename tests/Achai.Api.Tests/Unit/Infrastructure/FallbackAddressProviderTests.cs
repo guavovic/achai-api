@@ -1,13 +1,13 @@
 using System.Text.Json;
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Infrastructure;
-using AddressLookup.Api.Infrastructure.Fallback;
+using Achai.Api.Common;
+using Achai.Api.Infrastructure;
+using Achai.Api.Infrastructure.Fallback;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute.ExceptionExtensions;
 using Polly.CircuitBreaker;
 using Polly.Timeout;
 
-namespace AddressLookup.Api.Tests.Unit.Infrastructure;
+namespace Achai.Api.Tests.Unit.Infrastructure;
 
 public class FallbackAddressProviderTests
 {

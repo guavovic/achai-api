@@ -1,8 +1,8 @@
 using System.Net;
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Infrastructure.BrasilApi;
+namespace Achai.Api.Infrastructure.BrasilApi;
 
 public sealed class BrasilApiClient : IZipCodeProvider
 {

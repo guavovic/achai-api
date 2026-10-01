@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common.Http;
-using AddressLookup.Api.Features;
-using AddressLookup.Api.Infrastructure;
+using Achai.Api.Common.Http;
+using Achai.Api.Features;
+using Achai.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 

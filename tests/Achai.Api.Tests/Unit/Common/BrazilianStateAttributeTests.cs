@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common.Validation;
+using Achai.Api.Common.Validation;
 
-namespace AddressLookup.Api.Tests.Unit.Common;
+namespace Achai.Api.Tests.Unit.Common;
 
 public class BrazilianStateAttributeTests
 {

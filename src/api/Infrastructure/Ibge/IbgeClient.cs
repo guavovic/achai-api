@@ -1,7 +1,7 @@
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Infrastructure.Ibge;
+namespace Achai.Api.Infrastructure.Ibge;
 
 public sealed class IbgeClient : ICityProvider
 {

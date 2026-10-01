@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Common.Http;
+namespace Achai.Api.Common.Http;
 
 public static class ProblemExtensions
 {

@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace AddressLookup.Api.Common.Http;
+namespace Achai.Api.Common.Http;
 
 public static class CorsExtensions
 {

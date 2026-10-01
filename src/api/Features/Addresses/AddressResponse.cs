@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using AddressLookup.Api.Common;
+using Achai.Api.Common;
 
-namespace AddressLookup.Api.Features.Addresses;
+namespace Achai.Api.Features.Addresses;
 
 // Os nomes no JSON ficam em português porque são o contrato que o front usa.
 public sealed record AddressResponse(

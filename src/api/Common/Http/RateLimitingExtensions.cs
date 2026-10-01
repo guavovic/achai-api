@@ -3,7 +3,7 @@ using System.Threading.RateLimiting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace AddressLookup.Api.Common.Http;
+namespace Achai.Api.Common.Http;
 
 public static class RateLimitingExtensions
 {

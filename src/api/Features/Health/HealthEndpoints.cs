@@ -1,8 +1,8 @@
-using AddressLookup.Api.Infrastructure.HealthChecks;
+using Achai.Api.Infrastructure.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace AddressLookup.Api.Features.Health;
+namespace Achai.Api.Features.Health;
 
 public static class HealthEndpoints
 {

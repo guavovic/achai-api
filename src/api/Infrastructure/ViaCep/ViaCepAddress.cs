@@ -1,8 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AddressLookup.Api.Common;
+using Achai.Api.Common;
 
-namespace AddressLookup.Api.Infrastructure.ViaCep;
+namespace Achai.Api.Infrastructure.ViaCep;
 
 public sealed class ViaCepAddress
 {

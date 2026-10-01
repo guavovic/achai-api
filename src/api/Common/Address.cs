@@ -1,4 +1,4 @@
-namespace AddressLookup.Api.Common;
+namespace Achai.Api.Common;
 
 /// <summary>
 /// Endereço no formato da aplicação, independente da fonte (ViaCEP ou BrasilAPI).

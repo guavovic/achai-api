@@ -1,4 +1,4 @@
-namespace AddressLookup.Api.Infrastructure.HealthChecks;
+namespace Achai.Api.Infrastructure.HealthChecks;
 
 public static class HealthCheckTags
 {

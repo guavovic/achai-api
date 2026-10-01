@@ -1,4 +1,4 @@
-namespace AddressLookup.Api.Common.Results;
+namespace Achai.Api.Common.Results;
 
 public sealed class Result<T>
 {

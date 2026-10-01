@@ -1,6 +1,6 @@
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Tests.Unit.Common;
+namespace Achai.Api.Tests.Unit.Common;
 
 public class ResultTests
 {

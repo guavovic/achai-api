@@ -1,8 +1,8 @@
 using System.Net;
-using AddressLookup.Api.Common;
-using AddressLookup.Api.Common.Results;
+using Achai.Api.Common;
+using Achai.Api.Common.Results;
 
-namespace AddressLookup.Api.Infrastructure.ViaCep;
+namespace Achai.Api.Infrastructure.ViaCep;
 
 public sealed class ViaCepClient : IAddressProvider
 {
