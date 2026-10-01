@@ -27,6 +27,13 @@ Requires the .NET 10 SDK.
 
 2. Open `src/index.html` in the browser.
 
+## Health and Limits
+
+- `GET /health`: liveness. Says only whether the API process is up, without calling anything external.
+- `GET /health/ready`: checks ViaCEP, BrasilAPI and IBGE. A source that is down makes the status `Degraded`, since the API keeps answering.
+- Each IP can make 60 requests per minute. Above that, the API answers `429` with a `Retry-After` header. `/health` is not limited.
+- In production, only the origins in `Cors:AllowedOrigins` (`appsettings.json`) can call the API from a browser. In development, any origin can.
+
 ## How to Test
 
 From the repository root:
