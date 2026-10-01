@@ -184,6 +184,12 @@ button:disabled {
   }
 }
 
+.aviso-acordando {
+  text-align: center;
+  color: #6b7280;
+  font-size: 0.95rem;
+}
+
 .ui-autocomplete {
   background: #fff;
   border: 1px solid #d8dbe0;

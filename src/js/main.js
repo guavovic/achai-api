@@ -1,18 +1,30 @@
-const API_BASE_URL = "http://localhost:5010";
+// API_BASE_URL e ESTADOS vêm do config.js.
 
-const ESTADOS = [
-  "AC", "AL", "AP", "AM", "BA",  "CE", "DF", "ES", "GO", "MA",
-      "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
-  "RS", "RO", "RR", "SC", "SP", "SE", "TO"
-];
+// No plano grátis do Render, a API dorme depois de 15 minutos sem acesso e leva até um minuto para voltar.
+const AVISO_SERVIDOR_ACORDANDO_MS = 3000;
 
 let cacheCidades = {};
+
+// Já começa a acordar a API enquanto a pessoa preenche o formulário.
+fetch(`${API_BASE_URL}/health`).catch(() => {});
 
 $(document).ready(function () {
   const resultadoArea = $("#areaResultado");
 
   async function requestApi(url) {
-    const resposta = await fetch(url);
+    const avisoAcordando = setTimeout(() => {
+      resultadoArea.find(".loader").after(
+        `<p class="aviso-acordando">O servidor está acordando, isso pode levar até um minuto.</p>`
+      );
+    }, AVISO_SERVIDOR_ACORDANDO_MS);
+
+    let resposta;
+    try {
+      resposta = await fetch(url);
+    } finally {
+      clearTimeout(avisoAcordando);
+    }
+
     const corpo = await resposta.json();
 
     // Erros da API vêm como ProblemDetails (RFC 9457): o texto pro usuário fica em "detail",

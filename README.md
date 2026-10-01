@@ -41,7 +41,14 @@ The image uses the .NET 10 chiseled runtime: no shell, no package manager, runni
 - `GET /health`: liveness. Says only whether the API process is up, without calling anything external.
 - `GET /health/ready`: checks ViaCEP, BrasilAPI and IBGE. A source that is down makes the status `Degraded`, since the API keeps answering.
 - Each IP can make 60 requests per minute. Above that, the API answers `429` with a `Retry-After` header. `/health` is not limited.
-- In production, only the origins in `Cors:AllowedOrigins` (`appsettings.json`) can call the API from a browser. In development, any origin can.
+- In production, only the origins in `Cors:AllowedOrigins` and the Vercel preview links matched by `Cors:AllowedOriginPatterns` (`appsettings.json`) can call the API from a browser. In development, any origin can.
+
+## Deployment
+
+- **API:** [Render](https://render.com), free plan, described in [`render.yaml`](render.yaml). Every merge to `main` that touches the API is deployed only after the CI check passes, and Render waits for `/health` before switching traffic.
+- **Front end:** Vercel, with a preview link for each pull request.
+- The front end picks the API by its own address: opened from disk or `localhost`, it calls `http://localhost:5010`; deployed, it calls the Render URL (`src/js/config.js`).
+- On the free plan the API sleeps after 15 minutes without traffic and takes up to a minute to wake up. The front end shows a notice when a response takes longer than 3 seconds.
 
 ## How to Test
 
