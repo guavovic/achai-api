@@ -3,24 +3,25 @@ using BuscarEnderecos.API.Errors;
 using BuscarEnderecos.API.Interfaces;
 using BuscarEnderecos.API.Models;
 using BuscarEnderecos.API.Results;
-using BuscarEnderecos.API.Settings;
 
 namespace BuscarEnderecos.API.Rest
 {
     public class BuscarEnderecosApiRest : IApi
     {
-        private readonly HttpClient _viacephttpClient;
-        private readonly HttpClient _ibgeHttpClient;
+        public const string ViaCepClient = "ViaCep";
+        public const string IbgeClient = "Ibge";
 
-        public BuscarEnderecosApiRest()
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public BuscarEnderecosApiRest(IHttpClientFactory httpClientFactory)
         {
-            _viacephttpClient = new HttpClient { BaseAddress = new Uri(ApiUrls.VIA_CEP) };
-            _ibgeHttpClient = new HttpClient { BaseAddress = new Uri(ApiUrls.IBGE) };
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<Result<EnderecoModel>> BuscarEnderecoPorCEP(string cep)
         {
-            using var apiResponse = await _viacephttpClient.GetAsync($"{cep}/json");
+            var viaCep = _httpClientFactory.CreateClient(ViaCepClient);
+            using var apiResponse = await viaCep.GetAsync($"{cep}/json");
 
             // O ViaCEP responde 400 com uma página HTML quando o CEP está fora do formato.
             if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
@@ -39,7 +40,8 @@ namespace BuscarEnderecos.API.Rest
 
         public async Task<Result<List<EnderecoModel>>> BuscarPorEstadoECidade(string uf, string cidade, string logradouro)
         {
-            using var apiResponse = await _viacephttpClient.GetAsync($"{uf}/{cidade}/{logradouro}/json");
+            var viaCep = _httpClientFactory.CreateClient(ViaCepClient);
+            using var apiResponse = await viaCep.GetAsync($"{uf}/{cidade}/{logradouro}/json");
 
             if (apiResponse.StatusCode == HttpStatusCode.BadRequest)
                 return EnderecoErrors.BuscaInvalida;
@@ -53,7 +55,8 @@ namespace BuscarEnderecos.API.Rest
 
         public async Task<Result<List<CidadeModel>>> BuscarCidadesPorUF(string uf)
         {
-            using var apiResponse = await _ibgeHttpClient.GetAsync($"localidades/estados/{uf}/municipios");
+            var ibge = _httpClientFactory.CreateClient(IbgeClient);
+            using var apiResponse = await ibge.GetAsync($"localidades/estados/{uf}/municipios");
 
             apiResponse.EnsureSuccessStatusCode();
 

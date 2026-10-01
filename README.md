@@ -21,6 +21,15 @@ Requires the .NET 10 SDK.
 
 2. Open `src/index.html` in the browser.
 
+## How to Test
+
+```bash
+cd src/api
+dotnet test
+```
+
+Unit and integration tests use xUnit v3, NSubstitute and Shouldly. ViaCEP and IBGE are replaced by fake HTTP handlers, so the tests do not need network access.
+
 ## How to Use
 
 **Search by ZIP code (CEP):** enter a valid ZIP code (e.g. 88350250) and click Search. The address is displayed in the right panel.

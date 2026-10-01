@@ -2,6 +2,7 @@ using BuscarEnderecos.API.Handlers;
 using BuscarEnderecos.API.Interfaces;
 using BuscarEnderecos.API.Rest;
 using BuscarEnderecos.API.Services;
+using BuscarEnderecos.API.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient(BuscarEnderecosApiRest.ViaCepClient, client => client.BaseAddress = new Uri(ApiUrls.VIA_CEP));
+builder.Services.AddHttpClient(BuscarEnderecosApiRest.IbgeClient, client => client.BaseAddress = new Uri(ApiUrls.IBGE));
 builder.Services.AddProblemDetails(options =>
 {
     // Troca os títulos padrão (em inglês) de todo ProblemDetails, venha do MVC ou do pipeline.
