@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "BuscarEnderecoPorCEP": {
+    "AddressLookup.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

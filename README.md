@@ -29,12 +29,29 @@ Requires the .NET 10 SDK.
 
 ## How to Test
 
+From the repository root:
+
 ```bash
-cd src/api
 dotnet test
 ```
 
-Unit and integration tests use xUnit v3, NSubstitute and Shouldly. ViaCEP and IBGE are replaced by fake HTTP handlers, so the tests do not need network access.
+Unit and integration tests use xUnit v3, NSubstitute and Shouldly. ViaCEP, IBGE and BrasilAPI are replaced by fake HTTP handlers, so the tests do not need network access.
+
+## Project Structure
+
+The API uses Vertical Slice Architecture with Minimal APIs:
+
+```
+src/api/
+  Features/         one file per endpoint (route + handler)
+    Addresses/      GetAddressByZipCode, SearchAddressesByStreet
+    Cities/         GetCitiesByState
+  Common/           Result, errors, validation, ProblemDetails
+  Infrastructure/   ViaCEP, IBGE and BrasilAPI clients, cache and fallback decorators
+tests/AddressLookup.Api.Tests/
+  Unit/             handlers, clients and decorators
+  Integration/      the whole API in memory (WebApplicationFactory)
+```
 
 ## How to Use
 
