@@ -11,6 +11,12 @@ Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O
 
 **Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
+<p align="center">
+  <img src="docs/assets/achai-busca-por-cep.gif" alt="Busca pelo CEP 01310-100, que mostra a Avenida Paulista em São Paulo" width="45%">
+  &nbsp;
+  <img src="docs/assets/achai-busca-por-endereco.gif" alt="Busca pela Rua XV de Novembro, em Curitiba, que lista 12 endereços" width="45%">
+</p>
+
 ## Como foi feito
 
 O projeto começou como uma API simples que repassava as respostas do ViaCEP e foi reconstruído em etapas, cada uma com a decisão registrada num ADR.
