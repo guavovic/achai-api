@@ -12,6 +12,11 @@ services:
     healthCheckPath: /health
     # Publica a cada merge na main, mas só depois que o CI (check "Build da API") passa.
     autoDeployTrigger: checksPass
+    envVars:
+      # O Render fica atrás da Cloudflare: o X-Forwarded-For termina no balanceador, e o IP do visitante
+      # vem sozinho no True-Client-IP. É por ele que o rate limit separa os clientes.
+      - key: ForwardedHeaders__ClientIpHeader
+        value: True-Client-IP
     # Mudança só no front, nos testes ou na documentação não gera deploy da API.
     buildFilter:
       paths:
