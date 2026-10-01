@@ -34,3 +34,6 @@ jobs:
 
       - name: Compilar
         run: dotnet build --no-restore --configuration Release -warnaserror
+
+      - name: Testar
+        run: dotnet test --no-build --configuration Release
