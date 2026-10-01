@@ -1,9 +1,11 @@
 using AddressLookup.Api.Infrastructure.BrasilApi;
 using AddressLookup.Api.Infrastructure.Caching;
 using AddressLookup.Api.Infrastructure.Fallback;
+using AddressLookup.Api.Infrastructure.HealthChecks;
 using AddressLookup.Api.Infrastructure.Ibge;
 using AddressLookup.Api.Infrastructure.ViaCep;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Http.Resilience;
 
 namespace AddressLookup.Api.Infrastructure;
@@ -33,6 +35,15 @@ public static class DependencyInjection
         services.AddScoped<ICityProvider>(sp => new CachedCityProvider(
             sp.GetRequiredService<IbgeClient>(),
             sp.GetRequiredService<HybridCache>()));
+
+        // As fontes externas entram só na readiness. Uma fonte fora deixa a API "Degraded", não "Unhealthy",
+        // porque ela continua respondendo (com fallback ou com erro tratado).
+        string[] ready = [HealthCheckTags.Ready];
+        var timeout = TimeSpan.FromSeconds(3);
+        services.AddHealthChecks()
+            .AddCheck<ZipCodeProviderHealthCheck<ViaCepClient>>("viacep", HealthStatus.Degraded, ready, timeout)
+            .AddCheck<ZipCodeProviderHealthCheck<BrasilApiClient>>("brasilapi", HealthStatus.Degraded, ready, timeout)
+            .AddCheck<CityProviderHealthCheck<IbgeClient>>("ibge", HealthStatus.Degraded, ready, timeout);
 
         return services;
     }

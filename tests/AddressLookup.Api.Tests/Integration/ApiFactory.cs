@@ -15,12 +15,21 @@ namespace AddressLookup.Api.Tests.Integration;
 /// </summary>
 public sealed class ApiFactory : WebApplicationFactory<Program>
 {
+    private readonly string _environment;
+
+    public ApiFactory(string environment = "Development")
+    {
+        _environment = environment;
+    }
+
     public FakeHttpMessageHandler ViaCep { get; } = new();
     public FakeHttpMessageHandler Ibge { get; } = new();
     public FakeHttpMessageHandler BrasilApi { get; } = new();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        builder.UseEnvironment(_environment);
+
         builder.ConfigureTestServices(services =>
         {
             services.AddHttpClient<ViaCepClient>().ConfigurePrimaryHttpMessageHandler(() => ViaCep);
