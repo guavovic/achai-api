@@ -41,7 +41,7 @@ return result.Match(
 | 404 | O CEP tem o formato certo, mas não existe | `Endereco.CepNaoEncontrado` |
 | 404 | O IBGE não tem cidades para a UF | `Cidade.UfNaoEncontrada` |
 | 404 | A rota não existe | — |
-| 429 | O IP passou de 60 requisições no minuto. Vem com o cabeçalho `Retry-After` | — |
+| 429 | O IP passou do limite de requisições. Vem com o cabeçalho `Retry-After`, que diz em quantos segundos tentar de novo | — |
 | 500 | Erro inesperado | — |
 
 Uma busca por logradouro **sem resultados** não é erro: responde `200` com uma lista vazia.

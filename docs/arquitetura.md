@@ -8,8 +8,8 @@ A API não tem banco de dados. Ela recebe a consulta, busca nas fontes públicas
 
 ```mermaid
 flowchart LR
-    Front["Front (Vercel)"] -->|GET /buscar/...| API
-    subgraph API["API (Render)"]
+    Front["Front"] -->|GET /buscar/...| API
+    subgraph API["API"]
         direction LR
         Pipeline["Pipeline HTTP"] --> Feature["Feature (endpoint)"]
         Feature --> Cache["Cache"]
@@ -37,11 +37,11 @@ As features não conhecem o ViaCEP nem o IBGE. Elas dependem só de interfaces (
 Tomando `GET /buscar/01001000` como exemplo:
 
 1. **Pipeline HTTP** (`Program.cs`), nesta ordem:
-   - `UseForwardedHeaders`: recupera o IP real do visitante, já que a API roda atrás de proxies (no Render, `True-Client-IP`).
+   - `UseForwardedHeaders`: recupera o IP real do visitante quando a API roda atrás de proxies.
    - `UseExceptionHandler`: qualquer exceção não tratada vira um 500 padronizado (ver [Erros](erros.md)).
    - `UseStatusCodePages`: rota que não existe também responde em ProblemDetails.
-   - `UseCors`: libera o front publicado e os previews da Vercel.
-   - `UseRateLimiter`: 60 requisições por minuto por IP.
+   - `UseCors`: só o front publicado pode chamar a API pelo navegador.
+   - `UseRateLimiter`: limita as requisições por IP.
 2. **Validação**: o `AddValidation()` do .NET 10 confere os atributos dos parâmetros (`[RegularExpression]` no CEP, `[BrazilianState]` na UF, `[MinLength]` em cidade e logradouro) antes do handler rodar. Se algo estiver errado, a resposta é 400 e o handler nem é chamado.
 3. **Handler** (`Features/Addresses/GetAddressByZipCode.cs`): tira o traço do CEP e chama o `IAddressProvider`.
 4. **Cadeia de decorators**, cada um envolvendo o próximo:

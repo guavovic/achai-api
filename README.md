@@ -1,20 +1,16 @@
 # Achaí
 
-Aplicação web com back-end em C#/.NET que busca endereços brasileiros pelo CEP ou pelo logradouro, com uma interface simples para consultar os resultados.
+Aplicação web que busca endereços brasileiros pelo CEP ou pelo logradouro. O back-end é uma API em C#/.NET, e o front é uma interface simples para consultar os resultados.
 
-**Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · Documentação interativa da API: [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
-
-A API roda no plano grátis do Render e dorme depois de 15 minutos sem acesso, então a primeira busca pode levar até um minuto.
+**Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
 ## Tecnologias
 
-C# / .NET 10, JavaScript, jQuery e CSS.
-
-- **ViaCEP** para as buscas por CEP e por logradouro, com a **BrasilAPI** como alternativa para CEP quando o ViaCEP está fora do ar ou lento.
-- **IBGE** para a lista de cidades de cada estado.
-- Timeout, retry e circuit breaker em toda chamada externa (`Microsoft.Extensions.Http.Resilience`), e cache em memória (`HybridCache`).
-
-Os guias de como a API funciona por dentro (arquitetura, erros, cache e resiliência) e as decisões de arquitetura ficam em [`docs/`](docs).
+- **API:** .NET 10, ASP.NET Core Minimal APIs, organizada em vertical slices.
+- **Fontes de dados:** ViaCEP para CEP e logradouro, BrasilAPI como reserva para CEP, e IBGE para a lista de cidades.
+- **Robustez:** cache em memória, timeout, retry e circuit breaker nas chamadas externas, erros padronizados (ProblemDetails) e limite de requisições por IP.
+- **Front:** HTML, CSS e JavaScript, com os tokens visuais do [guavovic-ui](https://github.com/guavovic/guavovic-ui).
+- **Qualidade:** testes unitários e de integração, CI no GitHub Actions e imagem Docker.
 
 ## Como rodar
 
@@ -38,27 +34,6 @@ docker build -t achai .
 docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development achai
 ```
 
-A imagem usa o runtime chiseled do .NET 10: sem shell, sem gerenciador de pacotes e rodando sem root. Sem `ASPNETCORE_ENVIRONMENT=Development`, o container roda em modo produção, e o CORS só libera o front publicado. Se a variável de ambiente `PORT` estiver definida (como fazem hospedagens como o Render), a API escuta nela em vez da 8080.
-
-## Documentação da API
-
-- `GET /docs`: referência interativa ([Scalar](https://scalar.com)), com as rotas, os parâmetros, as respostas e um botão para testar cada rota no navegador. Fica aberta também em produção.
-- `GET /openapi/v1.json`: o documento OpenAPI 3.1, gerado pelo OpenAPI nativo do ASP.NET Core a partir das rotas e das validações.
-
-## Saúde e limites
-
-- `GET /health`: liveness. Diz só se o processo da API está de pé, sem chamar nada externo.
-- `GET /health/ready`: confere ViaCEP, BrasilAPI e IBGE. Uma fonte fora do ar deixa o status `Degraded`, porque a API continua respondendo.
-- Cada IP pode fazer 60 requisições por minuto. Acima disso, a API responde `429` com o cabeçalho `Retry-After`. O `/health` não entra no limite. Atrás de mais de um proxy, como no Render (Cloudflare + balanceador), o IP do cliente vem do cabeçalho configurado em `ForwardedHeaders:ClientIpHeader` (`True-Client-IP` no `render.yaml`).
-- Em produção, só as origens de `Cors:AllowedOrigins` e os links de preview da Vercel que casam com `Cors:AllowedOriginPatterns` (`appsettings.json`) podem chamar a API pelo navegador. Em desenvolvimento, qualquer origem pode.
-
-## Publicação
-
-- **API:** [Render](https://render.com), plano grátis, descrita no [`render.yaml`](render.yaml). Todo merge na `main` que mexe na API só é publicado depois que o CI passa, e o Render espera o `/health` responder antes de trocar o tráfego.
-- **Front:** Vercel, com um link de preview para cada pull request.
-- O front escolhe a API pelo próprio endereço: aberto do disco ou de `localhost`, chama `http://localhost:5010`; publicado, chama o endereço do Render (`src/js/config.js`).
-- No plano grátis, a API dorme depois de 15 minutos sem acesso e leva até um minuto para acordar. O front mostra um aviso quando a resposta demora mais de 3 segundos.
-
 ## Como testar
 
 Na raiz do repositório:
@@ -67,26 +42,22 @@ Na raiz do repositório:
 dotnet test
 ```
 
-Os testes unitários e de integração usam xUnit v3, NSubstitute e Shouldly. ViaCEP, IBGE e BrasilAPI são trocados por handlers HTTP falsos, então os testes não precisam de rede.
+As fontes externas são simuladas nos testes, então eles rodam sem rede.
 
-## Estrutura do projeto
-
-A API usa Vertical Slice Architecture com Minimal APIs:
+## Estrutura
 
 ```
 src/api/
   Features/         um arquivo por endpoint (rota + handler)
-    Addresses/      GetAddressByZipCode, SearchAddressesByStreet
-    Cities/         GetCitiesByState
-  Common/           Result, erros, validação, ProblemDetails
-  Infrastructure/   clientes do ViaCEP, IBGE e BrasilAPI, decorators de cache e fallback
-tests/Achai.Api.Tests/
-  Unit/             handlers, clientes e decorators
-  Integration/      a API inteira em memória (WebApplicationFactory)
+  Common/           tipos compartilhados, erros e validação
+  Infrastructure/   clientes das fontes externas, cache e fallback
+src/                front (HTML, CSS e JavaScript)
+tests/              testes unitários e de integração
+docs/               guias e decisões de arquitetura
 ```
 
-## Como usar
+## Documentação
 
-**Busca por CEP:** digite um CEP válido (por exemplo, 88350250) e clique em Buscar. O endereço aparece no painel da direita.
-
-**Busca por estado e cidade:** escolha o estado e a cidade, digite o logradouro (no mínimo 3 caracteres) e clique em Buscar. Os resultados aparecem em lista.
+- [Guias](docs): arquitetura, tratamento de erros, cache e resiliência.
+- [Decisões de arquitetura](docs/decisions): o porquê de cada escolha, com as alternativas consideradas.
+- [Referência da API](https://achai-api.onrender.com/docs): rotas, parâmetros e respostas, com teste no navegador.

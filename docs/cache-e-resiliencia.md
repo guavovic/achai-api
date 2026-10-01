@@ -20,7 +20,7 @@ Usa o `HybridCache` do .NET, só em memória ([ADR 0007](decisions/0007-cache-co
 - **Exceção não fica no cache.** Se a fonte falhou, a próxima requisição tenta de novo.
 - Como o `Result<T>` não é serializável, o cache guarda um `CachedResult<T>`, com o valor ou o erro, e converte de volta na leitura.
 - O `HybridCache` evita o *cache stampede*: se várias requisições pedem o mesmo CEP ao mesmo tempo e ele não está no cache, só uma vai à fonte, e as outras esperam o resultado dela.
-- No plano grátis do Render, a API dorme depois de 15 minutos parada, e o cache em memória se perde junto. A primeira busca depois disso vai às fontes de novo.
+- O cache fica em memória, então some quando a API reinicia. A primeira busca depois disso vai às fontes de novo.
 
 ## Resiliência HTTP
 
@@ -61,4 +61,4 @@ O `GET /health/ready` testa as três fontes e diz como cada uma está:
 }
 ```
 
-Uma fonte fora do ar deixa o status `Degraded`, e não `Unhealthy`, porque a API continua respondendo, com fallback ou com erro tratado. Já o `GET /health` não testa nada externo: só diz se o processo está de pé, e é ele que o Render usa para decidir se a API está no ar.
+Uma fonte fora do ar deixa o status `Degraded`, e não `Unhealthy`, porque a API continua respondendo, com fallback ou com erro tratado. Já o `GET /health` não testa nada externo: só diz se o processo está de pé, e é ele que a hospedagem usa para saber se a API está no ar.
