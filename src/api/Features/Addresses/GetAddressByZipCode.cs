@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Achai.Api.Common.Http;
 using Achai.Api.Infrastructure;
@@ -10,13 +11,20 @@ public static class GetAddressByZipCode
     {
         app.MapGet("/buscar/{cep}", HandleAsync)
             .WithName(nameof(GetAddressByZipCode))
-            .WithTags("Endereços");
+            .WithTags("Endereços")
+            .WithSummary("Busca o endereço pelo CEP")
+            .WithDescription("Consulta o ViaCEP. Se ele estiver fora do ar ou lento, usa a BrasilAPI. CEP que não existe devolve 404.")
+            .Produces<AddressResponse>()
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests);
 
         return app;
     }
 
     // O nome do parâmetro segue a rota, que faz parte do contrato da API.
     public static async Task<IResult> HandleAsync(
+        [Description("CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000.")]
         [RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "O CEP deve ter 8 dígitos, com ou sem traço.")] string cep,
         IAddressProvider addressProvider,
         CancellationToken cancellationToken)

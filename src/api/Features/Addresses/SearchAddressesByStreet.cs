@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Achai.Api.Common.Http;
 using Achai.Api.Common.Validation;
@@ -11,15 +12,22 @@ public static class SearchAddressesByStreet
     {
         app.MapGet("/buscar/{uf}/{cidade}/{logradouro}", HandleAsync)
             .WithName(nameof(SearchAddressesByStreet))
-            .WithTags("Endereços");
+            .WithTags("Endereços")
+            .WithSummary("Busca endereços pelo logradouro")
+            .WithDescription("Consulta o ViaCEP, que devolve até 50 endereços. Sem resultado, devolve uma lista vazia.")
+            .Produces<List<AddressResponse>>()
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status429TooManyRequests);
 
         return app;
     }
 
     // Os nomes dos parâmetros seguem a rota, que faz parte do contrato da API.
     public static async Task<IResult> HandleAsync(
-        [BrazilianState] string uf,
+        [Description("Sigla do estado. Exemplo: SP.")][BrazilianState] string uf,
+        [Description("Nome da cidade, com pelo menos 3 caracteres. Exemplo: São Paulo.")]
         [MinLength(3, ErrorMessage = "A cidade precisa de pelo menos 3 caracteres.")] string cidade,
+        [Description("Parte do nome da rua, com pelo menos 3 caracteres. Exemplo: Paulista.")]
         [MinLength(3, ErrorMessage = "O logradouro precisa de pelo menos 3 caracteres.")] string logradouro,
         IAddressProvider addressProvider,
         CancellationToken cancellationToken)
