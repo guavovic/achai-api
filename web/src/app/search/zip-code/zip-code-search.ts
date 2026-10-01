@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LucideCircleAlert, LucideSearch } from '@lucide/angular';
 import { AddressSearch } from '../address-search';
 
 @Component({
   selector: 'app-zip-code-search',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideCircleAlert, LucideSearch],
   templateUrl: './zip-code-search.html',
   styleUrl: '../search-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,8 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
+import {
+  LucideBookOpen,
+  LucideCodeXml,
+  LucideMailbox,
+  LucideMoon,
+  LucideSignpost,
+  LucideSun,
+  LucideSunMoon,
+} from '@lucide/angular';
 import { environment } from '../environments/environment';
 import { AchaiApi } from './core/api/achai-api';
+import { Logo } from './core/logo/logo';
 import { Theme } from './core/theme/theme';
-import { SearchResults, StreetExample } from './search/results/search-results';
+import { StreetExample } from './search/examples';
+import { SearchResults } from './search/results/search-results';
 import { StreetSearch } from './search/street/street-search';
 import { ZipCodeSearch } from './search/zip-code/zip-code-search';
 
@@ -12,7 +23,19 @@ const THEME_LABEL = { system: 'Sistema', light: 'Claro', dark: 'Escuro' } as con
 
 @Component({
   selector: 'app-root',
-  imports: [ZipCodeSearch, StreetSearch, SearchResults],
+  imports: [
+    Logo,
+    ZipCodeSearch,
+    StreetSearch,
+    SearchResults,
+    LucideBookOpen,
+    LucideCodeXml,
+    LucideMailbox,
+    LucideMoon,
+    LucideSignpost,
+    LucideSun,
+    LucideSunMoon,
+  ],
   templateUrl: './app.html',
   styleUrl: './app.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

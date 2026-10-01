@@ -13,6 +13,7 @@ p {
 }
 
 .empty {
+  color: var(--gv-color-text);
   display: grid;
   gap: var(--gv-space-2);
   padding: var(--gv-space-6);
@@ -30,6 +31,9 @@ p {
 }
 
 .example {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-1);
   font: inherit;
   font-size: var(--gv-text-sm);
   color: var(--gv-color-accent);
@@ -57,11 +61,7 @@ p {
 }
 
 .spinner {
-  width: 1.75rem;
-  height: 1.75rem;
-  border: 3px solid var(--gv-color-border);
-  border-top-color: var(--gv-color-accent);
-  border-radius: 50%;
+  color: var(--gv-color-accent);
   animation: spin 0.9s linear infinite;
 }
 
@@ -75,6 +75,10 @@ p {
   .spinner {
     animation-duration: 3s;
   }
+}
+
+.muted-icon {
+  color: var(--gv-color-text-muted);
 }
 
 .count {
@@ -108,6 +112,9 @@ p {
 }
 
 h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-2);
   margin: 0;
   font-family: var(--gv-font-display);
   font-size: var(--gv-text-lg);
@@ -120,12 +127,37 @@ h2 {
   overflow-wrap: anywhere;
 }
 
+.accent-icon {
+  flex-shrink: 0;
+  color: var(--gv-color-accent);
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-2);
+}
+
+/* Ícones de 16px centralizados no mesmo espaço do ícone de 20px do título. */
+.line svg {
+  flex-shrink: 0;
+  margin-inline: 2px;
+}
+
+/* Alinha o texto sem ícone com o texto ao lado dos ícones. */
+.indent {
+  padding-left: calc(20px + var(--gv-space-2));
+}
+
 .cep {
   font-family: var(--gv-font-mono);
   font-size: var(--gv-text-sm);
 }
 
 .copy {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-1);
   flex-shrink: 0;
   font: inherit;
   font-size: var(--gv-text-sm);

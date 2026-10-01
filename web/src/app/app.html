@@ -1,7 +1,7 @@
 <div class="page">
   <header class="header">
     <div>
-      <h1>Achaí</h1>
+      <h1><app-logo [size]="44" /> Achaí</h1>
       <p class="tagline">Encontre qualquer endereço do Brasil pelo CEP ou pelo nome da rua.</p>
     </div>
     <button
@@ -10,7 +10,18 @@
       (click)="theme.cycle()"
       [attr.aria-label]="'Tema: ' + themeLabel() + '. Clique para trocar.'"
     >
-      Tema: {{ themeLabel() }}
+      @switch (theme.mode()) {
+        @case ('light') {
+          <svg lucideSun size="16"></svg>
+        }
+        @case ('dark') {
+          <svg lucideMoon size="16"></svg>
+        }
+        @default {
+          <svg lucideSunMoon size="16"></svg>
+        }
+      }
+      {{ themeLabel() }}
     </button>
   </header>
 
@@ -24,6 +35,7 @@
         [attr.aria-selected]="tab() === 'zipCode'"
         (click)="tab.set('zipCode')"
       >
+        <svg lucideMailbox size="18"></svg>
         Por CEP
       </button>
       <button
@@ -34,6 +46,7 @@
         [attr.aria-selected]="tab() === 'street'"
         (click)="tab.set('street')"
       >
+        <svg lucideSignpost size="18"></svg>
         Por endereço
       </button>
     </div>
@@ -58,8 +71,10 @@
   />
 
   <footer class="footer">
-    <a [href]="docsUrl">Documentação da API</a>
+    <a [href]="docsUrl"><svg lucideBookOpen size="16"></svg> Documentação da API</a>
     <span aria-hidden="true">·</span>
-    <a href="https://github.com/guavovic/achai">Código no GitHub</a>
+    <a href="https://github.com/guavovic/achai"
+      ><svg lucideCodeXml size="16"></svg> Código no GitHub</a
+    >
   </footer>
 </div>

@@ -1,5 +1,10 @@
+:host {
+  display: block;
+}
+
 .search-form {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--gv-space-4);
 }
 
@@ -15,8 +20,10 @@
   }
 }
 
+/* minmax(0, 1fr): sem isso, a coluna do grid não encolhe abaixo da largura natural do campo, e o botão passa da borda no celular. */
 .field {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--gv-space-1);
   min-width: 0;
 }
@@ -57,6 +64,9 @@ select[aria-invalid='true'] {
 }
 
 button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gv-space-2);
   font: inherit;
   font-weight: var(--gv-weight-medium);
   color: var(--gv-color-on-accent);
@@ -88,5 +98,8 @@ button:focus-visible {
 }
 
 .field-error {
+  display: flex;
+  align-items: center;
+  gap: var(--gv-space-1);
   color: var(--gv-color-danger);
 }

@@ -12,10 +12,12 @@
         [attr.aria-invalid]="showError()"
         aria-describedby="cep-hint"
       />
-      <button type="submit">Buscar</button>
+      <button type="submit"><svg lucideSearch size="18"></svg> Buscar</button>
     </div>
     @if (showError()) {
-      <p id="cep-hint" class="field-error">Digite os 8 dígitos do CEP, com ou sem traço.</p>
+      <p id="cep-hint" class="field-error">
+        <svg lucideCircleAlert size="14"></svg> Digite os 8 dígitos do CEP, com ou sem traço.
+      </p>
     } @else {
       <p id="cep-hint" class="hint">8 dígitos, com ou sem traço.</p>
     }

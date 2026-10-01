@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AddressSearch, SearchState } from '../address-search';
+import { ZIP_CODE_EXAMPLES } from '../examples';
 import { SearchResults } from './search-results';
 
 describe('SearchResults', () => {
@@ -28,7 +29,8 @@ describe('SearchResults', () => {
     element.querySelector<HTMLButtonElement>('.example')!.click();
 
     expect(element.textContent).toContain('Digite um CEP');
-    expect(clicked).toHaveBeenCalledWith('01001-000');
+    expect(clicked).toHaveBeenCalledWith(fixture.componentInstance.examples.zipCode);
+    expect(ZIP_CODE_EXAMPLES).toContain(fixture.componentInstance.examples.zipCode);
   });
 
   it('mostra cada endereço encontrado', async () => {

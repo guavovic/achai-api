@@ -3,12 +3,13 @@ import { httpResource } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AchaiApi, City } from '../../core/api/achai-api';
+import { LucideCircleAlert, LucideSearch } from '@lucide/angular';
 import { AddressSearch } from '../address-search';
 import { STATES } from '../states';
 
 @Component({
   selector: 'app-street-search',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, LucideCircleAlert, LucideSearch],
   templateUrl: './street-search.html',
   styleUrl: '../search-form.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

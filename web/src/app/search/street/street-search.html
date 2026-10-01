@@ -9,7 +9,7 @@
         }
       </select>
       @if (showError('state')) {
-        <p class="field-error">Escolha o estado.</p>
+        <p class="field-error"><svg lucideCircleAlert size="14"></svg> Escolha o estado.</p>
       }
     </div>
 
@@ -29,7 +29,9 @@
         }
       </datalist>
       @if (showError('city')) {
-        <p class="field-error">Digite pelo menos 3 letras da cidade.</p>
+        <p class="field-error">
+          <svg lucideCircleAlert size="14"></svg> Digite pelo menos 3 letras da cidade.
+        </p>
       }
     </div>
   </div>
@@ -44,10 +46,12 @@
         placeholder="Ex.: Paulista"
         [attr.aria-invalid]="showError('street')"
       />
-      <button type="submit">Buscar</button>
+      <button type="submit"><svg lucideSearch size="18"></svg> Buscar</button>
     </div>
     @if (showError('street')) {
-      <p class="field-error">Digite pelo menos 3 letras do logradouro.</p>
+      <p class="field-error">
+        <svg lucideCircleAlert size="14"></svg> Digite pelo menos 3 letras do logradouro.
+      </p>
     } @else {
       <p class="hint">Pode ser só parte do nome.</p>
     }
