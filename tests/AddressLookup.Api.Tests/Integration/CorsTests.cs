@@ -15,10 +15,24 @@ public class CorsTests
         allowOrigin.ShouldBe(FrontOrigin);
     }
 
-    [Fact]
-    public async Task InProduction_OtherOriginsAreNotAllowed()
+    [Theory]
+    [InlineData("https://consultar-enderecos-eqoznbr7t-guavovic-projects.vercel.app")]
+    [InlineData("https://consultar-enderecos-git-feat-deploy-guavovic-projects.vercel.app")]
+    public async Task InProduction_VercelPreviewOriginsAreAllowed(string previewOrigin)
     {
-        var allowOrigin = await GetAllowOriginAsync("Production", OtherOrigin);
+        var allowOrigin = await GetAllowOriginAsync("Production", previewOrigin);
+
+        allowOrigin.ShouldBe(previewOrigin);
+    }
+
+    [Theory]
+    [InlineData(OtherOrigin)]
+    [InlineData("https://consultar-enderecos-abc-outra-conta.vercel.app")]
+    [InlineData("https://consultar-enderecos-abc-guavovic-projects.vercel.app.site-qualquer.com")]
+    [InlineData("http://consultar-enderecos-abc-guavovic-projects.vercel.app")]
+    public async Task InProduction_OtherOriginsAreNotAllowed(string origin)
+    {
+        var allowOrigin = await GetAllowOriginAsync("Production", origin);
 
         allowOrigin.ShouldBeNull();
     }
