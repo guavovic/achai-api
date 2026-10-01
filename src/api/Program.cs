@@ -4,18 +4,8 @@ using AddressLookup.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("front",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000")
-            .AllowAnyOrigin()
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-        });
-});
-
+builder.Services.AddFrontCors(builder.Configuration, builder.Environment);
+builder.Services.AddPerIpRateLimiting();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddValidation();
@@ -25,6 +15,7 @@ builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 
+app.UseForwardedHeaders();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 
@@ -35,7 +26,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("front");
+// O CORS vem antes do rate limit para o front conseguir ler a resposta 429.
+app.UseCors(CorsExtensions.FrontPolicy);
+app.UseRateLimiter();
 app.MapFeatureEndpoints();
 
 app.Run();
