@@ -93,7 +93,7 @@ $(document).ready(function () {
       configurarAutocompleteCidade(nomes);
       resultadoArea.html("");
     } catch (erro) {
-      resultadoArea.html(`<p style="color:red;">Erro ao carregar cidades de ${uf}: ${erro.message}</p>`);
+      resultadoArea.html(`<p class="mensagem-erro">Erro ao carregar cidades de ${uf}: ${erro.message}</p>`);
     }
   }
 
@@ -112,7 +112,7 @@ $(document).ready(function () {
     resultadoArea.html("");
 
     if (!/^\d{5}-?\d{3}$/.test(cep)) {
-      resultadoArea.html("<p style='color:red;'>Digite um CEP válido com 8 dígitos, com ou sem traço.</p>");
+      resultadoArea.html("<p class='mensagem-erro'>Digite um CEP válido com 8 dígitos, com ou sem traço.</p>");
       return;
     }
 
@@ -121,7 +121,7 @@ $(document).ready(function () {
       const dados = await requestApi(`${API_BASE_URL}/buscar/${cep}`);
       carregarEnderecos(dados);
     } catch (erro) {
-      resultadoArea.html(`<p style="color:red;">${erro.message}</p>`);
+      resultadoArea.html(`<p class="mensagem-erro">${erro.message}</p>`);
     }
   });
 
@@ -135,12 +135,12 @@ $(document).ready(function () {
     resultadoArea.html("");
 
     if (!uf || !cidade || !logradouro) {
-      resultadoArea.html("<p style='color:red;'>Preencha todos os campos</p>");
+      resultadoArea.html("<p class='mensagem-erro'>Preencha todos os campos</p>");
       return;
     }
 
     if (cidade.length < 3 || logradouro.length < 3) {
-      resultadoArea.html("<p style='color:red;'>Cidade e logradouro devem ter pelo menos 3 caracteres</p>");
+      resultadoArea.html("<p class='mensagem-erro'>Cidade e logradouro devem ter pelo menos 3 caracteres</p>");
       return;
     }
 
@@ -149,7 +149,7 @@ $(document).ready(function () {
       const dados = await requestApi(`${API_BASE_URL}/buscar/${uf}/${cidade}/${logradouro}`);
       carregarEnderecos(dados);
     } catch (erro) {
-      resultadoArea.html(`<p style="color:red;">Erro ao buscar endereços: ${erro.message}</p>`);
+      resultadoArea.html(`<p class="mensagem-erro">Erro ao buscar endereços: ${erro.message}</p>`);
     }
   });
 });
