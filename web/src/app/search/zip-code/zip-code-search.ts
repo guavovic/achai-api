@@ -14,7 +14,6 @@ export class ZipCodeSearch {
   private readonly search = inject(AddressSearch);
   private readonly submitted = signal(false);
 
-  // Mesma regra da API: 8 dígitos, com ou sem traço.
   readonly zipCode = new FormControl('', {
     nonNullable: true,
     validators: [Validators.required, Validators.pattern(/^\d{5}-?\d{3}$/)],

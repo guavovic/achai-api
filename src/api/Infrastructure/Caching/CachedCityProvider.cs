@@ -4,9 +4,6 @@ using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Achai.Api.Infrastructure.Caching;
 
-/// <summary>
-/// Decorator: consulta o cache antes da fonte de cidades.
-/// </summary>
 public sealed class CachedCityProvider : ICityProvider
 {
     private static readonly HybridCacheEntryOptions CitiesExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromDays(7));

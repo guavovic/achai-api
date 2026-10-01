@@ -4,12 +4,8 @@ using Microsoft.Extensions.Caching.Hybrid;
 
 namespace Achai.Api.Infrastructure.Caching;
 
-/// <summary>
-/// Decorator: consulta o cache antes da fonte de endereços.
-/// </summary>
 public sealed class CachedAddressProvider : IAddressProvider
 {
-    // CEP muda pouco. O "não encontrado" fica menos tempo porque os Correios criam CEPs novos.
     private static readonly HybridCacheEntryOptions ZipCodeExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromDays(7));
     private static readonly HybridCacheEntryOptions ZipCodeNotFoundExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromDays(1));
     private static readonly HybridCacheEntryOptions StreetExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromHours(1));

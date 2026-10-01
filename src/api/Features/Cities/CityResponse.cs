@@ -3,7 +3,6 @@ using Achai.Api.Common;
 
 namespace Achai.Api.Features.Cities;
 
-// O nome no JSON fica em português porque é o contrato que o front usa.
 public sealed record CityResponse([property: JsonPropertyName("nome")] string? Name)
 {
     public static CityResponse From(City city) => new(city.Name);

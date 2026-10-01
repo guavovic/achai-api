@@ -60,7 +60,6 @@ export class SearchResults {
   readonly zipCodeExample = output<string>();
   readonly streetExample = output<StreetExample>();
 
-  // Sorteados uma vez por visita, para cada pessoa ver exemplos de lugares diferentes.
   readonly examples = {
     zipCode: pickRandom(ZIP_CODE_EXAMPLES),
     street: pickRandom(STREET_EXAMPLES),
@@ -93,8 +92,6 @@ export class SearchResults {
       await navigator.clipboard.writeText(text);
       this.copied.set(address.cep);
       setTimeout(() => this.copied.set(null), 2000);
-    } catch {
-      // Sem permissão para a área de transferência: o endereço continua na tela para copiar à mão.
-    }
+    } catch {}
   }
 }

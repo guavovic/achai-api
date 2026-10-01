@@ -160,7 +160,6 @@ public class EndpointsTests : IDisposable
         address.GetProperty("cep").GetString().ShouldBe("01001-000");
         address.GetProperty("estado").GetString().ShouldBe("São Paulo");
         address.GetProperty("regiao").GetString().ShouldBe("Sudeste");
-        // 1 tentativa + 2 retries no ViaCEP antes de desistir.
         _factory.ViaCep.Requests.Count.ShouldBe(3);
         _factory.BrasilApi.Requests.Count.ShouldBe(1);
     }

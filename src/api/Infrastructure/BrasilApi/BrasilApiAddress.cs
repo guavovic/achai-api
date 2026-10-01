@@ -20,8 +20,6 @@ public sealed class BrasilApiAddress
     [JsonPropertyName("street")]
     public string? Street { get; set; }
 
-    // A BrasilAPI não traz complemento, unidade, nome do estado nem região.
-    // Os dois últimos vêm da tabela de UFs, para a resposta ficar igual à do ViaCEP.
     public Address ToAddress()
     {
         var state = BrazilianStates.Find(State);

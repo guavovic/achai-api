@@ -6,10 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Achai.Api.ContractTests;
 
-/// <summary>
-/// Os clientes reais do ViaCEP, da BrasilAPI e do IBGE, montados como na API:
-/// com o mesmo HttpClient e o mesmo pipeline de resiliência (timeout e retry).
-/// </summary>
 public sealed class ExternalApis : IDisposable
 {
     private readonly ServiceProvider _services = new ServiceCollection()

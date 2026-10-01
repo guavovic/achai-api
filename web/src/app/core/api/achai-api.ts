@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import type { components } from './schema';
 
-// Os tipos vêm do documento OpenAPI da API (npm run api:types).
 export type Address = components['schemas']['AddressResponse'];
 export type City = components['schemas']['CityResponse'];
 
@@ -26,7 +25,6 @@ export class AchaiApi {
     return `${this.baseUrl}/buscar/cidades/${encodeURIComponent(state)}`;
   }
 
-  /** Acorda a API logo que a página abre, enquanto a pessoa ainda está digitando. */
   wakeUp(): void {
     this.http
       .get(`${this.baseUrl}/health`, { responseType: 'text' })

@@ -9,10 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Achai.Api.Tests.Integration;
 
-/// <summary>
-/// Sobe a API inteira em memória, com o ViaCEP, o IBGE e a BrasilAPI trocados por handlers falsos.
-/// O pipeline de resiliência (timeout, retry e circuit breaker) continua valendo.
-/// </summary>
 public sealed class ApiFactory : WebApplicationFactory<Program>
 {
     private readonly string _environment;

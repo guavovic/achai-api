@@ -3,7 +3,6 @@ import { Observable, Subscription, finalize, map, timer } from 'rxjs';
 import { AchaiApi, Address } from '../core/api/achai-api';
 import { problemMessage } from '../core/api/problem-message';
 
-/** Depois desse tempo carregando, a tela avisa que a API pode estar acordando. */
 export const SLOW_RESPONSE_MS = 3000;
 
 export type SearchState =
@@ -12,7 +11,6 @@ export type SearchState =
   | { status: 'success'; addresses: Address[] }
   | { status: 'error'; message: string };
 
-/** Estado da busca, compartilhado entre os formulários e a lista de resultados. */
 @Injectable({ providedIn: 'root' })
 export class AddressSearch {
   private readonly api = inject(AchaiApi);
@@ -31,7 +29,6 @@ export class AddressSearch {
     this.run(this.api.searchByStreet(state, city, street));
   }
 
-  // Uma busca nova cancela a anterior, para uma resposta atrasada não sobrescrever a mais recente.
   private run(request: Observable<Address[]>): void {
     this.running?.unsubscribe();
     this.stateSignal.set({ status: 'loading', slow: false });

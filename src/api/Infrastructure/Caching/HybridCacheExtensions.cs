@@ -5,11 +5,6 @@ namespace Achai.Api.Infrastructure.Caching;
 
 public static class HybridCacheExtensions
 {
-    /// <summary>
-    /// Guarda o resultado inteiro (valor ou erro esperado). Exceções não ficam no cache,
-    /// então uma falha da fonte externa é tentada de novo na próxima requisição.
-    /// Um erro esperado fica pelo tempo de <paramref name="errorOptions"/>, quando informado.
-    /// </summary>
     public static async Task<Result<T>> GetOrCreateResultAsync<T>(
         this HybridCache cache,
         string key,
@@ -30,7 +25,6 @@ public static class HybridCacheExtensions
             options,
             cancellationToken: cancellationToken);
 
-        // Só regrava quando a fonte acabou de ser consultada; uma leitura do cache não renova a validade.
         if (fetched && cached.Error is not null && errorOptions is not null)
             await cache.SetAsync(key, cached, errorOptions, cancellationToken: cancellationToken);
 

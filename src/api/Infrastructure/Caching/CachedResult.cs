@@ -2,9 +2,6 @@ using Achai.Api.Common.Results;
 
 namespace Achai.Api.Infrastructure.Caching;
 
-/// <summary>
-/// Forma serializável de um <see cref="Result{T}"/>, para guardar no cache tanto o valor quanto o erro esperado.
-/// </summary>
 public sealed record CachedResult<T>(T? Value, Error? Error)
 {
     public static CachedResult<T> From(Result<T> result) =>

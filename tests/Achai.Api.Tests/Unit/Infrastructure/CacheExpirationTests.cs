@@ -67,7 +67,6 @@ public class CacheExpirationTests : IDisposable
         await _addresses.Received(2).GetByZipCodeAsync("99999999", Arg.Any<CancellationToken>());
     }
 
-    // Relógio que só anda quando o teste manda: serve ao HybridCache (TimeProvider) e ao MemoryCache (ISystemClock).
     private sealed class ManualClock : TimeProvider, ISystemClock
     {
         private DateTimeOffset _now = new(2026, 10, 1, 12, 0, 0, TimeSpan.Zero);

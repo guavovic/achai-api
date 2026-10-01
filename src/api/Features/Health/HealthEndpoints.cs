@@ -8,11 +8,9 @@ public static class HealthEndpoints
 {
     public static IEndpointRouteBuilder MapHealthEndpoints(this IEndpointRouteBuilder app)
     {
-        // Liveness: só diz se o processo está de pé, sem olhar nada externo. É o que a hospedagem consulta.
         app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false })
             .DisableRateLimiting();
 
-        // Readiness: testa o ViaCEP, a BrasilAPI e o IBGE. Serve para acompanhar, não para reiniciar a API.
         app.MapHealthChecks("/health/ready", new HealthCheckOptions
         {
             Predicate = check => check.Tags.Contains(HealthCheckTags.Ready),
@@ -22,7 +20,6 @@ public static class HealthEndpoints
         return app;
     }
 
-    // Só nome, status e duração de cada fonte: a mensagem de erro fica no log, não na resposta.
     private static Task WriteJsonAsync(HttpContext context, HealthReport report) =>
         context.Response.WriteAsJsonAsync(new
         {

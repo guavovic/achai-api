@@ -25,7 +25,6 @@ public class RateLimitingTests : IDisposable
     [Fact]
     public async Task AfterTheLimit_Returns429WithRetryAfterAndProblemDetails()
     {
-        // CEP fora do formato: barrado na validação, sem depender das APIs externas.
         for (var i = 0; i < RateLimitingExtensions.PermitsPerMinute; i++)
         {
             var allowed = await _client.GetAsync("/buscar/123", _ct);
@@ -49,7 +48,6 @@ public class RateLimitingTests : IDisposable
         });
         using var client = factory.CreateClient();
 
-        // Como no Render: a última entrada do X-Forwarded-For é o balanceador, que muda a cada requisição.
         for (var i = 0; i < RateLimitingExtensions.PermitsPerMinute; i++)
         {
             var allowed = await SendThroughProxiesAsync(client, clientIp: "203.0.113.7", lastProxy: $"10.0.0.{i}");

@@ -1,8 +1,6 @@
-# Lista de permissão: o build só precisa do projeto da API.
 *
 !src/api/
 
-# Dentro dele, nada de saída de build nem arquivo local.
 src/api/bin/
 src/api/obj/
 src/api/.vs/

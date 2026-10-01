@@ -22,7 +22,6 @@ public static class GetAddressByZipCode
         return app;
     }
 
-    // O nome do parâmetro segue a rota, que faz parte do contrato da API.
     public static async Task<IResult> HandleAsync(
         [Description("CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000.")]
         [RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "O CEP deve ter 8 dígitos, com ou sem traço.")] string cep,

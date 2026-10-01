@@ -1,10 +1,7 @@
 name: Contrato das APIs externas
 
-# Confere toda semana se o ViaCEP, a BrasilAPI e o IBGE continuam respondendo no formato que a API espera,
-# e se os exemplos do front continuam trazendo resultado. Quando algo quebra, abre (ou comenta) uma issue.
 on:
   schedule:
-    # Segunda-feira, 12:00 UTC (9:00 em Brasília).
     - cron: '0 12 * * 1'
   workflow_dispatch:
 

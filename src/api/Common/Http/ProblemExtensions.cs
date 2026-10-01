@@ -19,9 +19,6 @@ public static class ProblemExtensions
             extensions: new Dictionary<string, object?> { ["code"] = error.Code });
     }
 
-    /// <summary>
-    /// Registra o ProblemDetails trocando os títulos padrão (em inglês) de toda resposta de erro da API.
-    /// </summary>
     public static IServiceCollection AddPortugueseProblemDetails(this IServiceCollection services) =>
         services.AddProblemDetails(options =>
         {

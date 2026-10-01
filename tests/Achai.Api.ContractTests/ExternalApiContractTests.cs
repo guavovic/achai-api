@@ -2,10 +2,6 @@ using Achai.Api.Common;
 
 namespace Achai.Api.ContractTests;
 
-/// <summary>
-/// Chamam as APIs externas de verdade e conferem se as respostas ainda viram endereços completos.
-/// Rodam toda semana pelo workflow "Contrato das APIs externas", não no CI das PRs.
-/// </summary>
 [Trait("Category", "Contract")]
 public class ExternalApiContractTests : IClassFixture<ExternalApis>
 {

@@ -3,10 +3,6 @@ import type { components } from './schema';
 
 type ValidationProblem = components['schemas']['HttpValidationProblemDetails'];
 
-/**
- * Transforma um erro da API em texto para a pessoa. A API responde erros em ProblemDetails:
- * a mensagem fica em "errors" (validação, por campo) ou em "detail".
- */
 export function problemMessage(error: unknown): string {
   if (!(error instanceof HttpErrorResponse)) return 'Algo deu errado. Tente de novo.';
 

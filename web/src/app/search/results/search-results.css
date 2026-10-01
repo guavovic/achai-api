@@ -138,13 +138,11 @@ h2 {
   gap: var(--gv-space-2);
 }
 
-/* Ícones de 16px centralizados no mesmo espaço do ícone de 20px do título. */
 .line svg {
   flex-shrink: 0;
   margin-inline: 2px;
 }
 
-/* Alinha o texto sem ícone com o texto ao lado dos ícones. */
 .indent {
   padding-left: calc(20px + var(--gv-space-2));
 }

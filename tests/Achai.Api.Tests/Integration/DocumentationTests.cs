@@ -6,7 +6,6 @@ namespace Achai.Api.Tests.Integration;
 
 public class DocumentationTests : IDisposable
 {
-    // A documentação também fica aberta em produção.
     private readonly ApiFactory _factory = new("Production");
     private readonly HttpClient _client;
     private readonly CancellationToken _ct = TestContext.Current.CancellationToken;

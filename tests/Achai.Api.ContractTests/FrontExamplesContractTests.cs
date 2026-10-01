@@ -2,10 +2,6 @@ using System.Text.Json;
 
 namespace Achai.Api.ContractTests;
 
-/// <summary>
-/// Os exemplos que o front sorteia no estado vazio (web/src/app/search/examples.json)
-/// precisam continuar trazendo resultado: um exemplo clicável que volta vazio passa impressão de defeito.
-/// </summary>
 [Trait("Category", "Contract")]
 public class FrontExamplesContractTests : IClassFixture<ExternalApis>
 {
@@ -54,7 +50,6 @@ internal sealed record FrontExamples(List<ZipCodeExample> ZipCodes, List<StreetE
             ?? throw new InvalidOperationException($"Não foi possível ler {path}.");
     }
 
-    // Sobe a partir da pasta do teste até achar a solução, que fica na raiz do repositório.
     private static string FindRepositoryRoot()
     {
         for (var directory = new DirectoryInfo(AppContext.BaseDirectory); directory is not null; directory = directory.Parent)

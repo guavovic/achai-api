@@ -22,7 +22,6 @@ public static class SearchAddressesByStreet
         return app;
     }
 
-    // Os nomes dos parâmetros seguem a rota, que faz parte do contrato da API.
     public static async Task<IResult> HandleAsync(
         [Description("Sigla do estado. Exemplo: SP.")][BrazilianState] string uf,
         [Description("Nome da cidade, com pelo menos 3 caracteres. Exemplo: São Paulo.")]

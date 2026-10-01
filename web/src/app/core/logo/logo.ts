@@ -1,9 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
-/**
- * Símbolo do Achaí: o "í" do nome, com o acento desenhado como um pino de mapa.
- * Usa a cor do texto (currentColor), então herda o destaque do tema.
- */
 @Component({
   selector: 'app-logo',
   template: `

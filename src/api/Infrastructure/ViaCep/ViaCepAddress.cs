@@ -33,7 +33,6 @@ public sealed class ViaCepAddress
     [JsonPropertyName("regiao")]
     public string? Regiao { get; set; }
 
-    // Só vem quando o CEP não existe. Já foi booleano e hoje é a string "true".
     [JsonPropertyName("erro")]
     public JsonElement? Erro { get; set; }
 

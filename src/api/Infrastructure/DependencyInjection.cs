@@ -23,8 +23,6 @@ public static class DependencyInjection
 
         services.AddHybridCache();
 
-        // As features recebem cadeias de decorators:
-        // endereços: cache → fallback para a BrasilAPI → ViaCEP; cidades: cache → IBGE.
         services.AddScoped<IAddressProvider>(sp => new CachedAddressProvider(
             new FallbackAddressProvider(
                 sp.GetRequiredService<ViaCepClient>(),
@@ -36,8 +34,6 @@ public static class DependencyInjection
             sp.GetRequiredService<IbgeClient>(),
             sp.GetRequiredService<HybridCache>()));
 
-        // As fontes externas entram só na readiness. Uma fonte fora deixa a API "Degraded", não "Unhealthy",
-        // porque ela continua respondendo (com fallback ou com erro tratado).
         string[] ready = [HealthCheckTags.Ready];
         var timeout = TimeSpan.FromSeconds(3);
         services.AddHealthChecks()
@@ -48,8 +44,6 @@ public static class DependencyInjection
         return services;
     }
 
-    // Busca de endereço precisa responder rápido: o padrão do pacote espera até 30s no total.
-    // O circuit breaker padrão só abre depois de 100 requisições em 30s, o que nunca acontece no volume desta API.
     private static void ConfigureResilience(HttpStandardResilienceOptions options)
     {
         options.AttemptTimeout.Timeout = TimeSpan.FromSeconds(2);

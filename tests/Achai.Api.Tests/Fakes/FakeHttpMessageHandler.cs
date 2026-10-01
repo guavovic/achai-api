@@ -3,9 +3,6 @@ using System.Text;
 
 namespace Achai.Api.Tests.Fakes;
 
-/// <summary>
-/// Substitui a rede nos testes: devolve a resposta configurada e guarda as requisições recebidas.
-/// </summary>
 public sealed class FakeHttpMessageHandler : HttpMessageHandler
 {
     private Func<HttpRequestMessage, HttpResponseMessage> _responder =

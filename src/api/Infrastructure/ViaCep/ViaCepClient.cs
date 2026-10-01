@@ -19,7 +19,6 @@ public sealed class ViaCepClient : IAddressProvider
     {
         using var response = await _httpClient.GetAsync($"{zipCode}/json", cancellationToken);
 
-        // O ViaCEP responde 400 com uma página HTML quando o CEP está fora do formato.
         if (response.StatusCode == HttpStatusCode.BadRequest)
             return AddressErrors.InvalidZipCode;
 
@@ -27,7 +26,6 @@ public sealed class ViaCepClient : IAddressProvider
 
         var address = await response.Content.ReadFromJsonAsync<ViaCepAddress>(cancellationToken);
 
-        // CEP no formato certo, mas que não existe, volta 200 com {"erro": "true"}.
         if (address is null || address.NotFound)
             return AddressErrors.ZipCodeNotFound;
 

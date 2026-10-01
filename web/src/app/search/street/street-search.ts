@@ -37,7 +37,6 @@ export class StreetSearch {
     initialValue: '',
   });
 
-  // Sugestões de cidade: a lista do IBGE para o estado escolhido.
   readonly cities = httpResource<City[]>(() => {
     const state = this.selectedState();
     return state ? this.api.citiesUrl(state) : undefined;

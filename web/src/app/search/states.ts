@@ -1,4 +1,3 @@
-/** As 27 unidades federativas, na mesma lista que a API aceita. */
 export const STATES = [
   { code: 'AC', name: 'Acre' },
   { code: 'AL', name: 'Alagoas' },

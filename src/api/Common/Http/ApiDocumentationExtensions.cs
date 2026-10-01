@@ -7,9 +7,6 @@ public static class ApiDocumentationExtensions
 {
     public const string DocsPath = "/docs";
 
-    /// <summary>
-    /// Gera o documento OpenAPI a partir das rotas, com o OpenAPI nativo do ASP.NET Core.
-    /// </summary>
     public static IServiceCollection AddApiDocumentation(this IServiceCollection services) =>
         services.AddOpenApi(options => options.AddDocumentTransformer((document, _, _) =>
         {
@@ -25,10 +22,6 @@ public static class ApiDocumentationExtensions
             return Task.CompletedTask;
         }));
 
-    /// <summary>
-    /// Publica o documento em /openapi/v1.json e a referência interativa (Scalar) em <see cref="DocsPath"/>,
-    /// inclusive em produção: a API é pública e só tem consultas, então a documentação também é.
-    /// </summary>
     public static WebApplication MapApiDocumentation(this WebApplication app)
     {
         app.MapOpenApi();

@@ -20,7 +20,6 @@
   }
 }
 
-/* minmax(0, 1fr): sem isso, a coluna do grid não encolhe abaixo da largura natural do campo, e o botão passa da borda no celular. */
 .field {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

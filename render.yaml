@@ -1,23 +1,16 @@
-# Blueprint do Render: descreve como a API é publicada. Referência: https://render.com/docs/blueprint-spec
 services:
   - type: web
     name: achai-api
     runtime: docker
     plan: free
-    # Região mais próxima do Brasil entre as que o Render oferece.
     region: virginia
     branch: main
     dockerfilePath: ./Dockerfile
-    # O Render só manda tráfego para a versão nova depois que ela responde aqui.
     healthCheckPath: /health
-    # Publica a cada merge na main, mas só depois que o CI (check "Build da API") passa.
     autoDeployTrigger: checksPass
     envVars:
-      # O Render fica atrás da Cloudflare: o X-Forwarded-For termina no balanceador, e o IP do visitante
-      # vem sozinho no True-Client-IP. É por ele que o rate limit separa os clientes.
       - key: ForwardedHeaders__ClientIpHeader
         value: True-Client-IP
-    # Mudança só no front, nos testes ou na documentação não gera deploy da API.
     buildFilter:
       paths:
         - src/api/**

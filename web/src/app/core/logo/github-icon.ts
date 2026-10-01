@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-// Símbolo do GitHub (Octicons, licença MIT). O Lucide não tem ícones de marcas.
+// Octicons (MIT), GitHub.
 @Component({
   selector: 'app-github-icon',
   template: `

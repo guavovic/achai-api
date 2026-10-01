@@ -1,8 +1,5 @@
 namespace Achai.Api.Common;
 
-/// <summary>
-/// Endereço no formato da aplicação, independente da fonte (ViaCEP ou BrasilAPI).
-/// </summary>
 public sealed record Address(
     string? ZipCode,
     string? Street,

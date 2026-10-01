@@ -55,7 +55,6 @@ public class HealthEndpointsTests : IDisposable
 
         var response = await _client.GetAsync("/health/ready", _ct);
 
-        // Degraded continua 200: a API segue atendendo, com a BrasilAPI de reserva.
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync(_ct)).ShouldNotContain("detalhe interno");
         var report = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);

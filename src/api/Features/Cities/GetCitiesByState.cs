@@ -21,7 +21,6 @@ public static class GetCitiesByState
         return app;
     }
 
-    // O nome do parâmetro segue a rota, que faz parte do contrato da API.
     public static async Task<IResult> HandleAsync(
         [Description("Sigla do estado. Exemplo: SC.")][BrazilianState] string uf,
         ICityProvider cityProvider,

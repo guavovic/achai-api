@@ -6,11 +6,6 @@ using Polly.Timeout;
 
 namespace Achai.Api.Infrastructure.Fallback;
 
-/// <summary>
-/// Decorator: se a busca por CEP na fonte principal falhar (fora do ar, lenta ou com o circuito aberto),
-/// tenta a fonte de reserva. Um "não encontrado" da principal é resposta válida e não aciona a reserva,
-/// porque as fontes discordam sobre CEPs que não existem.
-/// </summary>
 public sealed class FallbackAddressProvider : IAddressProvider
 {
     private readonly IAddressProvider _primary;

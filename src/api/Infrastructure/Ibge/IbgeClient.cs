@@ -22,7 +22,6 @@ public sealed class IbgeClient : ICityProvider
 
         var cities = await response.Content.ReadFromJsonAsync<List<IbgeCity>>(cancellationToken);
 
-        // O IBGE devolve 200 com lista vazia para uma UF que não existe.
         if (cities is null || cities.Count == 0)
             return AddressErrors.StateNotFound;
 

@@ -19,9 +19,7 @@ export class Theme {
       try {
         if (mode === 'light') localStorage.setItem(THEME_STORAGE_KEY, mode);
         else localStorage.removeItem(THEME_STORAGE_KEY);
-      } catch {
-        // Sem localStorage, a escolha vale só até fechar a página.
-      }
+      } catch {}
     });
   }
 

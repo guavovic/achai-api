@@ -2,7 +2,6 @@ using Achai.Api.Common.Results;
 
 namespace Achai.Api.Common;
 
-// Os códigos ficam em português porque fazem parte do contrato da API (campo "code" do ProblemDetails).
 public static class AddressErrors
 {
     public static readonly Error InvalidZipCode =
