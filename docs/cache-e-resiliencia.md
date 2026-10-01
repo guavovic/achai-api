@@ -12,11 +12,11 @@ Usa o `HybridCache` do .NET, só em memória ([ADR 0007](decisions/0007-cache-co
 
 | Consulta | Chave | Validade |
 |---|---|---|
-| CEP | `cep:{cep}` | 24 horas |
+| CEP | `cep:{cep}` | 7 dias (1 dia quando não encontrado) |
 | Logradouro | `logradouro:{uf}:{cidade}:{logradouro}` | 1 hora |
 | Cidades de um estado | `cidades:{uf}` | 7 dias |
 
-- **"Não encontrado" também fica no cache.** Um CEP que não existe continua não existindo, e guardar isso evita bater no ViaCEP toda vez.
+- **"Não encontrado" também fica no cache**, por menos tempo: evita bater no ViaCEP toda vez, mas um CEP recém-criado pelos Correios aparece no dia seguinte.
 - **Exceção não fica no cache.** Se a fonte falhou, a próxima requisição tenta de novo.
 - Como o `Result<T>` não é serializável, o cache guarda um `CachedResult<T>`, com o valor ou o erro, e converte de volta na leitura.
 - O `HybridCache` evita o *cache stampede*: se várias requisições pedem o mesmo CEP ao mesmo tempo e ele não está no cache, só uma vai à fonte, e as outras esperam o resultado dela.

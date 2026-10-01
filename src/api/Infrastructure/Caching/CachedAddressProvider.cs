@@ -9,7 +9,9 @@ namespace Achai.Api.Infrastructure.Caching;
 /// </summary>
 public sealed class CachedAddressProvider : IAddressProvider
 {
-    private static readonly HybridCacheEntryOptions ZipCodeExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromHours(24));
+    // CEP muda pouco. O "não encontrado" fica menos tempo porque os Correios criam CEPs novos.
+    private static readonly HybridCacheEntryOptions ZipCodeExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromDays(7));
+    private static readonly HybridCacheEntryOptions ZipCodeNotFoundExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromDays(1));
     private static readonly HybridCacheEntryOptions StreetExpiration = HybridCacheExtensions.Expiration(TimeSpan.FromHours(1));
 
     private readonly IAddressProvider _inner;
@@ -26,7 +28,8 @@ public sealed class CachedAddressProvider : IAddressProvider
             $"cep:{zipCode}",
             token => _inner.GetByZipCodeAsync(zipCode, token),
             ZipCodeExpiration,
-            cancellationToken);
+            cancellationToken,
+            ZipCodeNotFoundExpiration);
 
     public Task<Result<List<Address>>> SearchByStreetAsync(string state, string city, string street, CancellationToken cancellationToken = default) =>
         _cache.GetOrCreateResultAsync(
