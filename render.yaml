@@ -1,7 +1,7 @@
 # Blueprint do Render: descreve como a API é publicada. Referência: https://render.com/docs/blueprint-spec
 services:
   - type: web
-    name: achai
+    name: achai-api
     runtime: docker
     plan: free
     # Região mais próxima do Brasil entre as que o Render oferece.
