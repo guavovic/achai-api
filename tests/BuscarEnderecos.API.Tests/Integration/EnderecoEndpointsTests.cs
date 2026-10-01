@@ -134,9 +134,10 @@ namespace BuscarEnderecos.API.Tests.Integration
         }
 
         [Fact]
-        public async Task QuandoOViaCepEstaFora_Devolve500SemVazarDetalhe()
+        public async Task QuandoOViaCepEABrasilApiEstaoFora_Devolve500SemVazarDetalhe()
         {
             _factory.ViaCep.ThrowOnRequest(new HttpRequestException("detalhe interno que não pode vazar"));
+            _factory.BrasilApi.ThrowOnRequest(new HttpRequestException("outro detalhe interno"));
 
             var response = await _client.GetAsync("/buscar/01001000", _ct);
 
@@ -144,6 +145,50 @@ namespace BuscarEnderecos.API.Tests.Integration
             var corpo = await response.Content.ReadAsStringAsync(_ct);
             corpo.ShouldContain("Erro interno");
             corpo.ShouldNotContain("detalhe interno");
+        }
+
+        [Fact]
+        public async Task QuandoOViaCepEstaFora_TentaDeNovoEDepoisUsaABrasilApi()
+        {
+            _factory.ViaCep.RespondWith(HttpStatusCode.ServiceUnavailable, "");
+            _factory.BrasilApi.RespondWith(HttpStatusCode.OK, RespostasExternas.BrasilApiPracaDaSe);
+
+            var response = await _client.GetAsync("/buscar/01001-000", _ct);
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            var endereco = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+            endereco.GetProperty("cep").GetString().ShouldBe("01001-000");
+            endereco.GetProperty("estado").GetString().ShouldBe("São Paulo");
+            endereco.GetProperty("regiao").GetString().ShouldBe("Sudeste");
+            // 1 tentativa + 2 retries no ViaCEP antes de desistir.
+            _factory.ViaCep.Requests.Count.ShouldBe(3);
+            _factory.BrasilApi.Requests.Count.ShouldBe(1);
+        }
+
+        [Fact]
+        public async Task QuandoOViaCepDizQueOCepNaoExiste_NaoConsultaABrasilApi()
+        {
+            _factory.ViaCep.RespondWith(HttpStatusCode.OK, RespostasExternas.CepInexistente);
+
+            var response = await _client.GetAsync("/buscar/99999999", _ct);
+
+            response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+            _factory.BrasilApi.Requests.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public async Task QuandoOViaCepFalhaUmaVez_ORetryResolveSemPrecisarDaBrasilApi()
+        {
+            var tentativas = 0;
+            _factory.ViaCep.RespondWith(_ => ++tentativas == 1
+                ? new HttpResponseMessage(HttpStatusCode.ServiceUnavailable)
+                : new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent(RespostasExternas.EnderecoPracaDaSe) });
+
+            var response = await _client.GetAsync("/buscar/01001000", _ct);
+
+            response.StatusCode.ShouldBe(HttpStatusCode.OK);
+            _factory.ViaCep.Requests.Count.ShouldBe(2);
+            _factory.BrasilApi.Requests.ShouldBeEmpty();
         }
 
         [Fact]

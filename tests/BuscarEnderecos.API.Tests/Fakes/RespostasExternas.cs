@@ -37,5 +37,32 @@ namespace BuscarEnderecos.API.Tests.Fakes
               { "nome": "Assis Brasil" }
             ]
             """;
+
+        public const string BrasilApiPracaDaSe = """
+            {
+              "cep": "01001000",
+              "state": "SP",
+              "city": "São Paulo",
+              "neighborhood": "Sé",
+              "street": "Praça da Sé",
+              "service": "open-cep"
+            }
+            """;
+
+        public const string BrasilApiCepNaoEncontrado = """
+            {
+              "name": "CepPromiseError",
+              "message": "Todos os serviços de CEP retornaram erro.",
+              "type": "service_error"
+            }
+            """;
+
+        public const string BrasilApiCepInvalido = """
+            {
+              "name": "CepPromiseError",
+              "message": "CEP deve conter exatamente 8 caracteres.",
+              "type": "validation_error"
+            }
+            """;
     }
 }

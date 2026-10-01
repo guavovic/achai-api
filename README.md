@@ -1,10 +1,16 @@
 # Address Lookup API
 
-A web application with a C#/.NET back-end that consumes the ViaCEP and BrasilAPI public APIs to retrieve address data, with a simple interface for querying the results.
+A web application with a C#/.NET back-end that looks up Brazilian addresses by ZIP code (CEP) or by street, with a simple interface for querying the results.
 
 ## Tech Stack
 
-C# / .NET, JavaScript, jQuery and CSS. Integrates the ViaCEP API and BrasilAPI.
+C# / .NET 10, JavaScript, jQuery and CSS.
+
+- **ViaCEP** for ZIP code and street lookups, with **BrasilAPI** as a fallback for ZIP codes when ViaCEP is down or slow.
+- **IBGE** for the list of cities in each state.
+- Timeout, retry and circuit breaker on every external call (`Microsoft.Extensions.Http.Resilience`), and an in-memory cache (`HybridCache`).
+
+Architecture decisions are recorded in [`docs/decisions`](docs/decisions).
 
 ## How to Run
 
