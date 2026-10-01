@@ -36,6 +36,20 @@ namespace BuscarEnderecos.API.Tests.Integration
         }
 
         [Fact]
+        public async Task BuscarPorCep_ComESemTraco_ChamaOViaCepUmaVezSo()
+        {
+            _factory.ViaCep.RespondWith(HttpStatusCode.OK, RespostasExternas.EnderecoPracaDaSe);
+
+            var primeira = await _client.GetAsync("/buscar/01001-000", _ct);
+            var segunda = await _client.GetAsync("/buscar/01001000", _ct);
+
+            primeira.StatusCode.ShouldBe(HttpStatusCode.OK);
+            segunda.StatusCode.ShouldBe(HttpStatusCode.OK);
+            (await segunda.Content.ReadAsStringAsync(_ct)).ShouldBe(await primeira.Content.ReadAsStringAsync(_ct));
+            _factory.ViaCep.Requests.Count.ShouldBe(1);
+        }
+
+        [Fact]
         public async Task BuscarPorCep_Inexistente_Devolve404ComProblemDetails()
         {
             _factory.ViaCep.RespondWith(HttpStatusCode.OK, RespostasExternas.CepInexistente);
