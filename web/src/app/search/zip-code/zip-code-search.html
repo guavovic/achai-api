@@ -1,0 +1,23 @@
+<form class="search-form" (submit)="submit($event)" novalidate>
+  <div class="field">
+    <label for="cep">CEP</label>
+    <div class="inline">
+      <input
+        id="cep"
+        [formControl]="zipCode"
+        inputmode="numeric"
+        autocomplete="postal-code"
+        maxlength="9"
+        placeholder="00000-000"
+        [attr.aria-invalid]="showError()"
+        aria-describedby="cep-hint"
+      />
+      <button type="submit">Buscar</button>
+    </div>
+    @if (showError()) {
+      <p id="cep-hint" class="field-error">Digite os 8 dígitos do CEP, com ou sem traço.</p>
+    } @else {
+      <p id="cep-hint" class="hint">8 dígitos, com ou sem traço.</p>
+    }
+  </div>
+</form>

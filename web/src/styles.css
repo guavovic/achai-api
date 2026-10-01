@@ -1,0 +1,19 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--gv-color-bg);
+  color: var(--gv-color-text);
+  font-family: var(--gv-font-body);
+  font-size: var(--gv-text-base);
+  line-height: var(--gv-leading-normal);
+}
+
+[hidden] {
+  display: none !important;
+}

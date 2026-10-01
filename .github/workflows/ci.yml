@@ -37,3 +37,28 @@ jobs:
       # Só confere se o Dockerfile continua construindo; a imagem não é publicada.
       - name: Construir a imagem Docker
         run: docker build --tag achai:ci .
+
+  front:
+    name: Build do front
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar
+        run: npm run build
+
+      - name: Testar
+        run: npx ng test --watch=false

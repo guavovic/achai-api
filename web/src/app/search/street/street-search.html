@@ -1,0 +1,55 @@
+<form class="search-form" [formGroup]="form" (submit)="submit($event)" novalidate>
+  <div class="grid">
+    <div class="field">
+      <label for="uf">Estado</label>
+      <select id="uf" formControlName="state" [attr.aria-invalid]="showError('state')">
+        <option value="" disabled>Escolha</option>
+        @for (state of states; track state.code) {
+          <option [value]="state.code">{{ state.code }} · {{ state.name }}</option>
+        }
+      </select>
+      @if (showError('state')) {
+        <p class="field-error">Escolha o estado.</p>
+      }
+    </div>
+
+    <div class="field">
+      <label for="cidade">Cidade</label>
+      <input
+        id="cidade"
+        formControlName="city"
+        list="cidades"
+        autocomplete="off"
+        [placeholder]="cities.isLoading() ? 'Carregando cidades...' : 'Ex.: Blumenau'"
+        [attr.aria-invalid]="showError('city')"
+      />
+      <datalist id="cidades">
+        @for (city of cities.value() ?? []; track city.nome) {
+          <option [value]="city.nome"></option>
+        }
+      </datalist>
+      @if (showError('city')) {
+        <p class="field-error">Digite pelo menos 3 letras da cidade.</p>
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="logradouro">Rua, avenida ou praça</label>
+    <div class="inline">
+      <input
+        id="logradouro"
+        formControlName="street"
+        autocomplete="off"
+        placeholder="Ex.: Paulista"
+        [attr.aria-invalid]="showError('street')"
+      />
+      <button type="submit">Buscar</button>
+    </div>
+    @if (showError('street')) {
+      <p class="field-error">Digite pelo menos 3 letras do logradouro.</p>
+    } @else {
+      <p class="hint">Pode ser só parte do nome.</p>
+    }
+  </div>
+</form>

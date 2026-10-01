@@ -1,0 +1,100 @@
+.page {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-inline: var(--gv-space-4);
+  padding-block: var(--gv-space-12) var(--gv-space-8);
+  display: grid;
+  gap: var(--gv-space-6);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--gv-space-4);
+}
+
+h1 {
+  margin: 0;
+  font-family: var(--gv-font-display);
+  font-size: var(--gv-text-3xl);
+  line-height: var(--gv-leading-tight);
+}
+
+.tagline {
+  margin: var(--gv-space-1) 0 0;
+  color: var(--gv-color-text-muted);
+}
+
+.theme {
+  flex-shrink: 0;
+  font: inherit;
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text);
+  background: var(--gv-color-surface);
+  border: 1px solid var(--gv-color-border-strong);
+  border-radius: var(--gv-radius-full);
+  padding: var(--gv-space-1) var(--gv-space-3);
+  cursor: pointer;
+}
+
+.theme:hover {
+  background: var(--gv-color-surface-hover);
+}
+
+.card {
+  display: grid;
+  gap: var(--gv-space-6);
+  padding: var(--gv-space-6);
+  background: var(--gv-color-surface);
+  border: 1px solid var(--gv-color-border);
+  border-radius: var(--gv-radius-lg);
+  box-shadow: var(--gv-shadow-sm);
+}
+
+.tabs {
+  display: flex;
+  gap: var(--gv-space-1);
+  border-bottom: 1px solid var(--gv-color-border);
+}
+
+.tabs button {
+  font: inherit;
+  font-weight: var(--gv-weight-medium);
+  color: var(--gv-color-text-muted);
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: var(--gv-space-2) var(--gv-space-3);
+  cursor: pointer;
+}
+
+.tabs button[aria-selected='true'] {
+  color: var(--gv-color-accent);
+  border-bottom-color: var(--gv-color-accent);
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--gv-color-focus);
+  outline-offset: 2px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  gap: var(--gv-space-2);
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text-muted);
+}
+
+.footer a {
+  color: var(--gv-color-accent);
+}
+
+@media (max-width: 30rem) {
+  .header {
+    flex-direction: column;
+  }
+}
