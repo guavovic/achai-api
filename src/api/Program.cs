@@ -1,8 +1,10 @@
+using BuscarEnderecos.API.Caching;
 using BuscarEnderecos.API.Handlers;
 using BuscarEnderecos.API.Interfaces;
 using BuscarEnderecos.API.Rest;
 using BuscarEnderecos.API.Services;
 using BuscarEnderecos.API.Settings;
+using Microsoft.Extensions.Caching.Hybrid;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,8 +43,14 @@ builder.Services.AddProblemDetails(options =>
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
+builder.Services.AddHybridCache();
+
 builder.Services.AddSingleton<IEnderecoService, EnderecoService>();
-builder.Services.AddSingleton<IApi, BuscarEnderecosApiRest>();
+builder.Services.AddSingleton<BuscarEnderecosApiRest>();
+// O IApi entregue ao service é o decorator com cache, que por dentro chama o cliente real.
+builder.Services.AddSingleton<IApi>(sp => new CachedApi(
+    sp.GetRequiredService<BuscarEnderecosApiRest>(),
+    sp.GetRequiredService<HybridCache>()));
 
 var app = builder.Build();
 
