@@ -1,75 +1,34 @@
-# Achaí
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/assets/logo-escuro.svg">
+    <img src="docs/assets/logo-claro.svg" alt="Logo do Achaí: a letra í com o acento em forma de pino de mapa" width="96" height="96">
+  </picture>
+</p>
 
-Aplicação web que busca endereços brasileiros pelo CEP ou pelo logradouro. O back-end é uma API em C#/.NET, e o front é um app em Angular.
+<h1 align="center">Achaí</h1>
+
+Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
 **Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
+## Como foi feito
+
+O projeto começou como uma API simples que repassava as respostas do ViaCEP e foi reconstruído em etapas, cada uma com a decisão registrada num ADR.
+
+- **API em vertical slices:** cada rota é uma fatia completa (rota, validação e handler), e as fontes externas ficam atrás de interfaces.
+- **Erros previsíveis:** CEP inexistente ou parâmetro inválido viram respostas padronizadas (ProblemDetails), com mensagens em português; erro inesperado vira um 500 genérico, com o detalhe só no log.
+- **Robustez nas fontes externas:** cache em memória, timeout, retry e circuit breaker em cada chamada, e a BrasilAPI assume quando o ViaCEP falha numa busca por CEP.
+- **Contrato compartilhado:** o front usa tipos gerados a partir do documento OpenAPI da API, então uma mudança na API quebra o build do front, e não a tela.
+- **Testes em camadas:** unitários e de integração sem rede em todo pull request, e testes de contrato semanais contra as APIs reais, que abrem uma issue quando algo muda.
+- **Interface:** uma tela com abas, estados de vazio, carregando e erro, tema claro e escuro, e visual vindo dos tokens do [guavovic-ui](https://github.com/guavovic/guavovic-ui).
+
 ## Tecnologias
 
-- **API:** .NET 10, ASP.NET Core Minimal APIs, organizada em vertical slices.
-- **Fontes de dados:** ViaCEP para CEP e logradouro, BrasilAPI como reserva para CEP, e IBGE para a lista de cidades.
-- **Robustez:** cache em memória, timeout, retry e circuit breaker nas chamadas externas, erros padronizados (ProblemDetails) e limite de requisições por IP.
-- **Front:** Angular 22 (componentes standalone, signals, sem zone.js), com tipos gerados a partir do OpenAPI da API e os tokens visuais do [guavovic-ui](https://github.com/guavovic/guavovic-ui).
-- **Qualidade:** testes unitários e de integração, CI no GitHub Actions e imagem Docker.
-
-## Como rodar
-
-Precisa do SDK do .NET 10 e do Node.js 24.
-
-1. Suba a API:
-
-   ```bash
-   cd src/api
-   dotnet run
-   ```
-
-   Ela escuta em `http://localhost:5010`, e a documentação interativa abre em `http://localhost:5010/docs`.
-
-2. Em outro terminal, suba o front:
-
-   ```bash
-   cd web
-   npm install
-   npm start
-   ```
-
-   Ele abre em `http://localhost:4200` e chama a API local.
-
-### Com Docker
-
-```bash
-docker build -t achai .
-docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development achai
-```
-
-## Como testar
-
-Na raiz do repositório:
-
-```bash
-dotnet test
-```
-
-E no front:
-
-```bash
-cd web
-npx ng test --watch=false
-```
-
-As fontes externas e a API são simuladas nos testes, então eles rodam sem rede.
-
-## Estrutura
-
-```
-src/api/
-  Features/         um arquivo por endpoint (rota + handler)
-  Common/           tipos compartilhados, erros e validação
-  Infrastructure/   clientes das fontes externas, cache e fallback
-web/                front em Angular
-tests/              testes unitários e de integração
-docs/               guias e decisões de arquitetura
-```
+- **API:** .NET 10, ASP.NET Core Minimal APIs, HybridCache, Microsoft.Extensions.Http.Resilience (Polly), OpenAPI com Scalar.
+- **Front:** Angular 22 (componentes standalone, signals, sem zone.js), Lucide para os ícones.
+- **Fontes de dados:** ViaCEP, BrasilAPI e IBGE.
+- **Testes:** xUnit v3, NSubstitute e Shouldly na API; Vitest no front.
+- **Entrega:** Docker, GitHub Actions e deploy contínuo.
 
 ## Documentação
 

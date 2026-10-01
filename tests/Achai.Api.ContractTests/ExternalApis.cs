@@ -1,0 +1,25 @@
+using Achai.Api.Infrastructure;
+using Achai.Api.Infrastructure.BrasilApi;
+using Achai.Api.Infrastructure.Ibge;
+using Achai.Api.Infrastructure.ViaCep;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Achai.Api.ContractTests;
+
+/// <summary>
+/// Os clientes reais do ViaCEP, da BrasilAPI e do IBGE, montados como na API:
+/// com o mesmo HttpClient e o mesmo pipeline de resiliência (timeout e retry).
+/// </summary>
+public sealed class ExternalApis : IDisposable
+{
+    private readonly ServiceProvider _services = new ServiceCollection()
+        .AddLogging()
+        .AddInfrastructure()
+        .BuildServiceProvider();
+
+    public ViaCepClient ViaCep => _services.GetRequiredService<ViaCepClient>();
+    public BrasilApiClient BrasilApi => _services.GetRequiredService<BrasilApiClient>();
+    public IbgeClient Ibge => _services.GetRequiredService<IbgeClient>();
+
+    public void Dispose() => _services.Dispose();
+}

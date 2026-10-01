@@ -3,6 +3,7 @@
     <Project Path="src/api/Achai.Api.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Achai.Api.ContractTests/Achai.Api.ContractTests.csproj" />
     <Project Path="tests/Achai.Api.Tests/Achai.Api.Tests.csproj" />
   </Folder>
 </Solution>

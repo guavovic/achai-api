@@ -1,0 +1,103 @@
+{
+  "zipCodes": [
+    {
+      "zipCode": "01001-000",
+      "place": "São Paulo/SP"
+    },
+    {
+      "zipCode": "20040-020",
+      "place": "Rio de Janeiro/RJ"
+    },
+    {
+      "zipCode": "70040-010",
+      "place": "Brasília/DF"
+    },
+    {
+      "zipCode": "30130-010",
+      "place": "Belo Horizonte/MG"
+    },
+    {
+      "zipCode": "80010-000",
+      "place": "Curitiba/PR"
+    },
+    {
+      "zipCode": "90010-000",
+      "place": "Porto Alegre/RS"
+    },
+    {
+      "zipCode": "88010-400",
+      "place": "Florianópolis/SC"
+    },
+    {
+      "zipCode": "60060-000",
+      "place": "Fortaleza/CE"
+    },
+    {
+      "zipCode": "69005-000",
+      "place": "Manaus/AM"
+    },
+    {
+      "zipCode": "66010-000",
+      "place": "Belém/PA"
+    },
+    {
+      "zipCode": "50030-230",
+      "place": "Recife/PE"
+    },
+    {
+      "zipCode": "64000-020",
+      "place": "Teresina/PI"
+    },
+    {
+      "zipCode": "57020-000",
+      "place": "Maceió/AL"
+    }
+  ],
+  "streets": [
+    {
+      "state": "RJ",
+      "city": "Rio de Janeiro",
+      "street": "Atlântica"
+    },
+    {
+      "state": "SP",
+      "city": "São Paulo",
+      "street": "Paulista"
+    },
+    {
+      "state": "BA",
+      "city": "Salvador",
+      "street": "Sete de Setembro"
+    },
+    {
+      "state": "MG",
+      "city": "Belo Horizonte",
+      "street": "Afonso Pena"
+    },
+    {
+      "state": "PR",
+      "city": "Curitiba",
+      "street": "XV de Novembro"
+    },
+    {
+      "state": "RS",
+      "city": "Porto Alegre",
+      "street": "Ipiranga"
+    },
+    {
+      "state": "PE",
+      "city": "Recife",
+      "street": "Boa Viagem"
+    },
+    {
+      "state": "CE",
+      "city": "Fortaleza",
+      "street": "Beira Mar"
+    },
+    {
+      "state": "PA",
+      "city": "Belém",
+      "street": "Nazaré"
+    }
+  ]
+}

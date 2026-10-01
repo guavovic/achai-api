@@ -1,0 +1,50 @@
+name: Contrato das APIs externas
+
+# Confere toda semana se o ViaCEP, a BrasilAPI e o IBGE continuam respondendo no formato que a API espera,
+# e se os exemplos do front continuam trazendo resultado. Quando algo quebra, abre (ou comenta) uma issue.
+on:
+  schedule:
+    # Segunda-feira, 12:00 UTC (9:00 em Brasília).
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  contract:
+    name: Contrato das APIs externas
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Compilar
+        run: dotnet build tests/Achai.Api.ContractTests --configuration Release
+
+      - name: Rodar os testes de contrato
+        run: dotnet test --no-build --configuration Release --project tests/Achai.Api.ContractTests -- --explicit only
+
+      - name: Abrir ou comentar a issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create contrato --color B60205 --description "Mudança numa API externa" 2>/dev/null || true
+
+          issue=$(gh issue list --label contrato --state open --json number --jq '.[0].number')
+          body="Os testes de contrato falharam. Detalhes na execução: $RUN_URL"
+
+          if [ -n "$issue" ]; then
+            gh issue comment "$issue" --body "$body"
+          else
+            gh issue create --title "Uma API externa mudou ou está fora do ar" --label contrato --body "$body
+
+          Pode ser uma mudança no formato da resposta do ViaCEP, da BrasilAPI ou do IBGE, um exemplo do front que parou de trazer resultado, ou só uma instabilidade. Rode o workflow de novo pela aba Actions para descartar a instabilidade."
+          fi
