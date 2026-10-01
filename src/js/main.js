@@ -15,9 +15,12 @@ $(document).ready(function () {
     const resposta = await fetch(url);
     const corpo = await resposta.json();
 
-    // Erros da API vêm como ProblemDetails (RFC 9457): o texto pro usuário fica em "detail".
-    if (!resposta.ok)
-      throw new Error(corpo.detail || corpo.title || `Erro ${resposta.status}`);
+    // Erros da API vêm como ProblemDetails (RFC 9457): o texto pro usuário fica em "detail",
+    // ou em "errors" (um array de mensagens por campo) quando é erro de validação.
+    if (!resposta.ok) {
+      const errosDeCampo = Object.values(corpo.errors ?? {}).flat();
+      throw new Error(errosDeCampo[0] || corpo.detail || corpo.title || `Erro ${resposta.status}`);
+    }
 
     return corpo;
   }
@@ -96,8 +99,8 @@ $(document).ready(function () {
     const cep = $("#campoCep").val().trim();
     resultadoArea.html("");
 
-    if (!/^\d{8}$/.test(cep)) { // pega tudo que n for digito e verifica se tem 8 digitos (testar depois)
-      resultadoArea.html("<p style='color:red;'>Digite um CEP válido com 8 dígitos.</p>");
+    if (!/^\d{5}-?\d{3}$/.test(cep)) {
+      resultadoArea.html("<p style='color:red;'>Digite um CEP válido com 8 dígitos, com ou sem traço.</p>");
       return;
     }
 

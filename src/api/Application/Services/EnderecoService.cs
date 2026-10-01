@@ -16,19 +16,19 @@ namespace BuscarEnderecos.API.Services
 
         public async Task<Result<EnderecoResponseDTO>> BuscarEnderecoPorCEP(string cep)
         {
-            var endereco = await _api.BuscarEnderecoPorCEP(cep);
+            var endereco = await _api.BuscarEnderecoPorCEP(cep.Replace("-", ""));
             return endereco.Map(e => e.ToDto());
         }
 
         public async Task<Result<List<EnderecoResponseDTO>>> BuscarPorEstadoECidade(string uf, string cidade, string logradouro)
         {
-            var enderecos = await _api.BuscarPorEstadoECidade(uf, cidade, logradouro);
+            var enderecos = await _api.BuscarPorEstadoECidade(uf.ToUpperInvariant(), cidade, logradouro);
             return enderecos.Map(lista => lista.Select(e => e.ToDto()).ToList());
         }
 
         public async Task<Result<List<CidadeResponseDTO>>> BuscarCidadesPorUF(string uf)
         {
-            var cidades = await _api.BuscarCidadesPorUF(uf);
+            var cidades = await _api.BuscarCidadesPorUF(uf.ToUpperInvariant());
             return cidades.Map(lista => lista.Select(c => c.ToDto()).ToList());
         }
     }

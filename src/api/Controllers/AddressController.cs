@@ -1,5 +1,6 @@
-using BuscarEnderecos.API.Errors;
+using System.ComponentModel.DataAnnotations;
 using BuscarEnderecos.API.Interfaces;
+using BuscarEnderecos.API.Validation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BuscarEnderecos.API.Controllers
@@ -15,37 +16,28 @@ namespace BuscarEnderecos.API.Controllers
         }
 
         [HttpGet("buscar/{cep}")]
-        public async Task<IActionResult> BuscarEndereco([FromRoute] string cep)
+        public async Task<IActionResult> BuscarEndereco(
+            [FromRoute, RegularExpression(@"^\d{5}-?\d{3}$", ErrorMessage = "O CEP deve ter 8 dígitos, com ou sem traço.")] string cep)
         {
-            if (string.IsNullOrWhiteSpace(cep))
-                return this.ToProblem(EnderecoErrors.CepInvalido);
-
             var result = await _enderecoService.BuscarEnderecoPorCEP(cep);
 
             return result.Match(endereco => Ok(endereco), this.ToProblem);
         }
 
         [HttpGet("buscar/{uf}/{cidade}/{logradouro}")]
-        public async Task<IActionResult> BuscarEndereco([FromRoute] string uf, [FromRoute] string cidade, [FromRoute] string logradouro)
+        public async Task<IActionResult> BuscarEndereco(
+            [FromRoute, Uf] string uf,
+            [FromRoute, MinLength(3, ErrorMessage = "A cidade precisa de pelo menos 3 caracteres.")] string cidade,
+            [FromRoute, MinLength(3, ErrorMessage = "O logradouro precisa de pelo menos 3 caracteres.")] string logradouro)
         {
-            if (string.IsNullOrWhiteSpace(uf)
-            || string.IsNullOrWhiteSpace(cidade) || cidade.Length < 3
-            || string.IsNullOrWhiteSpace(logradouro) || logradouro.Length < 3)
-            {
-                return this.ToProblem(EnderecoErrors.BuscaInvalida);
-            }
-
             var result = await _enderecoService.BuscarPorEstadoECidade(uf, cidade, logradouro);
 
             return result.Match(enderecos => Ok(enderecos), this.ToProblem);
         }
 
         [HttpGet("buscar/cidades/{uf}")]
-        public async Task<IActionResult> BuscarCidades(string uf)
+        public async Task<IActionResult> BuscarCidades([FromRoute, Uf] string uf)
         {
-            if (string.IsNullOrWhiteSpace(uf))
-                return this.ToProblem(EnderecoErrors.UfObrigatoria);
-
             var result = await _enderecoService.BuscarCidadesPorUF(uf);
 
             return result.Match(cidades => Ok(cidades), this.ToProblem);
