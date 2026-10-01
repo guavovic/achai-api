@@ -21,7 +21,22 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
-builder.Services.AddProblemDetails();
+builder.Services.AddProblemDetails(options =>
+{
+    // Troca os títulos padrão (em inglês) de todo ProblemDetails, venha do MVC ou do pipeline.
+    options.CustomizeProblemDetails = context =>
+    {
+        var problem = context.ProblemDetails;
+
+        problem.Title = problem switch
+        {
+            HttpValidationProblemDetails => "Um ou mais campos são inválidos.",
+            { Status: StatusCodes.Status400BadRequest } => "Requisição inválida",
+            { Status: StatusCodes.Status404NotFound } => "Não encontrado",
+            _ => problem.Title
+        };
+    };
+});
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddSingleton<IEnderecoService, EnderecoService>();
