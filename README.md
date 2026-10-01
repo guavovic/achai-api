@@ -2,6 +2,10 @@
 
 Aplicação web com back-end em C#/.NET que busca endereços brasileiros pelo CEP ou pelo logradouro, com uma interface simples para consultar os resultados.
 
+**Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · API: [achai-api.onrender.com/health](https://achai-api.onrender.com/health)
+
+A API roda no plano grátis do Render e dorme depois de 15 minutos sem acesso, então a primeira busca pode levar até um minuto.
+
 ## Tecnologias
 
 C# / .NET 10, JavaScript, jQuery e CSS.
