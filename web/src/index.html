@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <title>Achaí: busca de endereços pelo CEP</title>
@@ -14,6 +14,12 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/guavovic/guavovic-ui@v0.1.0/tokens.css"
     />
+    <script>
+      try {
+        if (localStorage.getItem('achai-theme') === 'light')
+          document.documentElement.setAttribute('data-theme', 'light');
+      } catch {}
+    </script>
   </head>
   <body>
     <app-root></app-root>

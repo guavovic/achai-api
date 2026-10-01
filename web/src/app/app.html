@@ -4,25 +4,37 @@
       <h1><app-logo [size]="44" /> Achaí</h1>
       <p class="tagline">Encontre qualquer endereço do Brasil pelo CEP ou pelo nome da rua.</p>
     </div>
-    <button
-      type="button"
-      class="theme"
-      (click)="theme.cycle()"
-      [attr.aria-label]="'Tema: ' + themeLabel() + '. Clique para trocar.'"
-    >
-      @switch (theme.mode()) {
-        @case ('light') {
-          <svg lucideSun size="16"></svg>
+    <nav class="actions" aria-label="Links e tema">
+      <a
+        class="icon-button"
+        [href]="docsUrl"
+        title="Documentação da API"
+        aria-label="Documentação da API"
+      >
+        <svg lucideBookOpen size="20"></svg>
+      </a>
+      <a
+        class="icon-button"
+        href="https://github.com/guavovic/achai"
+        title="Código no GitHub"
+        aria-label="Código no GitHub"
+      >
+        <app-github-icon />
+      </a>
+      <button
+        type="button"
+        class="icon-button"
+        (click)="theme.toggle()"
+        [title]="themeAction()"
+        [attr.aria-label]="themeAction()"
+      >
+        @if (theme.mode() === 'dark') {
+          <svg lucideSun size="20"></svg>
+        } @else {
+          <svg lucideMoon size="20"></svg>
         }
-        @case ('dark') {
-          <svg lucideMoon size="16"></svg>
-        }
-        @default {
-          <svg lucideSunMoon size="16"></svg>
-        }
-      }
-      {{ themeLabel() }}
-    </button>
+      </button>
+    </nav>
   </header>
 
   <main class="card">
@@ -51,7 +63,6 @@
       </button>
     </div>
 
-    <!-- Os dois formulários ficam montados: trocar de aba não apaga o que foi digitado. -->
     <div id="painel-cep" role="tabpanel" aria-labelledby="tab-cep" [hidden]="tab() !== 'zipCode'">
       <app-zip-code-search />
     </div>
@@ -69,12 +80,4 @@
     (zipCodeExample)="searchZipCodeExample($event)"
     (streetExample)="searchStreetExample($event)"
   />
-
-  <footer class="footer">
-    <a [href]="docsUrl"><svg lucideBookOpen size="16"></svg> Documentação da API</a>
-    <span aria-hidden="true">·</span>
-    <a href="https://github.com/guavovic/achai"
-      ><svg lucideCodeXml size="16"></svg> Código no GitHub</a
-    >
-  </footer>
 </div>

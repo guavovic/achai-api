@@ -1,15 +1,10 @@
 import { DOCUMENT } from '@angular/common';
 import { Injectable, effect, inject, signal } from '@angular/core';
 
-export type ThemeMode = 'system' | 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark';
 
-const STORAGE_KEY = 'achai-theme';
-const NEXT: Record<ThemeMode, ThemeMode> = { system: 'light', light: 'dark', dark: 'system' };
+export const THEME_STORAGE_KEY = 'achai-theme';
 
-/**
- * Tema da página. "system" segue o sistema; "light" e "dark" põem data-theme no <html>,
- * que é o que os tokens do guavovic-ui usam para forçar um tema.
- */
 @Injectable({ providedIn: 'root' })
 export class Theme {
   private readonly root = inject(DOCUMENT).documentElement;
@@ -19,27 +14,26 @@ export class Theme {
   constructor() {
     effect(() => {
       const mode = this.mode();
-      if (mode === 'system') this.root.removeAttribute('data-theme');
-      else this.root.setAttribute('data-theme', mode);
+      this.root.setAttribute('data-theme', mode);
 
       try {
-        localStorage.setItem(STORAGE_KEY, mode);
+        if (mode === 'light') localStorage.setItem(THEME_STORAGE_KEY, mode);
+        else localStorage.removeItem(THEME_STORAGE_KEY);
       } catch {
-        // Sem localStorage (janela anônima, por exemplo), o tema só não fica salvo.
+        // Sem localStorage, a escolha vale só até fechar a página.
       }
     });
   }
 
-  cycle(): void {
-    this.mode.update((mode) => NEXT[mode]);
+  toggle(): void {
+    this.mode.update((mode) => (mode === 'dark' ? 'light' : 'dark'));
   }
 }
 
 function readSaved(): ThemeMode {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved === 'light' || saved === 'dark' ? saved : 'system';
+    return localStorage.getItem(THEME_STORAGE_KEY) === 'light' ? 'light' : 'dark';
   } catch {
-    return 'system';
+    return 'dark';
   }
 }

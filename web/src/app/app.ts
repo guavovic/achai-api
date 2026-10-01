@@ -1,15 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
 import {
   LucideBookOpen,
-  LucideCodeXml,
   LucideMailbox,
   LucideMoon,
   LucideSignpost,
   LucideSun,
-  LucideSunMoon,
 } from '@lucide/angular';
 import { environment } from '../environments/environment';
 import { AchaiApi } from './core/api/achai-api';
+import { GithubIcon } from './core/logo/github-icon';
 import { Logo } from './core/logo/logo';
 import { Theme } from './core/theme/theme';
 import { StreetExample } from './search/examples';
@@ -19,22 +18,19 @@ import { ZipCodeSearch } from './search/zip-code/zip-code-search';
 
 type Tab = 'zipCode' | 'street';
 
-const THEME_LABEL = { system: 'Sistema', light: 'Claro', dark: 'Escuro' } as const;
-
 @Component({
   selector: 'app-root',
   imports: [
     Logo,
+    GithubIcon,
     ZipCodeSearch,
     StreetSearch,
     SearchResults,
     LucideBookOpen,
-    LucideCodeXml,
     LucideMailbox,
     LucideMoon,
     LucideSignpost,
     LucideSun,
-    LucideSunMoon,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
@@ -52,8 +48,8 @@ export class App {
     inject(AchaiApi).wakeUp();
   }
 
-  protected themeLabel(): string {
-    return THEME_LABEL[this.theme.mode()];
+  protected themeAction(): string {
+    return this.theme.mode() === 'dark' ? 'Mudar para o tema claro' : 'Mudar para o tema escuro';
   }
 
   protected searchZipCodeExample(zipCode: string): void {
