@@ -40,7 +40,7 @@ A imagem usa o runtime chiseled do .NET 10: sem shell, sem gerenciador de pacote
 
 - `GET /health`: liveness. Diz só se o processo da API está de pé, sem chamar nada externo.
 - `GET /health/ready`: confere ViaCEP, BrasilAPI e IBGE. Uma fonte fora do ar deixa o status `Degraded`, porque a API continua respondendo.
-- Cada IP pode fazer 60 requisições por minuto. Acima disso, a API responde `429` com o cabeçalho `Retry-After`. O `/health` não entra no limite.
+- Cada IP pode fazer 60 requisições por minuto. Acima disso, a API responde `429` com o cabeçalho `Retry-After`. O `/health` não entra no limite. Atrás de mais de um proxy, como no Render (Cloudflare + balanceador), o IP do cliente vem do cabeçalho configurado em `ForwardedHeaders:ClientIpHeader` (`True-Client-IP` no `render.yaml`).
 - Em produção, só as origens de `Cors:AllowedOrigins` e os links de preview da Vercel que casam com `Cors:AllowedOriginPatterns` (`appsettings.json`) podem chamar a API pelo navegador. Em desenvolvimento, qualquer origem pode.
 
 ## Publicação

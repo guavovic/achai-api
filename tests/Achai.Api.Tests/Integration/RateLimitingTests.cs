@@ -41,6 +41,29 @@ public class RateLimitingTests : IDisposable
     }
 
     [Fact]
+    public async Task WithClientIpHeader_LimitsByThatHeaderEvenWhenTheProxyChainChanges()
+    {
+        using var factory = new ApiFactory(settings: new Dictionary<string, string>
+        {
+            ["ForwardedHeaders:ClientIpHeader"] = "True-Client-IP"
+        });
+        using var client = factory.CreateClient();
+
+        // Como no Render: a última entrada do X-Forwarded-For é o balanceador, que muda a cada requisição.
+        for (var i = 0; i < RateLimitingExtensions.PermitsPerMinute; i++)
+        {
+            var allowed = await SendThroughProxiesAsync(client, clientIp: "203.0.113.7", lastProxy: $"10.0.0.{i}");
+            allowed.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        }
+
+        var rejected = await SendThroughProxiesAsync(client, clientIp: "203.0.113.7", lastProxy: "10.0.0.250");
+        rejected.StatusCode.ShouldBe(HttpStatusCode.TooManyRequests);
+
+        var otherClient = await SendThroughProxiesAsync(client, clientIp: "198.51.100.20", lastProxy: "10.0.0.251");
+        otherClient.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+    }
+
+    [Fact]
     public async Task Health_IsNotRateLimited()
     {
         for (var i = 0; i < RateLimitingExtensions.PermitsPerMinute + 10; i++)
@@ -48,5 +71,14 @@ public class RateLimitingTests : IDisposable
             var response = await _client.GetAsync("/health", _ct);
             response.StatusCode.ShouldBe(HttpStatusCode.OK);
         }
+    }
+
+    private async Task<HttpResponseMessage> SendThroughProxiesAsync(HttpClient client, string clientIp, string lastProxy)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, "/buscar/123");
+        request.Headers.Add("True-Client-IP", clientIp);
+        request.Headers.Add("X-Forwarded-For", $"{clientIp}, 172.71.195.123, {lastProxy}");
+
+        return await client.SendAsync(request, _ct);
     }
 }
