@@ -27,6 +27,15 @@ Requires the .NET 10 SDK.
 
 2. Open `src/index.html` in the browser.
 
+### With Docker
+
+```bash
+docker build -t address-lookup-api .
+docker run --rm -p 5010:8080 -e ASPNETCORE_ENVIRONMENT=Development address-lookup-api
+```
+
+The image uses the .NET 10 chiseled runtime: no shell, no package manager, running as a non-root user. Without `ASPNETCORE_ENVIRONMENT=Development`, the container runs in production mode, where CORS only allows the deployed front end. If the `PORT` environment variable is set (as hosting platforms like Render do), the API listens on it instead of 8080.
+
 ## Health and Limits
 
 - `GET /health`: liveness. Says only whether the API process is up, without calling anything external.

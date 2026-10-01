@@ -33,3 +33,7 @@ jobs:
 
       - name: Testar
         run: dotnet test --no-build --configuration Release
+
+      # Só confere se o Dockerfile continua construindo; a imagem não é publicada.
+      - name: Construir a imagem Docker
+        run: docker build --tag address-lookup-api:ci .
