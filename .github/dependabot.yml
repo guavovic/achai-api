@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directories:
+      - "/src/api"
+      - "/tests/*"
+    schedule:
+      interval: "monthly"
+    groups:
+      nuget:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "npm"
+    directory: "/web"
+    schedule:
+      interval: "monthly"
+    groups:
+      npm:
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
