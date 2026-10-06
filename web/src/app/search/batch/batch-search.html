@@ -1,0 +1,22 @@
+<form class="search-form" (submit)="submit($event)" novalidate>
+  <div class="field">
+    <label for="ceps"
+      >ceps
+      <span class="type">string[] · até 20, separados por vírgula, espaço ou linha</span></label
+    >
+    <textarea
+      id="ceps"
+      rows="4"
+      [formControl]="zipCodes"
+      placeholder="01001-000, 22010-000, 30130-905"
+      [attr.aria-invalid]="!!error()"
+      [attr.aria-describedby]="error() ? 'ceps-erro' : null"
+    ></textarea>
+    @if (error()) {
+      <p id="ceps-erro" class="field-error">{{ error() }}</p>
+    }
+    <div class="actions">
+      <button type="submit">Enviar</button>
+    </div>
+  </div>
+</form>

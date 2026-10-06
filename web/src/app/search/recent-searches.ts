@@ -28,10 +28,14 @@ export function isZipCodeQuery(query: SearchQuery): query is { cep: string } {
   return 'cep' in query;
 }
 
+export function isBatchQuery(query: SearchQuery): query is { ceps: string } {
+  return 'ceps' in query;
+}
+
 function keyOf(query: SearchQuery): string {
-  return isZipCodeQuery(query)
-    ? query.cep
-    : [query.uf, query.cidade, query.logradouro].join('|').toLocaleLowerCase('pt-BR');
+  if (isZipCodeQuery(query)) return query.cep;
+  if (isBatchQuery(query)) return `lote|${query.ceps}`;
+  return [query.uf, query.cidade, query.logradouro].join('|').toLocaleLowerCase('pt-BR');
 }
 
 function load(): SearchQuery[] {

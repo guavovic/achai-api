@@ -35,7 +35,8 @@ export class ResponsePanel {
     const state = this.state();
     if (state.status !== 'success') return '';
 
-    const { addresses, response } = state;
+    const { addresses, response, note } = state;
+    if (note) return note;
     const searchedAs = response.searchedAs ? `, buscado como "${response.searchedAs}"` : '';
     if (addresses.length === 0)
       return 'nenhum endereço encontrado. confira o nome da rua e da cidade';

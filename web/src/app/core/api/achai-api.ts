@@ -6,6 +6,7 @@ import type { components } from './schema';
 
 export type Address = components['schemas']['AddressResponse'];
 export type City = components['schemas']['CityResponse'];
+export type BatchItem = components['schemas']['BatchItem'];
 
 @Injectable({ providedIn: 'root' })
 export class AchaiApi {
@@ -23,12 +24,20 @@ export class AchaiApi {
     return `${this.baseUrl}/buscar/${path}`;
   }
 
+  batchUrl(): string {
+    return `${this.baseUrl}/buscar/lote`;
+  }
+
   citiesUrl(state: string): string {
     return `${this.baseUrl}/buscar/cidades/${encodeURIComponent(state)}`;
   }
 
   get<T>(url: string): Observable<HttpResponse<T>> {
     return this.http.get<T>(url, { observe: 'response' });
+  }
+
+  post<T>(url: string, body: unknown): Observable<HttpResponse<T>> {
+    return this.http.post<T>(url, body, { observe: 'response' });
   }
 
   wakeUp(): void {
