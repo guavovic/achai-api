@@ -29,7 +29,7 @@ describe('ResponsePanel', () => {
     state.set({ status: 'idle' });
     TestBed.configureTestingModule({
       imports: [ResponsePanel],
-      providers: [{ provide: AddressSearch, useValue: { state } }],
+      providers: [{ provide: AddressSearch, useValue: { state, query: signal(null) } }],
     });
   });
 

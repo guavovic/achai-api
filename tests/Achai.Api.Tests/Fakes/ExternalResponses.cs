@@ -46,6 +46,18 @@ public static class ExternalResponses
         }
         """;
 
+    public static string BrasilApiWithLocation(string latitude, string longitude) => $$"""
+        {
+          "cep": "01001000",
+          "state": "SP",
+          "city": "São Paulo",
+          "neighborhood": "Sé",
+          "street": "Praça da Sé",
+          "service": "open-cep",
+          "location": { "type": "Point", "coordinates": { "latitude": "{{latitude}}", "longitude": "{{longitude}}" } }
+        }
+        """;
+
     public const string BrasilApiNotFound = """
         {
           "name": "CepPromiseError",

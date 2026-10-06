@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Observable, Subscription, finalize, timer } from 'rxjs';
-import { AchaiApi, Address, BatchItem, Consensus } from '../core/api/achai-api';
+import { AchaiApi, Address, BatchItem, Consensus, Distance } from '../core/api/achai-api';
 import { problemMessage } from '../core/api/problem-message';
 
 export const SLOW_RESPONSE_MS = 3000;
@@ -25,7 +25,8 @@ export type SearchQuery =
   | { cep: string }
   | { uf: string; cidade: string; logradouro: string }
   | { ceps: string }
-  | { consenso: string };
+  | { consenso: string }
+  | { origem: string; destino: string };
 
 @Injectable({ providedIn: 'root' })
 export class AddressSearch {
@@ -59,6 +60,20 @@ export class AddressSearch {
       (consensus) =>
         (consensus.fontes ?? []).flatMap((source) => (source.endereco ? [source.endereco] : [])),
       consensusNote,
+    );
+  }
+
+  byDistance(origin: string, destination: string): void {
+    this.querySignal.set({
+      origem: origin.replace('-', ''),
+      destino: destination.replace('-', ''),
+    });
+    const url = this.api.distanceUrl(origin, destination);
+    this.run<Distance>(
+      url,
+      this.api.get(url),
+      () => [],
+      (distance) => `${distance.distanciaKm} km em linha reta, entre os centros aproximados`,
     );
   }
 

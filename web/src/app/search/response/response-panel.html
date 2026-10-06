@@ -45,6 +45,10 @@
     <p class="note">// {{ summary() }}</p>
   }
 
+  @for (zipCode of mapZipCodes(); track zipCode) {
+    <app-map-preview [zipCode]="zipCode" />
+  }
+
   @if (response()) {
     <pre
       class="json"

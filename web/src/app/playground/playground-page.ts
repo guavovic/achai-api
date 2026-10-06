@@ -15,12 +15,14 @@ import { AchaiApi } from '../core/api/achai-api';
 import { RoutePath } from '../core/route-path/route-path';
 import { AddressSearch, SearchQuery } from '../search/address-search';
 import { BatchSearch } from '../search/batch/batch-search';
+import { DistanceSearch } from '../search/distance/distance-search';
 import { STREET_EXAMPLES, ZIP_CODE_EXAMPLES, pickRandom } from '../search/examples';
 import { ResponsePanel } from '../search/response/response-panel';
 import {
   RecentSearches,
   isBatchQuery,
   isConsensusQuery,
+  isDistanceQuery,
   isZipCodeQuery,
 } from '../search/recent-searches';
 import { CodeSnippets } from '../search/snippets/code-snippets';
@@ -29,11 +31,27 @@ import { StreetSearch } from '../search/street/street-search';
 import { maskZipCode } from '../search/zip-code/zip-code-mask';
 import { ZipCodeSearch } from '../search/zip-code/zip-code-search';
 
-type Tab = 'zipCode' | 'street' | 'batch' | 'consensus';
+type Tab = 'zipCode' | 'street' | 'batch' | 'consensus' | 'distance';
+
+const PATHS: Record<Tab, string> = {
+  zipCode: '/buscar/{cep}',
+  street: '/buscar/{uf}/{cidade}/{logradouro}',
+  batch: '/buscar/lote',
+  consensus: '/buscar/{cep}/consenso',
+  distance: '/distancia/{origem}/{destino}',
+};
 
 @Component({
   selector: 'app-playground-page',
-  imports: [ZipCodeSearch, StreetSearch, BatchSearch, ResponsePanel, CodeSnippets, RoutePath],
+  imports: [
+    ZipCodeSearch,
+    StreetSearch,
+    BatchSearch,
+    DistanceSearch,
+    ResponsePanel,
+    CodeSnippets,
+    RoutePath,
+  ],
   templateUrl: './playground-page.html',
   styleUrl: './playground-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,10 +69,13 @@ export class PlaygroundPage {
   readonly logradouro = input<string>();
   readonly ceps = input<string>();
   readonly consenso = input<string>();
+  readonly origem = input<string>();
+  readonly destino = input<string>();
 
   protected readonly tab = linkedSignal<Tab>(() => {
     if (this.endpoint() === 'lote' || this.ceps()) return 'batch';
     if (this.endpoint() === 'consenso' || this.consenso()) return 'consensus';
+    if (this.endpoint() === 'distancia' || this.origem()) return 'distance';
     return this.endpoint() === 'logradouro' || this.logradouro() ? 'street' : 'zipCode';
   });
   protected readonly baseUrl = inject(AchaiApi).baseUrl;
@@ -62,19 +83,13 @@ export class PlaygroundPage {
     zipCode: pickRandom(ZIP_CODE_EXAMPLES),
     street: pickRandom(STREET_EXAMPLES),
     batch: ZIP_CODE_EXAMPLES.slice(0, 3),
+    distance: ZIP_CODE_EXAMPLES.slice(0, 2),
   };
 
   protected readonly requestUrl = computed(() => {
     const state = this.search.state();
     if (state.status !== 'idle') return state.url;
-
-    const paths: Record<Tab, string> = {
-      zipCode: '/buscar/{cep}',
-      street: '/buscar/{uf}/{cidade}/{logradouro}',
-      batch: '/buscar/lote',
-      consensus: '/buscar/{cep}/consenso',
-    };
-    return `${this.baseUrl}${paths[this.tab()]}`;
+    return `${this.baseUrl}${PATHS[this.tab()]}`;
   });
 
   protected readonly requestBody = computed<BatchBody | undefined>(() => {
@@ -88,6 +103,7 @@ export class PlaygroundPage {
   private readonly streetSearch = viewChild.required(StreetSearch);
   private readonly batchSearch = viewChild.required(BatchSearch);
   private readonly consensusSearch = viewChild.required<ZipCodeSearch>('consensusSearch');
+  private readonly distanceSearch = viewChild.required(DistanceSearch);
 
   constructor() {
     afterNextRender(() => this.searchFromUrl());
@@ -113,6 +129,8 @@ export class PlaygroundPage {
     if (isZipCodeQuery(query)) return maskZipCode(query.cep);
     if (isBatchQuery(query)) return `lote de ${query.ceps.split(',').length} CEPs`;
     if (isConsensusQuery(query)) return `consenso ${maskZipCode(query.consenso)}`;
+    if (isDistanceQuery(query))
+      return `${maskZipCode(query.origem)} → ${maskZipCode(query.destino)}`;
     return `${query.logradouro}, ${query.cidade}/${query.uf}`;
   }
 
@@ -123,6 +141,9 @@ export class PlaygroundPage {
     } else if (isConsensusQuery(query)) {
       this.tab.set('consensus');
       this.consensusSearch().searchFor(query.consenso);
+    } else if (isDistanceQuery(query)) {
+      this.tab.set('distance');
+      this.distanceSearch().searchFor(query.origem, query.destino);
     } else if (isZipCodeQuery(query)) {
       this.tab.set('zipCode');
       this.zipCodeSearch().searchFor(query.cep);
@@ -134,12 +155,16 @@ export class PlaygroundPage {
 
   private searchFromUrl(): void {
     const [cep, uf, cidade, logradouro] = [this.cep(), this.uf(), this.cidade(), this.logradouro()];
-    const ceps = this.ceps();
-
-    const consenso = this.consenso();
+    const [ceps, consenso, origem, destino] = [
+      this.ceps(),
+      this.consenso(),
+      this.origem(),
+      this.destino(),
+    ];
 
     if (ceps) this.batchSearch().searchFor(ceps.split(','));
     else if (consenso) this.consensusSearch().searchFor(consenso);
+    else if (origem && destino) this.distanceSearch().searchFor(origem, destino);
     else if (cep) this.zipCodeSearch().searchFor(cep);
     else if (uf && cidade && logradouro) this.streetSearch().searchFor(uf, cidade, logradouro);
   }
@@ -150,6 +175,11 @@ export class PlaygroundPage {
 
   protected searchConsensusExample(): void {
     this.consensusSearch().searchFor(this.examples.zipCode);
+  }
+
+  protected searchDistanceExample(): void {
+    const [origin, destination] = this.examples.distance;
+    this.distanceSearch().searchFor(origin, destination);
   }
 
   protected searchBatchExample(): void {
