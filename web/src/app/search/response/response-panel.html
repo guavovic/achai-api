@@ -1,0 +1,50 @@
+<section class="response" aria-live="polite" aria-label="Resposta da API">
+  <div class="bar">
+    <h2 class="label">resposta</h2>
+    @switch (state().status) {
+      @case ('idle') {
+        <span class="muted">nenhuma requisição ainda</span>
+      }
+      @case ('loading') {
+        <span class="muted">aguardando<span class="cursor">_</span></span>
+      }
+      @default {
+        @if (response(); as response) {
+          <span
+            class="status"
+            [class.ok]="response.status < 400"
+            [class.fail]="response.status >= 400"
+          >
+            {{ response.status }} {{ reason(response.status) }}
+          </span>
+          <span class="muted">{{ response.ms }} ms</span>
+        } @else {
+          <span class="status fail">sem resposta</span>
+        }
+      }
+    }
+    @if (response()) {
+      <button type="button" class="copy" (click)="copyJson()">
+        {{ copied() ? 'copiado' : 'copiar json' }}
+      </button>
+    }
+  </div>
+
+  @if (slow()) {
+    <p class="note">// o servidor está acordando, isso pode levar até um minuto</p>
+  }
+  @if (errorMessage()) {
+    <p class="note fail" role="alert">// {{ errorMessage() }}</p>
+  }
+  @if (summary()) {
+    <p class="note">// {{ summary() }}</p>
+  }
+
+  @if (response()) {
+    <pre
+      class="json"
+    ><code>@for (token of tokens(); track $index) {<span [class]="token.kind">{{ token.text }}</span>}</code></pre>
+  } @else {
+    <pre class="json placeholder"><code>// a resposta da API aparece aqui</code></pre>
+  }
+</section>

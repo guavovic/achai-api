@@ -10,7 +10,7 @@
 
 .grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   gap: var(--gv-space-4);
 }
 
@@ -29,7 +29,13 @@
 
 label {
   font-size: var(--gv-text-sm);
-  font-weight: var(--gv-weight-medium);
+  font-weight: var(--gv-weight-bold);
+}
+
+.type {
+  margin-left: var(--gv-space-2);
+  font-weight: var(--gv-weight-regular);
+  color: var(--gv-color-text-muted);
 }
 
 .inline {
@@ -43,11 +49,14 @@ select {
   min-width: 0;
   font: inherit;
   color: var(--gv-color-text);
-  background: var(--gv-color-bg);
+  background: transparent;
   border: 1px solid var(--gv-color-border-strong);
-  border-radius: var(--gv-radius-md);
+  border-radius: var(--gv-radius-sm);
   padding: var(--gv-space-2) var(--gv-space-3);
-  transition: border-color var(--gv-duration-fast) var(--gv-ease);
+}
+
+select option {
+  background: var(--gv-color-surface);
 }
 
 input:focus-visible,
@@ -63,22 +72,18 @@ select[aria-invalid='true'] {
 }
 
 button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--gv-space-2);
   font: inherit;
-  font-weight: var(--gv-weight-medium);
-  color: var(--gv-color-on-accent);
-  background: var(--gv-color-accent);
+  font-weight: var(--gv-weight-bold);
+  color: var(--gv-color-bg);
+  background: var(--gv-color-text);
   border: 0;
-  border-radius: var(--gv-radius-md);
-  padding: var(--gv-space-2) var(--gv-space-6);
+  border-radius: var(--gv-radius-sm);
+  padding: var(--gv-space-2) var(--gv-space-4);
   cursor: pointer;
-  transition: background-color var(--gv-duration-fast) var(--gv-ease);
 }
 
 button:hover {
-  background: var(--gv-color-accent-hover);
+  opacity: 0.85;
 }
 
 button:focus-visible {
@@ -86,19 +91,8 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-.hint,
 .field-error {
   margin: 0;
   font-size: var(--gv-text-xs);
-}
-
-.hint {
-  color: var(--gv-color-text-muted);
-}
-
-.field-error {
-  display: flex;
-  align-items: center;
-  gap: var(--gv-space-1);
   color: var(--gv-color-danger);
 }

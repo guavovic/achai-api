@@ -1,6 +1,6 @@
 <form class="search-form" (submit)="submit($event)" novalidate>
   <div class="field">
-    <label for="cep">CEP</label>
+    <label for="cep">cep <span class="type">string · 8 dígitos, com ou sem traço</span></label>
     <div class="inline">
       <input
         id="cep"
@@ -10,16 +10,12 @@
         maxlength="9"
         placeholder="00000-000"
         [attr.aria-invalid]="showError()"
-        aria-describedby="cep-hint"
+        [attr.aria-describedby]="showError() ? 'cep-erro' : null"
       />
-      <button type="submit"><svg lucideSearch size="18"></svg> Buscar</button>
+      <button type="submit">Enviar</button>
     </div>
     @if (showError()) {
-      <p id="cep-hint" class="field-error">
-        <svg lucideCircleAlert size="14"></svg> Digite os 8 dígitos do CEP, com ou sem traço.
-      </p>
-    } @else {
-      <p id="cep-hint" class="hint">8 dígitos, com ou sem traço.</p>
+      <p id="cep-erro" class="field-error">Digite os 8 dígitos do CEP, com ou sem traço.</p>
     }
   </div>
 </form>

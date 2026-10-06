@@ -1,26 +1,26 @@
 <form class="search-form" [formGroup]="form" (submit)="submit($event)" novalidate>
   <div class="grid">
     <div class="field">
-      <label for="uf">Estado</label>
+      <label for="uf">uf <span class="type">sigla</span></label>
       <select id="uf" formControlName="state" [attr.aria-invalid]="showError('state')">
-        <option value="" disabled>Escolha</option>
+        <option value="" disabled>escolha</option>
         @for (state of states; track state.code) {
           <option [value]="state.code">{{ state.code }} · {{ state.name }}</option>
         }
       </select>
       @if (showError('state')) {
-        <p class="field-error"><svg lucideCircleAlert size="14"></svg> Escolha o estado.</p>
+        <p class="field-error">Escolha o estado.</p>
       }
     </div>
 
     <div class="field">
-      <label for="cidade">Cidade</label>
+      <label for="cidade">cidade <span class="type">string · 3+ letras</span></label>
       <input
         id="cidade"
         formControlName="city"
         list="cidades"
         autocomplete="off"
-        [placeholder]="cities.isLoading() ? 'Carregando cidades...' : 'Ex.: Blumenau'"
+        [placeholder]="cities.isLoading() ? 'carregando cidades...' : 'Blumenau'"
         [attr.aria-invalid]="showError('city')"
       />
       <datalist id="cidades">
@@ -29,31 +29,27 @@
         }
       </datalist>
       @if (showError('city')) {
-        <p class="field-error">
-          <svg lucideCircleAlert size="14"></svg> Digite pelo menos 3 letras da cidade.
-        </p>
+        <p class="field-error">Digite pelo menos 3 letras da cidade.</p>
       }
     </div>
   </div>
 
   <div class="field">
-    <label for="logradouro">Rua, avenida ou praça</label>
+    <label for="logradouro"
+      >logradouro <span class="type">string · pode ser parte do nome</span></label
+    >
     <div class="inline">
       <input
         id="logradouro"
         formControlName="street"
         autocomplete="off"
-        placeholder="Ex.: Paulista"
+        placeholder="Paulista"
         [attr.aria-invalid]="showError('street')"
       />
-      <button type="submit"><svg lucideSearch size="18"></svg> Buscar</button>
+      <button type="submit">Enviar</button>
     </div>
     @if (showError('street')) {
-      <p class="field-error">
-        <svg lucideCircleAlert size="14"></svg> Digite pelo menos 3 letras do logradouro.
-      </p>
-    } @else {
-      <p class="hint">Pode ser só parte do nome.</p>
+      <p class="field-error">Digite pelo menos 3 letras do logradouro.</p>
     }
   </div>
 </form>

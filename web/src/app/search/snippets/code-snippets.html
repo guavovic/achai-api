@@ -1,0 +1,21 @@
+<section class="snippets" aria-label="Exemplo de chamada">
+  <div class="bar">
+    <h2 class="label">chamada</h2>
+    <div class="languages" role="tablist" aria-label="Linguagem">
+      @for (option of languages; track option.id) {
+        <button
+          type="button"
+          role="tab"
+          [attr.aria-selected]="language() === option.id"
+          (click)="language.set(option.id)"
+        >
+          {{ option.label }}
+        </button>
+      }
+    </div>
+    <button type="button" class="copy" (click)="copy()">
+      {{ copied() ? 'copiado' : 'copiar' }}
+    </button>
+  </div>
+  <pre class="code"><code>{{ code() }}</code></pre>
+</section>

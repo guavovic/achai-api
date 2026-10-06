@@ -1,15 +1,22 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { Observable, Subscription, finalize, map, timer } from 'rxjs';
+import { Subscription, finalize, timer } from 'rxjs';
 import { AchaiApi, Address } from '../core/api/achai-api';
 import { problemMessage } from '../core/api/problem-message';
 
 export const SLOW_RESPONSE_MS = 3000;
 
+export interface ApiResponse {
+  status: number;
+  ms: number;
+  body: unknown;
+}
+
 export type SearchState =
   | { status: 'idle' }
-  | { status: 'loading'; slow: boolean }
-  | { status: 'success'; addresses: Address[] }
-  | { status: 'error'; message: string };
+  | { status: 'loading'; url: string; slow: boolean }
+  | { status: 'success'; url: string; response: ApiResponse; addresses: Address[] }
+  | { status: 'error'; url: string; response: ApiResponse | null; message: string };
 
 @Injectable({ providedIn: 'root' })
 export class AddressSearch {
@@ -20,28 +27,46 @@ export class AddressSearch {
   readonly state = this.stateSignal.asReadonly();
 
   byZipCode(zipCode: string): void {
-    this.run(
-      this.api.getAddressByZipCode(zipCode.replace('-', '')).pipe(map((address) => [address])),
-    );
+    this.run<Address>(this.api.zipCodeUrl(zipCode.replace('-', '')), (address) => [address]);
   }
 
   byStreet(state: string, city: string, street: string): void {
-    this.run(this.api.searchByStreet(state, city, street));
+    this.run<Address[]>(this.api.streetUrl(state, city, street), (addresses) => addresses);
   }
 
-  private run(request: Observable<Address[]>): void {
+  private run<T>(url: string, toAddresses: (body: T) => Address[]): void {
     this.running?.unsubscribe();
-    this.stateSignal.set({ status: 'loading', slow: false });
+    this.stateSignal.set({ status: 'loading', url, slow: false });
 
     const slowNotice = timer(SLOW_RESPONSE_MS).subscribe(() =>
       this.stateSignal.update((state) =>
         state.status === 'loading' ? { ...state, slow: true } : state,
       ),
     );
+    const startedAt = performance.now();
+    const elapsed = () => Math.round(performance.now() - startedAt);
 
-    this.running = request.pipe(finalize(() => slowNotice.unsubscribe())).subscribe({
-      next: (addresses) => this.stateSignal.set({ status: 'success', addresses }),
-      error: (error) => this.stateSignal.set({ status: 'error', message: problemMessage(error) }),
-    });
+    this.running = this.api
+      .get<T>(url)
+      .pipe(finalize(() => slowNotice.unsubscribe()))
+      .subscribe({
+        next: (response) =>
+          this.stateSignal.set({
+            status: 'success',
+            url,
+            response: { status: response.status, ms: elapsed(), body: response.body },
+            addresses: toAddresses(response.body as T),
+          }),
+        error: (error) =>
+          this.stateSignal.set({
+            status: 'error',
+            url,
+            message: problemMessage(error),
+            response:
+              error instanceof HttpErrorResponse && error.status !== 0
+                ? { status: error.status, ms: elapsed(), body: error.error }
+                : null,
+          }),
+      });
   }
 }
