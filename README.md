@@ -2,7 +2,7 @@
 
 Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
-**Demo:** [achai-api.vercel.app](https://achai-api.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
+**Demo:** [achai-api.vercel.app](https://achai-api.vercel.app) · **Documentação da API:** [achai-api.vercel.app/docs](https://achai-api.vercel.app/docs)
 
 <p align="center">
   <img src="docs/assets/achai-busca-por-endereco.gif" alt="No playground, a busca pela Rua XV de Novembro, em Curitiba, devolve 200 OK com 12 endereços em JSON" width="100%">
@@ -21,7 +21,7 @@ O projeto começou como uma API simples que repassava as respostas do ViaCEP e f
 
 ## Tecnologias
 
-- **API:** .NET 10, ASP.NET Core Minimal APIs, HybridCache, Microsoft.Extensions.Http.Resilience (Polly), OpenAPI com Scalar.
+- **API:** .NET 10, ASP.NET Core Minimal APIs, HybridCache, Microsoft.Extensions.Http.Resilience (Polly), OpenAPI.
 - **Front:** Angular 22 (componentes standalone, signals, sem zone.js), JetBrains Mono.
 - **Fontes de dados:** ViaCEP, BrasilAPI e IBGE.
 - **Testes:** xUnit v3, NSubstitute e Shouldly na API; Vitest no front.
@@ -31,4 +31,4 @@ O projeto começou como uma API simples que repassava as respostas do ViaCEP e f
 
 - [Guias](docs): arquitetura, tratamento de erros, cache e resiliência.
 - [Decisões de arquitetura](docs/decisions): o porquê de cada escolha, com as alternativas consideradas.
-- [Referência da API](https://achai-api.onrender.com/docs): rotas, parâmetros e respostas, com teste no navegador.
+- [Referência da API](https://achai-api.vercel.app/docs): rotas, parâmetros, respostas e modelos, gerada a partir do OpenAPI, com link para testar no playground.

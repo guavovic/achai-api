@@ -1,0 +1,70 @@
+<section class="intro">
+  <h1>API de endereços do Brasil</h1>
+  <p>
+    Busca por CEP, por logradouro e lista de cidades, com cache e fallback entre ViaCEP, BrasilAPI e
+    IBGE. Aberta e sem chave.
+  </p>
+  <p class="base">
+    <span class="muted">base url</span> <code>{{ baseUrl }}</code>
+  </p>
+</section>
+
+<main class="workbench">
+  <section class="request" aria-label="Requisição">
+    <div class="group">
+      <h2 class="label">endpoint</h2>
+      <div class="endpoints" role="tablist" aria-label="Endpoint">
+        <button
+          type="button"
+          role="tab"
+          id="tab-cep"
+          aria-controls="painel-cep"
+          [attr.aria-selected]="tab() === 'zipCode'"
+          (click)="tab.set('zipCode')"
+        >
+          <span class="method">GET</span> /buscar/&#123;cep&#125;
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-endereco"
+          aria-controls="painel-endereco"
+          [attr.aria-selected]="tab() === 'street'"
+          (click)="tab.set('street')"
+        >
+          <span class="method">GET</span>
+          /buscar/&#123;uf&#125;/&#123;cidade&#125;/&#123;logradouro&#125;
+        </button>
+      </div>
+    </div>
+
+    <div class="group">
+      <h2 class="label">parâmetros</h2>
+      <div id="painel-cep" role="tabpanel" aria-labelledby="tab-cep" [hidden]="tab() !== 'zipCode'">
+        <app-zip-code-search />
+        <p class="example">
+          exemplo:
+          <button type="button" (click)="searchZipCodeExample()">{{ examples.zipCode }}</button>
+        </p>
+      </div>
+      <div
+        id="painel-endereco"
+        role="tabpanel"
+        aria-labelledby="tab-endereco"
+        [hidden]="tab() !== 'street'"
+      >
+        <app-street-search />
+        <p class="example">
+          exemplo:
+          <button type="button" (click)="searchStreetExample()">
+            {{ examples.street.street }}, {{ examples.street.city }}/{{ examples.street.state }}
+          </button>
+        </p>
+      </div>
+    </div>
+
+    <app-code-snippets [url]="requestUrl()" />
+  </section>
+
+  <app-response-panel />
+</main>
