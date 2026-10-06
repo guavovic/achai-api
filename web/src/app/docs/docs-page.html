@@ -1,0 +1,170 @@
+@if (docs(); as docs) {
+  <div class="layout">
+    <nav class="toc" aria-label="Seções da documentação">
+      <a routerLink="/docs" fragment="introducao">introdução</a>
+      @for (group of docs.groups; track group.name) {
+        <p class="toc-group">{{ group.name }}</p>
+        @for (operation of group.operations; track operation.id) {
+          <a routerLink="/docs" [fragment]="operation.id">
+            <span class="method">{{ operation.method }}</span> {{ operation.path }}
+          </a>
+        }
+      }
+      <p class="toc-group">modelos</p>
+      @for (schema of docs.schemas; track schema.id) {
+        <a routerLink="/docs" [fragment]="schema.id">{{ schema.name }}</a>
+      }
+    </nav>
+
+    <div class="content">
+      <section id="introducao" class="intro">
+        <h1>Documentação</h1>
+        <p>{{ docs.description }}</p>
+        <dl class="facts">
+          <dt>base url</dt>
+          <dd>
+            <code>{{ docs.baseUrl }}</code>
+          </dd>
+          <dt>respostas</dt>
+          <dd>JSON; erros em <code>application/problem+json</code> (ProblemDetails)</dd>
+          <dt>openapi</dt>
+          <dd>
+            <a [href]="openApiUrl">openapi/v1.json</a>
+          </dd>
+        </dl>
+      </section>
+
+      @for (group of docs.groups; track group.name) {
+        <section class="group">
+          <h2 class="label">{{ group.name }}</h2>
+
+          @for (operation of group.operations; track operation.id) {
+            <article class="operation" [id]="operation.id">
+              <h3>
+                <span class="method">{{ operation.method }}</span> {{ operation.path }}
+              </h3>
+              <p class="summary">{{ operation.summary }}</p>
+              <p class="muted">{{ operation.description }}</p>
+
+              @if (operation.parameters.length) {
+                <h4 class="sub">parâmetros</h4>
+                <div class="table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>nome</th>
+                        <th>onde</th>
+                        <th>tipo</th>
+                        <th>descrição</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @for (parameter of operation.parameters; track parameter.name) {
+                        <tr>
+                          <td class="strong">
+                            {{ parameter.name }}
+                            @if (parameter.required) {
+                              <span class="muted">obrigatório</span>
+                            }
+                          </td>
+                          <td>{{ parameter.location }}</td>
+                          <td>
+                            {{ parameter.type }}
+                            @for (rule of parameter.rules; track rule) {
+                              <span class="rule">{{ rule }}</span>
+                            }
+                          </td>
+                          <td class="muted">{{ parameter.description }}</td>
+                        </tr>
+                      }
+                    </tbody>
+                  </table>
+                </div>
+              }
+
+              <h4 class="sub">respostas</h4>
+              <div class="table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>status</th>
+                      <th>descrição</th>
+                      <th>corpo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (response of operation.responses; track response.status) {
+                      <tr>
+                        <td class="strong" [class]="statusClass(response.status)">
+                          {{ response.status }}
+                        </td>
+                        <td>{{ response.description }}</td>
+                        <td>
+                          @if (response.schemaRef) {
+                            <a routerLink="/docs" [fragment]="schemaId(response.schemaRef)">{{
+                              response.schema
+                            }}</a>
+                          } @else {
+                            {{ response.schema }}
+                          }
+                          @if (response.contentType) {
+                            <span class="rule">{{ response.contentType }}</span>
+                          }
+                        </td>
+                      </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              @if (operation.playground) {
+                <a class="try" routerLink="/" [queryParams]="{ endpoint: operation.playground }"
+                  >testar no playground →</a
+                >
+              }
+            </article>
+          }
+        </section>
+      }
+
+      <section class="group">
+        <h2 class="label">modelos</h2>
+        @for (schema of docs.schemas; track schema.id) {
+          <article class="operation" [id]="schema.id">
+            <h3>{{ schema.name }}</h3>
+            <div class="table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>campo</th>
+                    <th>tipo</th>
+                    <th>obrigatório</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (field of schema.fields; track field.name) {
+                    <tr>
+                      <td class="strong">{{ field.name }}</td>
+                      <td>{{ field.type }}</td>
+                      <td class="muted">{{ field.required ? 'sim' : 'não' }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </article>
+        }
+      </section>
+    </div>
+  </div>
+} @else if (document.error()) {
+  <p class="note fail" role="alert">
+    // não foi possível carregar a documentação da API. Tente de novo ou abra o
+    <a [href]="openApiUrl">openapi/v1.json</a>.
+  </p>
+} @else {
+  <p class="note">
+    // carregando a documentação da API<span class="cursor">_</span> se o servidor estiver dormindo,
+    isso pode levar até um minuto.
+  </p>
+}

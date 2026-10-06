@@ -1,5 +1,4 @@
 using Microsoft.OpenApi;
-using Scalar.AspNetCore;
 
 namespace Achai.Api.Common.Http;
 
@@ -25,9 +24,10 @@ public static class ApiDocumentationExtensions
     public static WebApplication MapApiDocumentation(this WebApplication app)
     {
         app.MapOpenApi();
-        app.MapScalarApiReference(DocsPath, options => options
-            .WithTitle("achaí-API")
-            .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch));
+
+        var docsUrl = app.Configuration["Docs:Url"]
+            ?? throw new InvalidOperationException("Configure Docs:Url com o endereço da documentação no front.");
+        app.MapGet(DocsPath, () => TypedResults.Redirect(docsUrl)).ExcludeFromDescription();
 
         return app;
     }

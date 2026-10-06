@@ -2,7 +2,7 @@
 
 Data: 30/09/2026
 
-Status: Aceito
+Status: Substituído em parte pelo ADR 0020 (o Scalar saiu; o OpenAPI nativo continua)
 
 ## Contexto
 

@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Achai.Api.Common.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Achai.Api.Tests.Integration;
 
@@ -41,12 +42,13 @@ public class DocumentationTests : IDisposable
     }
 
     [Fact]
-    public async Task ScalarReference_IsPublished()
+    public async Task Docs_RedirectsToTheFront()
     {
-        var response = await _client.GetAsync($"{ApiDocumentationExtensions.DocsPath}/", _ct);
+        using var client = _factory.CreateClient(new WebApplicationFactoryClientOptions { AllowAutoRedirect = false });
 
-        response.StatusCode.ShouldBe(HttpStatusCode.OK);
-        response.Content.Headers.ContentType?.MediaType.ShouldBe("text/html");
-        (await response.Content.ReadAsStringAsync(_ct)).ShouldContain("<title>achaí-API</title>");
+        var response = await client.GetAsync(ApiDocumentationExtensions.DocsPath, _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.Redirect);
+        response.Headers.Location.ShouldBe(new Uri("https://achai-api.vercel.app/docs"));
     }
 }

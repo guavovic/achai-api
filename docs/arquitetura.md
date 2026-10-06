@@ -68,4 +68,4 @@ O cache fica **por fora** do fallback de propósito: um endereço que veio da Br
 
 ## Contrato da API
 
-As rotas (`/buscar/...`), os nomes dos campos no JSON e os códigos de erro ficam em português, porque o front e quem consome a API dependem deles. O código interno (classes, métodos e pastas) fica em inglês, seguindo as convenções do .NET. A referência completa das rotas é a documentação interativa em [`/docs`](https://achai-api.onrender.com/docs).
+As rotas (`/buscar/...`), os nomes dos campos no JSON e os códigos de erro ficam em português, porque o front e quem consome a API dependem deles. O código interno (classes, métodos e pastas) fica em inglês, seguindo as convenções do .NET. A referência completa das rotas é a [página de documentação](https://achai-api.vercel.app/docs), montada a partir do OpenAPI.
