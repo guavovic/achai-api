@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "api:types": "npx -y openapi-typescript@7.13.0 http://localhost:5010/openapi/v1.json -o src/app/core/api/schema.ts"
+    "api:types": "npx -y openapi-typescript@7.13.0 ../sdk/openapi.json -o src/app/core/api/schema.ts"
   },
   "private": true,
   "packageManager": "npm@11.19.0",

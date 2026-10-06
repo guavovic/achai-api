@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\api\Achai.Api.csproj" />
+    <ProjectReference Include="..\..\sdk\dotnet\Achai.Client\Achai.Client.csproj" />
   </ItemGroup>
 
 </Project>

@@ -32,8 +32,8 @@ public static class GeoEndpoints
             .WithTags("Localização")
             .WithSummary("Coordenadas do CEP")
             .WithDescription(
-                "Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: na maioria dos CEPs, apontam para o centro " +
-                "da cidade, não para a rua. CEP sem coordenadas devolve 404.")
+                "Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: dependendo do CEP, apontam para a rua ou só " +
+                "para o centro da cidade. CEP sem coordenadas devolve 404.")
             .Produces<CoordinatesResponse>()
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -45,7 +45,7 @@ public static class GeoEndpoints
             .WithSummary("Distância entre dois CEPs")
             .WithDescription(
                 "Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). " +
-                "Como as coordenadas costumam ser o centro da cidade, serve para distância entre cidades, não dentro da mesma " +
+                "Como as coordenadas às vezes são só o centro da cidade, é confiável entre cidades, não dentro da mesma " +
                 "cidade. Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.")
             .Produces<DistanceResponse>()
             .ProducesValidationProblem()

@@ -64,8 +64,8 @@ public static partial class AddressTools
 
     [McpServerTool(Name = "distancia_entre_ceps", ReadOnly = true, OpenWorld = true)]
     [Description(
-        "Distância em linha reta, em km, entre dois CEPs. As coordenadas costumam ser o centro da cidade, " +
-        "então serve para distância entre cidades, não dentro da mesma cidade.")]
+        "Distância em linha reta, em km, entre dois CEPs. As coordenadas às vezes são só o centro da cidade, " +
+        "então é confiável entre cidades, não dentro da mesma cidade.")]
     public static async Task<DistanceResponse> DistanceAsync(
         [Description("CEP de origem. Exemplo: 01001-000.")] string origem,
         [Description("CEP de destino. Exemplo: 20040-020.")] string destino,

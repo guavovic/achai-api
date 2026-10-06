@@ -113,7 +113,7 @@ export interface paths {
         };
         /**
          * Coordenadas do CEP
-         * @description Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: na maioria dos CEPs, apontam para o centro da cidade, não para a rua. CEP sem coordenadas devolve 404.
+         * @description Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: dependendo do CEP, apontam para a rua ou só para o centro da cidade. CEP sem coordenadas devolve 404.
          */
         get: operations["GetCoordinatesByZipCode"];
         put?: never;
@@ -133,7 +133,7 @@ export interface paths {
         };
         /**
          * Distância entre dois CEPs
-         * @description Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). Como as coordenadas costumam ser o centro da cidade, serve para distância entre cidades, não dentro da mesma cidade. Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.
+         * @description Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). Como as coordenadas às vezes são só o centro da cidade, é confiável entre cidades, não dentro da mesma cidade. Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.
          */
         get: operations["GetDistanceBetweenZipCodes"];
         put?: never;
