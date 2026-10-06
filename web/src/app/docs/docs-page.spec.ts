@@ -37,9 +37,7 @@ describe('DocsPage', () => {
     http.expectOne(`${environment.apiBaseUrl}/openapi/v1.json`).flush(fixture);
     await page.whenStable();
 
-    const headings = [...element.querySelectorAll('.operation h3')].map((h) =>
-      h.textContent?.trim(),
-    );
+    const headings = [...element.querySelectorAll('.block h3')].map((h) => h.textContent?.trim());
     expect(headings).toContain('GET /buscar/{cep}');
     expect(element.querySelector('#get-buscar-cep .try')?.getAttribute('href')).toBe(
       '/?endpoint=cep',

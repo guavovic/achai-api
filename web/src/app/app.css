@@ -41,25 +41,17 @@ router-outlet {
   font-size: var(--gv-text-sm);
 }
 
-.links a,
-.links button {
-  font: inherit;
+.links a {
   color: var(--gv-color-text-muted);
-  background: none;
-  border: 0;
-  padding: 0;
   text-decoration: none;
-  cursor: pointer;
 }
 
 .links a:hover,
-.links button:hover,
 .links a.active {
   color: var(--gv-color-text);
 }
 
-.links a:hover,
-.links button:hover {
+.links a:hover {
   text-decoration: underline;
 }
 
@@ -68,7 +60,6 @@ router-outlet {
   text-underline-offset: 4px;
 }
 
-button:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--gv-color-focus);
   outline-offset: 2px;
