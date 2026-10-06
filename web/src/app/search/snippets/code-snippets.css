@@ -62,7 +62,8 @@ button:focus-visible {
 
 .code {
   margin: 0;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   padding: var(--gv-space-4);
   font-size: var(--gv-text-sm);
   line-height: 1.7;
