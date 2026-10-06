@@ -12,7 +12,7 @@ public static class ApiDocumentationExtensions
         {
             document.Info = new OpenApiInfo
             {
-                Title = "Achaí-API",
+                Title = "achaí-API",
                 Version = "v1",
                 Description = "Busca endereços brasileiros pelo CEP ou pelo logradouro, e lista as cidades de cada estado. " +
                     "Os dados vêm do ViaCEP, com a BrasilAPI como alternativa para CEP, e do IBGE. " +
@@ -26,7 +26,7 @@ public static class ApiDocumentationExtensions
     {
         app.MapOpenApi();
         app.MapScalarApiReference(DocsPath, options => options
-            .WithTitle("Achaí-API")
+            .WithTitle("achaí-API")
             .WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch));
 
         return app;
