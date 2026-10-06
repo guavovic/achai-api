@@ -1,13 +1,12 @@
 <form class="search-form" (submit)="submit($event)" novalidate>
   <div class="field">
-    <label for="cep">cep <span class="type">string · 8 dígitos, com ou sem traço</span></label>
+    <label for="cep">cep <span class="type">string · 8 dígitos, o traço entra sozinho</span></label>
     <div class="inline">
       <input
         id="cep"
         [formControl]="zipCode"
         inputmode="numeric"
         autocomplete="postal-code"
-        maxlength="9"
         placeholder="00000-000"
         [attr.aria-invalid]="showError()"
         [attr.aria-describedby]="showError() ? 'cep-erro' : null"
