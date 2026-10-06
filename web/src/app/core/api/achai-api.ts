@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -10,19 +10,24 @@ export type City = components['schemas']['CityResponse'];
 @Injectable({ providedIn: 'root' })
 export class AchaiApi {
   private readonly http = inject(HttpClient);
-  private readonly baseUrl = environment.apiBaseUrl;
 
-  getAddressByZipCode(zipCode: string): Observable<Address> {
-    return this.http.get<Address>(`${this.baseUrl}/buscar/${encodeURIComponent(zipCode)}`);
+  readonly baseUrl = environment.apiBaseUrl;
+
+  zipCodeUrl(zipCode: string): string {
+    return `${this.baseUrl}/buscar/${encodeURIComponent(zipCode)}`;
   }
 
-  searchByStreet(state: string, city: string, street: string): Observable<Address[]> {
+  streetUrl(state: string, city: string, street: string): string {
     const path = [state, city, street].map(encodeURIComponent).join('/');
-    return this.http.get<Address[]>(`${this.baseUrl}/buscar/${path}`);
+    return `${this.baseUrl}/buscar/${path}`;
   }
 
   citiesUrl(state: string): string {
     return `${this.baseUrl}/buscar/cidades/${encodeURIComponent(state)}`;
+  }
+
+  get<T>(url: string): Observable<HttpResponse<T>> {
+    return this.http.get<T>(url, { observe: 'response' });
   }
 
   wakeUp(): void {

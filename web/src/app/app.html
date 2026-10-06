@@ -1,83 +1,88 @@
 <div class="page">
-  <header class="header">
-    <div>
-      <h1><app-logo [size]="44" /> Achaí</h1>
-      <p class="tagline">Encontre qualquer endereço do Brasil pelo CEP ou pelo nome da rua.</p>
-    </div>
-    <nav class="actions" aria-label="Links e tema">
-      <a
-        class="icon-button"
-        [href]="docsUrl"
-        title="Documentação da API"
-        aria-label="Documentação da API"
-      >
-        <svg lucideBookOpen size="20"></svg>
-      </a>
-      <a
-        class="icon-button"
-        href="https://github.com/guavovic/achai"
-        title="Código no GitHub"
-        aria-label="Código no GitHub"
-      >
-        <app-github-icon />
-      </a>
-      <button
-        type="button"
-        class="icon-button"
-        (click)="theme.toggle()"
-        [title]="themeAction()"
-        [attr.aria-label]="themeAction()"
-      >
-        @if (theme.mode() === 'dark') {
-          <svg lucideSun size="20"></svg>
-        } @else {
-          <svg lucideMoon size="20"></svg>
-        }
+  <header class="top">
+    <a class="brand" href="/"><app-logo [size]="22" /> achaí <span class="product">api</span></a>
+    <nav class="links" aria-label="Links e tema">
+      <a [href]="docsUrl">docs</a>
+      <a href="https://github.com/guavovic/achai-api">github</a>
+      <button type="button" (click)="theme.toggle()" [attr.aria-label]="themeAction()">
+        tema: {{ theme.mode() === 'dark' ? 'escuro' : 'claro' }}
       </button>
     </nav>
   </header>
 
-  <main class="card">
-    <div class="tabs" role="tablist" aria-label="Tipo de busca">
-      <button
-        type="button"
-        role="tab"
-        id="tab-cep"
-        aria-controls="painel-cep"
-        [attr.aria-selected]="tab() === 'zipCode'"
-        (click)="tab.set('zipCode')"
-      >
-        <svg lucideMailbox size="18"></svg>
-        Por CEP
-      </button>
-      <button
-        type="button"
-        role="tab"
-        id="tab-endereco"
-        aria-controls="painel-endereco"
-        [attr.aria-selected]="tab() === 'street'"
-        (click)="tab.set('street')"
-      >
-        <svg lucideSignpost size="18"></svg>
-        Por endereço
-      </button>
-    </div>
+  <section class="intro">
+    <h1>API de endereços do Brasil</h1>
+    <p>
+      Busca por CEP, por logradouro e lista de cidades, com cache e fallback entre ViaCEP, BrasilAPI
+      e IBGE. Aberta e sem chave.
+    </p>
+    <p class="base">
+      <span class="muted">base url</span> <code>{{ baseUrl }}</code>
+    </p>
+  </section>
 
-    <div id="painel-cep" role="tabpanel" aria-labelledby="tab-cep" [hidden]="tab() !== 'zipCode'">
-      <app-zip-code-search />
-    </div>
-    <div
-      id="painel-endereco"
-      role="tabpanel"
-      aria-labelledby="tab-endereco"
-      [hidden]="tab() !== 'street'"
-    >
-      <app-street-search />
-    </div>
+  <main class="workbench">
+    <section class="request" aria-label="Requisição">
+      <div class="group">
+        <h2 class="label">endpoint</h2>
+        <div class="endpoints" role="tablist" aria-label="Endpoint">
+          <button
+            type="button"
+            role="tab"
+            id="tab-cep"
+            aria-controls="painel-cep"
+            [attr.aria-selected]="tab() === 'zipCode'"
+            (click)="tab.set('zipCode')"
+          >
+            <span class="method">GET</span> /buscar/&#123;cep&#125;
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="tab-endereco"
+            aria-controls="painel-endereco"
+            [attr.aria-selected]="tab() === 'street'"
+            (click)="tab.set('street')"
+          >
+            <span class="method">GET</span>
+            /buscar/&#123;uf&#125;/&#123;cidade&#125;/&#123;logradouro&#125;
+          </button>
+        </div>
+      </div>
+
+      <div class="group">
+        <h2 class="label">parâmetros</h2>
+        <div
+          id="painel-cep"
+          role="tabpanel"
+          aria-labelledby="tab-cep"
+          [hidden]="tab() !== 'zipCode'"
+        >
+          <app-zip-code-search />
+          <p class="example">
+            exemplo:
+            <button type="button" (click)="searchZipCodeExample()">{{ examples.zipCode }}</button>
+          </p>
+        </div>
+        <div
+          id="painel-endereco"
+          role="tabpanel"
+          aria-labelledby="tab-endereco"
+          [hidden]="tab() !== 'street'"
+        >
+          <app-street-search />
+          <p class="example">
+            exemplo:
+            <button type="button" (click)="searchStreetExample()">
+              {{ examples.street.street }}, {{ examples.street.city }}/{{ examples.street.state }}
+            </button>
+          </p>
+        </div>
+      </div>
+
+      <app-code-snippets [url]="requestUrl()" />
+    </section>
+
+    <app-response-panel />
   </main>
-
-  <app-search-results
-    (zipCodeExample)="searchZipCodeExample($event)"
-    (streetExample)="searchStreetExample($event)"
-  />
 </div>
