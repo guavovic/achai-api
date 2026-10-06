@@ -22,7 +22,7 @@ public static class CorsExtensions
                     allowedOrigins.Contains(origin, StringComparer.OrdinalIgnoreCase)
                     || allowedPatterns.Any(pattern => pattern.IsMatch(origin)));
 
-            policy.WithMethods(HttpMethods.Get).AllowAnyHeader();
+            policy.WithMethods(HttpMethods.Get).AllowAnyHeader().WithExposedHeaders("X-Logradouro-Buscado");
         }));
     }
 }

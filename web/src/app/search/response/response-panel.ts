@@ -35,11 +35,12 @@ export class ResponsePanel {
     const state = this.state();
     if (state.status !== 'success') return '';
 
-    const { addresses } = state;
+    const { addresses, response } = state;
+    const searchedAs = response.searchedAs ? `, buscado como "${response.searchedAs}"` : '';
     if (addresses.length === 0)
       return 'nenhum endereço encontrado. confira o nome da rua e da cidade';
-    if (addresses.length > 1) return `${addresses.length} endereços`;
-    return addresses[0].enderecoFormatado;
+    if (addresses.length > 1) return `${addresses.length} endereços${searchedAs}`;
+    return `${addresses[0].enderecoFormatado}${searchedAs}`;
   });
 
   reason(status: number): string {
