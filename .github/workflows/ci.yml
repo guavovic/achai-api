@@ -61,3 +61,45 @@ jobs:
 
       - name: Testar
         run: npx ng test --watch=false
+
+  sdks:
+    name: SDKs em dia
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: sdk/typescript/package-lock.json
+
+      - name: Gerar o OpenAPI a partir do código
+        run: dotnet build src/api --configuration Release
+
+      - name: Gerar o cliente .NET
+        run: |
+          dotnet tool restore
+          dotnet kiota generate -l CSharp -d sdk/openapi.json -c AchaiApiClient -n Achai.Client \
+            -o sdk/dotnet/Achai.Client/Generated --clean-output --exclude-backward-compatible
+
+      - name: Gerar o cliente TypeScript
+        working-directory: sdk/typescript
+        run: |
+          npm ci
+          npm run generate
+          npm run build
+
+      - name: Gerar os tipos do front
+        working-directory: web
+        run: npm run api:types
+
+      - name: Conferir se nada mudou
+        run: |
+          git diff --ignore-cr-at-eol --exit-code -- sdk web/src/app/core/api/schema.ts \
+            || (echo "::error::A API mudou e os SDKs não foram gerados de novo. Rode os passos deste job e commite." && exit 1)

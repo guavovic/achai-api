@@ -73,7 +73,7 @@ export class AddressSearch {
       url,
       this.api.get(url),
       () => [],
-      (distance) => `${distance.distanciaKm} km em linha reta, entre os centros aproximados`,
+      (distance) => `${distance.distanciaKm} km em linha reta, entre coordenadas aproximadas`,
     );
   }
 

@@ -32,6 +32,15 @@ Em clientes configurados por JSON:
 }
 ```
 
+## SDKs
+
+Clientes gerados a partir do OpenAPI, publicados a cada release:
+
+- .NET: `dotnet add package Achai.Client`, e `var achai = AchaiClient.Create();`.
+- TypeScript: `npm install achai-api`, e `const achai = createAchaiClient();`.
+
+O código fica em [`sdk/`](../sdk). O documento OpenAPI (`sdk/openapi.json`) é gerado no build da API, e o CI confere se os clientes estão em dia com ele.
+
 ## Decisões de arquitetura
 
 [`decisions/`](decisions) guarda os ADRs: por que cada escolha foi feita, quais eram as alternativas e o que cada uma implica. Os guias contam **como** a API funciona; os ADRs contam **por quê**.

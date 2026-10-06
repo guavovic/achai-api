@@ -1,0 +1,928 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "achaí-API",
+    "description": "Busca endereços brasileiros pelo CEP ou pelo logradouro, e lista as cidades de cada estado. Os dados vêm do ViaCEP, com a BrasilAPI como alternativa para CEP, e do IBGE. Erros seguem o ProblemDetails (RFC 9457), e cada IP pode fazer 60 requisições por minuto.",
+    "version": "v1"
+  },
+  "paths": {
+    "/buscar/{cep}": {
+      "get": {
+        "tags": [
+          "Endereços"
+        ],
+        "summary": "Busca o endereço pelo CEP",
+        "description": "Consulta o ViaCEP. Se ele estiver fora do ar ou lento, usa a BrasilAPI. CEP que não existe devolve 404.",
+        "operationId": "GetAddressByZipCode",
+        "parameters": [
+          {
+            "name": "cep",
+            "in": "path",
+            "description": "CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000.",
+            "required": true,
+            "schema": {
+              "pattern": "^\\d{5}-?\\d{3}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddressResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buscar/lote": {
+      "post": {
+        "tags": [
+          "Endereços"
+        ],
+        "summary": "Busca vários CEPs de uma vez",
+        "description": "Recebe de 1 a 20 CEPs e devolve um item para cada um, na mesma ordem, com o status encontrado, nao_encontrado ou invalido. Usa o mesmo cache e o mesmo fallback da busca por CEP.",
+        "operationId": "GetAddressesByZipCodes",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BatchItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buscar/{cep}/consenso": {
+      "get": {
+        "tags": [
+          "Endereços"
+        ],
+        "summary": "Compara o CEP no ViaCEP e na BrasilAPI",
+        "description": "Consulta as duas fontes ao mesmo tempo, sem cache, e diz se concordam. Compara logradouro, bairro, localidade e UF, sem diferença de acentos e maiúsculas. Quando uma fonte acha o CEP e a outra não, a divergência é \"encontrado\".",
+        "operationId": "CompareZipCodeSources",
+        "parameters": [
+          {
+            "name": "cep",
+            "in": "path",
+            "description": "CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000.",
+            "required": true,
+            "schema": {
+              "pattern": "^\\d{5}-?\\d{3}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsensusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buscar/{uf}/{cidade}/{logradouro}": {
+      "get": {
+        "tags": [
+          "Endereços"
+        ],
+        "summary": "Busca endereços pelo logradouro",
+        "description": "Consulta o ViaCEP, que devolve até 50 endereços. Sem resultado, tenta variações do nome: abreviação por extenso (Av. vira Avenida), número romano ou arábico (XV e 15) e o nome sem o tipo (Rua). Quando uma variação encontra, o cabeçalho X-Logradouro-Buscado diz qual foi, com o texto codificado para URL. Sem nenhum resultado, devolve uma lista vazia.",
+        "operationId": "SearchAddressesByStreet",
+        "parameters": [
+          {
+            "name": "uf",
+            "in": "path",
+            "description": "Sigla do estado. Exemplo: SP.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cidade",
+            "in": "path",
+            "description": "Nome da cidade, com pelo menos 3 caracteres. Exemplo: São Paulo.",
+            "required": true,
+            "schema": {
+              "minLength": 3,
+              "type": "string"
+            }
+          },
+          {
+            "name": "logradouro",
+            "in": "path",
+            "description": "Parte do nome da rua, com pelo menos 3 caracteres. Exemplo: Paulista.",
+            "required": true,
+            "schema": {
+              "minLength": 3,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AddressResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buscar/cidades/{uf}": {
+      "get": {
+        "tags": [
+          "Cidades"
+        ],
+        "summary": "Lista as cidades de um estado",
+        "description": "Consulta o IBGE. Estado que não está entre as 27 siglas devolve 400.",
+        "operationId": "GetCitiesByState",
+        "parameters": [
+          {
+            "name": "uf",
+            "in": "path",
+            "description": "Sigla do estado. Exemplo: SC.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CityResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/buscar/{cep}/coordenadas": {
+      "get": {
+        "tags": [
+          "Localização"
+        ],
+        "summary": "Coordenadas do CEP",
+        "description": "Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: dependendo do CEP, apontam para a rua ou só para o centro da cidade. CEP sem coordenadas devolve 404.",
+        "operationId": "GetCoordinatesByZipCode",
+        "parameters": [
+          {
+            "name": "cep",
+            "in": "path",
+            "description": "CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000.",
+            "required": true,
+            "schema": {
+              "pattern": "^\\d{5}-?\\d{3}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoordinatesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/distancia/{origem}/{destino}": {
+      "get": {
+        "tags": [
+          "Localização"
+        ],
+        "summary": "Distância entre dois CEPs",
+        "description": "Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). Como as coordenadas às vezes são só o centro da cidade, é confiável entre cidades, não dentro da mesma cidade. Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.",
+        "operationId": "GetDistanceBetweenZipCodes",
+        "parameters": [
+          {
+            "name": "origem",
+            "in": "path",
+            "description": "CEP de origem. Exemplo: 01001000.",
+            "required": true,
+            "schema": {
+              "pattern": "^\\d{5}-?\\d{3}$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "destino",
+            "in": "path",
+            "description": "CEP de destino. Exemplo: 20040020.",
+            "required": true,
+            "schema": {
+              "pattern": "^\\d{5}-?\\d{3}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DistanceResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HttpValidationProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status": {
+      "get": {
+        "tags": [
+          "Status"
+        ],
+        "summary": "Disponibilidade das fontes",
+        "description": "Histórico das verificações do ViaCEP, da BrasilAPI e do IBGE, feitas a cada 5 minutos e guardadas em memória por até 24 horas. O servidor dorme quando fica sem uso, e o histórico recomeça quando ele acorda: o campo desde diz a partir de quando há dados. Disponibilidade é a porcentagem de verificações saudáveis.",
+        "operationId": "GetSourcesStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AddressResponse": {
+        "required": [
+          "cep",
+          "logradouro",
+          "complemento",
+          "unidade",
+          "bairro",
+          "localidade",
+          "uf",
+          "estado",
+          "regiao",
+          "tipoLogradouro",
+          "nomeLogradouro",
+          "enderecoFormatado"
+        ],
+        "type": "object",
+        "properties": {
+          "cep": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "logradouro": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "complemento": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "unidade": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "bairro": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "localidade": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "uf": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "estado": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "regiao": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "tipoLogradouro": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "nomeLogradouro": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "enderecoFormatado": {
+            "type": "string"
+          }
+        }
+      },
+      "BatchItem": {
+        "required": [
+          "cep",
+          "status",
+          "endereco"
+        ],
+        "type": "object",
+        "properties": {
+          "cep": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "endereco": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AddressResponse"
+              }
+            ]
+          }
+        }
+      },
+      "BatchRequest": {
+        "required": [
+          "ceps"
+        ],
+        "type": "object",
+        "properties": {
+          "ceps": {
+            "maxItems": 20,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "De 1 a 20 CEPs, com ou sem traço."
+          }
+        }
+      },
+      "CityResponse": {
+        "required": [
+          "nome"
+        ],
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "ConsensusResponse": {
+        "required": [
+          "cep",
+          "concordam",
+          "divergencias",
+          "fontes"
+        ],
+        "type": "object",
+        "properties": {
+          "cep": {
+            "type": "string"
+          },
+          "concordam": {
+            "type": "boolean"
+          },
+          "divergencias": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "fontes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceResult"
+            }
+          }
+        }
+      },
+      "CoordinatesResponse": {
+        "required": [
+          "cep",
+          "latitude",
+          "longitude",
+          "fonte"
+        ],
+        "type": "object",
+        "properties": {
+          "cep": {
+            "type": "string"
+          },
+          "latitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "longitude": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "fonte": {
+            "type": "string"
+          }
+        }
+      },
+      "DistanceResponse": {
+        "required": [
+          "origem",
+          "destino",
+          "distanciaKm"
+        ],
+        "type": "object",
+        "properties": {
+          "origem": {
+            "$ref": "#/components/schemas/CoordinatesResponse"
+          },
+          "destino": {
+            "$ref": "#/components/schemas/CoordinatesResponse"
+          },
+          "distanciaKm": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          }
+        }
+      },
+      "HttpValidationProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "title": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "status": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "null",
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "detail": {
+            "type": [
+              "null",
+              "string"
+            ]
+          },
+          "instance": {
+            "type": [
+              "null",
+              "string"
+            ]
+          }
+        }
+      },
+      "SampleResponse": {
+        "required": [
+          "em",
+          "status",
+          "ms"
+        ],
+        "type": "object",
+        "properties": {
+          "em": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "ms": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          }
+        }
+      },
+      "SourceResult": {
+        "required": [
+          "fonte",
+          "status",
+          "endereco"
+        ],
+        "type": "object",
+        "properties": {
+          "fonte": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "endereco": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/AddressResponse"
+              }
+            ]
+          }
+        }
+      },
+      "SourceStatusResponse": {
+        "required": [
+          "fonte",
+          "disponibilidade",
+          "latenciaMediaMs",
+          "ultimoStatus",
+          "amostras"
+        ],
+        "type": "object",
+        "properties": {
+          "fonte": {
+            "type": "string"
+          },
+          "disponibilidade": {
+            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$",
+            "type": [
+              "number",
+              "string"
+            ],
+            "format": "double"
+          },
+          "latenciaMediaMs": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "ultimoStatus": {
+            "type": "string"
+          },
+          "amostras": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SampleResponse"
+            }
+          }
+        }
+      },
+      "StatusResponse": {
+        "required": [
+          "desde",
+          "intervaloMinutos",
+          "fontes"
+        ],
+        "type": "object",
+        "properties": {
+          "desde": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "intervaloMinutos": {
+            "pattern": "^-?(?:0|[1-9]\\d*)$",
+            "type": [
+              "integer",
+              "string"
+            ],
+            "format": "int32"
+          },
+          "fontes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceStatusResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Endereços"
+    },
+    {
+      "name": "Cidades"
+    },
+    {
+      "name": "Localização"
+    },
+    {
+      "name": "Status"
+    }
+  ]
+}
