@@ -16,6 +16,7 @@ O projeto começou como uma API simples que repassava as respostas do ViaCEP e f
 - **Erros previsíveis:** CEP inexistente ou parâmetro inválido viram respostas padronizadas (ProblemDetails), com mensagens em português; erro inesperado vira um 500 genérico, com o detalhe só no log.
 - **Robustez nas fontes externas:** cache em memória, timeout, retry e circuit breaker em cada chamada, e a BrasilAPI assume quando o ViaCEP falha numa busca por CEP.
 - **Contrato compartilhado:** o front usa tipos gerados a partir do documento OpenAPI da API, então uma mudança na API quebra o build do front, e não a tela.
+- **Mais que a busca:** vários CEPs de uma vez, consenso entre o ViaCEP e a BrasilAPI, busca por rua tolerante a erro, endereço normalizado, coordenadas, distância entre CEPs, página de status das fontes e um servidor MCP para assistentes de IA.
 - **Testes em camadas:** unitários e de integração sem rede em todo pull request, e testes de contrato semanais contra as APIs reais, que abrem uma issue quando algo muda.
 - **Interface:** um playground da API, com a escolha do endpoint, o exemplo de chamada em curl, fetch e C# e a resposta com status, tempo e JSON, e uma página de documentação gerada do OpenAPI, em tema claro, com a paleta Açaí por cima dos tokens do [guavovic-ui](https://github.com/guavovic/guavovic-ui).
 
