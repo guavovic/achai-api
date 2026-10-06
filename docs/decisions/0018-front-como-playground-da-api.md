@@ -20,6 +20,7 @@ O foco do Achaí é a API. O front existe para mostrar a API funcionando, mas pa
 - Os erros aparecem como a API devolve, com o status e o corpo do ProblemDetails.
 - Fonte JetBrains Mono em tudo. Cores só para o que tem significado: verde para o método e o 2xx, vermelho para erro, âmbar para números e literais no JSON. As cores continuam vindo dos tokens do guavovic-ui.
 - **Sem ícones.** Os links e o botão de tema viram texto, e o `@lucide/angular` sai das dependências. O logo continua no cabeçalho e no favicon.
+- **Atualização de 06/10/2026:** o front passa a usar só o tema claro, e o botão de tema sai.
 
 ## Consequências
 
