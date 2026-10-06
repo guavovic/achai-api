@@ -15,6 +15,9 @@ const praçaDaSé: Address = {
   uf: 'SP',
   estado: 'São Paulo',
   regiao: 'Sudeste',
+  tipoLogradouro: 'Praça',
+  nomeLogradouro: 'da Sé',
+  enderecoFormatado: 'Praça da Sé, lado ímpar - Sé, São Paulo/SP, CEP 01001-000',
 };
 
 describe('AddressSearch', () => {

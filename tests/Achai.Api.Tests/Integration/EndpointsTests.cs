@@ -32,6 +32,9 @@ public class EndpointsTests : IDisposable
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         var address = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
         address.GetProperty("logradouro").GetString().ShouldBe("Praça da Sé");
+        address.GetProperty("tipoLogradouro").GetString().ShouldBe("Praça");
+        address.GetProperty("nomeLogradouro").GetString().ShouldBe("da Sé");
+        address.GetProperty("enderecoFormatado").GetString().ShouldBe("Praça da Sé, lado ímpar - Sé, São Paulo/SP, CEP 01001-000");
         _factory.ViaCep.Requests.Single().RequestUri!.AbsolutePath.ShouldBe("/ws/01001000/json");
     }
 
