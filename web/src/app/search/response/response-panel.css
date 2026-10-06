@@ -103,18 +103,24 @@
   color: var(--gv-color-text-muted);
 }
 
-.key,
 .plain {
   color: var(--gv-color-text-muted);
 }
 
-.string {
-  color: var(--gv-color-text);
+.key {
+  color: var(--gv-color-accent);
 }
 
-.number,
+.string {
+  color: var(--achai-kiwi);
+}
+
+.number {
+  color: var(--achai-banana);
+}
+
 .literal {
-  color: var(--gv-color-warning);
+  color: var(--achai-morango);
 }
 
 button:focus-visible {

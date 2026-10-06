@@ -251,3 +251,11 @@ a:focus-visible {
     position: static;
   }
 }
+
+.field {
+  color: var(--gv-color-accent);
+}
+
+.strong .muted {
+  color: var(--achai-morango);
+}

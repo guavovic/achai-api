@@ -2,11 +2,13 @@ import { httpResource } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AchaiApi } from '../core/api/achai-api';
+import { RoutePath } from '../core/route-path/route-path';
 import { OpenApiDocument, schemaId, toApiDocs } from './api-docs';
+import { TypeLabel } from './type-label';
 
 @Component({
   selector: 'app-docs-page',
-  imports: [RouterLink],
+  imports: [RouterLink, RoutePath, TypeLabel],
   templateUrl: './docs-page.html',
   styleUrl: './docs-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

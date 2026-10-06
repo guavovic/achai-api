@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AchaiApi } from '../core/api/achai-api';
+import { RoutePath } from '../core/route-path/route-path';
 import { AddressSearch, SearchQuery } from '../search/address-search';
 import { STREET_EXAMPLES, ZIP_CODE_EXAMPLES, pickRandom } from '../search/examples';
 import { ResponsePanel } from '../search/response/response-panel';
@@ -25,7 +26,7 @@ type Tab = 'zipCode' | 'street';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [ZipCodeSearch, StreetSearch, ResponsePanel, CodeSnippets],
+  imports: [ZipCodeSearch, StreetSearch, ResponsePanel, CodeSnippets, RoutePath],
   templateUrl: './playground-page.html',
   styleUrl: './playground-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

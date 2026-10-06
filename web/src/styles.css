@@ -11,10 +11,14 @@ html:root {
   --gv-color-accent-hover: #47163c;
   --gv-color-on-accent: #ffffff;
   --gv-color-focus: #5b1e4e;
-  --gv-color-success: #1d7a45;
-  --gv-color-warning: #8a6200;
-  --gv-color-danger: #b42318;
   --achai-accent-soft: #f3e9f0;
+  --achai-kiwi: #2f6f3e;
+  --achai-banana: #8a6200;
+  --achai-morango: #b4234a;
+  --achai-mirtilo: #3b4a9c;
+  --gv-color-success: var(--achai-kiwi);
+  --gv-color-warning: var(--achai-banana);
+  --gv-color-danger: var(--achai-morango);
 }
 
 *,
@@ -56,6 +60,10 @@ button {
 
 a {
   color: var(--gv-color-accent);
+}
+
+.param {
+  color: var(--achai-mirtilo);
 }
 
 [hidden] {

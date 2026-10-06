@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input, signal } from '@angular/core';
+import { codeTokens } from './code-tokens';
 import { SNIPPET_LANGUAGES, SnippetLanguage, snippet } from './snippets';
 
 @Component({
@@ -14,6 +15,7 @@ export class CodeSnippets {
   readonly language = signal<SnippetLanguage>('curl');
   readonly copied = signal(false);
   readonly code = computed(() => snippet(this.language(), this.url()));
+  readonly tokens = computed(() => codeTokens(this.code()));
 
   async copy(): Promise<void> {
     try {
