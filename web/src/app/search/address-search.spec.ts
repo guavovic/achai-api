@@ -111,4 +111,14 @@ describe('AddressSearch', () => {
       addresses: [{ ...praçaDaSé, cep: '22010-000' }],
     });
   });
+
+  it('diz qual variação do logradouro a API usou', () => {
+    search.byStreet('SC', 'Blumenau', 'XV de Novembro');
+
+    http
+      .expectOne(`${environment.apiBaseUrl}/buscar/SC/Blumenau/XV%20de%20Novembro`)
+      .flush([praçaDaSé], { headers: { 'X-Logradouro-Buscado': '15%20de%20Novembro' } });
+
+    expect(search.state()).toMatchObject({ response: { searchedAs: '15 de Novembro' } });
+  });
 });

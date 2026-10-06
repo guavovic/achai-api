@@ -1,6 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
+using Achai.Api.Features.Addresses;
 using Achai.Api.Tests.Fakes;
 
 namespace Achai.Api.Tests.Integration;
@@ -113,6 +115,39 @@ public class EndpointsTests : IDisposable
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         (await response.Content.ReadAsStringAsync(_ct)).ShouldBe("[]");
         _factory.ViaCep.Requests.Single().RequestUri!.AbsolutePath.ShouldStartWith("/ws/SP/");
+    }
+
+    [Fact]
+    public async Task SearchByStreet_WhenOnlyAVariationFinds_ReturnsItAndSaysWhich()
+    {
+        _factory.ViaCep.RespondWith(request => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(
+                Uri.UnescapeDataString(request.RequestUri!.AbsolutePath).Contains("15 de Novembro")
+                    ? ExternalResponses.ViaCepListWithPracaDaSe
+                    : ExternalResponses.EmptyList,
+                Encoding.UTF8,
+                "application/json")
+        });
+
+        var response = await _client.GetAsync("/buscar/SC/Blumenau/XV de Novembro", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        (await response.Content.ReadFromJsonAsync<JsonElement>(_ct)).GetArrayLength().ShouldBe(1);
+        response.Headers.GetValues(SearchAddressesByStreet.SearchedStreetHeader).Single().ShouldBe("15%20de%20Novembro");
+        _factory.ViaCep.Requests.Count.ShouldBe(2);
+    }
+
+    [Fact]
+    public async Task SearchByStreet_WhenTheNameFinds_DoesNotTryVariationsNorSetTheHeader()
+    {
+        _factory.ViaCep.RespondWith(HttpStatusCode.OK, ExternalResponses.ViaCepListWithPracaDaSe);
+
+        var response = await _client.GetAsync("/buscar/SP/Sao Paulo/Av. Paulista", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        response.Headers.Contains(SearchAddressesByStreet.SearchedStreetHeader).ShouldBeFalse();
+        Uri.UnescapeDataString(_factory.ViaCep.Requests.Single().RequestUri!.AbsolutePath).ShouldEndWith("/Av Paulista/json");
     }
 
     [Fact]
