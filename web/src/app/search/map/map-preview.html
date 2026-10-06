@@ -1,0 +1,20 @@
+@switch (state().status) {
+  @case ('closed') {
+    <button type="button" class="open" (click)="show()">ver no mapa</button>
+  }
+  @case ('loading') {
+    <p class="note">// buscando as coordenadas...</p>
+  }
+  @case ('error') {
+    <p class="note">// não há coordenadas para este CEP.</p>
+  }
+  @case ('ready') {
+    <figure class="map">
+      <iframe [src]="embedUrl()" title="Mapa do CEP" loading="lazy"></iframe>
+      <figcaption>
+        coordenadas aproximadas da BrasilAPI, em geral o centro da cidade ·
+        <a [href]="openUrl()" target="_blank" rel="noopener">abrir no OpenStreetMap</a>
+      </figcaption>
+    </figure>
+  }
+}

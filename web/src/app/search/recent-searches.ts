@@ -32,6 +32,10 @@ export function isConsensusQuery(query: SearchQuery): query is { consenso: strin
   return 'consenso' in query;
 }
 
+export function isDistanceQuery(query: SearchQuery): query is { origem: string; destino: string } {
+  return 'origem' in query;
+}
+
 export function isBatchQuery(query: SearchQuery): query is { ceps: string } {
   return 'ceps' in query;
 }
@@ -40,6 +44,7 @@ function keyOf(query: SearchQuery): string {
   if (isZipCodeQuery(query)) return query.cep;
   if (isBatchQuery(query)) return `lote|${query.ceps}`;
   if (isConsensusQuery(query)) return `consenso|${query.consenso}`;
+  if (isDistanceQuery(query)) return `distancia|${query.origem}|${query.destino}`;
   return [query.uf, query.cidade, query.logradouro].join('|').toLocaleLowerCase('pt-BR');
 }
 

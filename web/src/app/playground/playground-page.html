@@ -55,6 +55,16 @@
         >
           <span class="method">GET</span> <app-route-path path="/buscar/{cep}/consenso" />
         </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-distancia"
+          aria-controls="painel-distancia"
+          [attr.aria-selected]="tab() === 'distance'"
+          (click)="tab.set('distance')"
+        >
+          <span class="method">GET</span> <app-route-path path="/distancia/{origem}/{destino}" />
+        </button>
       </div>
     </div>
 
@@ -100,6 +110,20 @@
         <p class="example">
           exemplo:
           <button type="button" (click)="searchConsensusExample()">{{ examples.zipCode }}</button>
+        </p>
+      </div>
+      <div
+        id="painel-distancia"
+        role="tabpanel"
+        aria-labelledby="tab-distancia"
+        [hidden]="tab() !== 'distance'"
+      >
+        <app-distance-search />
+        <p class="example">
+          exemplo:
+          <button type="button" (click)="searchDistanceExample()">
+            {{ examples.distance.join(' → ') }}
+          </button>
         </p>
       </div>
       @if (recent.list().length) {

@@ -30,6 +30,10 @@ public static class DependencyInjection
                 sp.GetRequiredService<ILogger<FallbackAddressProvider>>()),
             sp.GetRequiredService<HybridCache>()));
 
+        services.AddScoped<ICoordinatesProvider>(sp => new CachedCoordinatesProvider(
+            sp.GetRequiredService<BrasilApiClient>(),
+            sp.GetRequiredService<HybridCache>()));
+
         services.AddScoped<ICityProvider>(sp => new CachedCityProvider(
             sp.GetRequiredService<IbgeClient>(),
             sp.GetRequiredService<HybridCache>()));

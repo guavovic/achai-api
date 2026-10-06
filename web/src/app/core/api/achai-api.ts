@@ -8,6 +8,8 @@ export type Address = components['schemas']['AddressResponse'];
 export type City = components['schemas']['CityResponse'];
 export type BatchItem = components['schemas']['BatchItem'];
 export type Consensus = components['schemas']['ConsensusResponse'];
+export type CoordinatesResponse = components['schemas']['CoordinatesResponse'];
+export type Distance = components['schemas']['DistanceResponse'];
 
 @Injectable({ providedIn: 'root' })
 export class AchaiApi {
@@ -27,6 +29,17 @@ export class AchaiApi {
 
   consensusUrl(zipCode: string): string {
     return `${this.baseUrl}/buscar/${encodeURIComponent(zipCode)}/consenso`;
+  }
+
+  coordinatesUrl(zipCode: string): string {
+    return `${this.baseUrl}/buscar/${encodeURIComponent(zipCode.replace('-', ''))}/coordenadas`;
+  }
+
+  distanceUrl(origin: string, destination: string): string {
+    const path = [origin, destination].map((zipCode) =>
+      encodeURIComponent(zipCode.replace('-', '')),
+    );
+    return `${this.baseUrl}/distancia/${path.join('/')}`;
   }
 
   batchUrl(): string {

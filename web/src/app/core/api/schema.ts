@@ -104,6 +104,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/buscar/{cep}/coordenadas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Coordenadas do CEP
+         * @description Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: em geral apontam para a rua ou o bairro, não para o número. CEP sem coordenadas devolve 404.
+         */
+        get: operations["GetCoordinatesByZipCode"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/distancia/{origem}/{destino}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Distância entre dois CEPs
+         * @description Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.
+         */
+        get: operations["GetDistanceBetweenZipCodes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -139,6 +179,20 @@ export interface components {
             concordam: boolean;
             divergencias: string[];
             fontes: components["schemas"]["SourceResult"][];
+        };
+        CoordinatesResponse: {
+            cep: string;
+            /** Format: double */
+            latitude: number | string;
+            /** Format: double */
+            longitude: number | string;
+            fonte: string;
+        };
+        DistanceResponse: {
+            origem: components["schemas"]["CoordinatesResponse"];
+            destino: components["schemas"]["CoordinatesResponse"];
+            /** Format: double */
+            distanciaKm: number | string;
         };
         HttpValidationProblemDetails: {
             type?: null | string;
@@ -379,6 +433,108 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetCoordinatesByZipCode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000. */
+                cep: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CoordinatesResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetDistanceBetweenZipCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description CEP de origem. Exemplo: 01001000. */
+                origem: string;
+                /** @description CEP de destino. Exemplo: 20040020. */
+                destino: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DistanceResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
                 };
             };
             /** @description Too Many Requests */

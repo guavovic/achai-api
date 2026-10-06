@@ -230,6 +230,74 @@ public class EndpointsTests : IDisposable
     }
 
     [Fact]
+    public async Task Coordinates_ReturnsLatitudeAndLongitudeFromBrasilApi()
+    {
+        _factory.BrasilApi.RespondWith(HttpStatusCode.OK, ExternalResponses.BrasilApiWithLocation("-23.5475", "-46.63611"));
+
+        var response = await _client.GetAsync("/buscar/01001-000/coordenadas", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+        body.GetProperty("latitude").GetDouble().ShouldBe(-23.5475);
+        body.GetProperty("longitude").GetDouble().ShouldBe(-46.63611);
+        body.GetProperty("fonte").GetString().ShouldBe("BrasilAPI");
+    }
+
+    [Fact]
+    public async Task Coordinates_WhenBrasilApiHasNone_Returns404()
+    {
+        _factory.BrasilApi.RespondWith(HttpStatusCode.OK, ExternalResponses.BrasilApiPracaDaSe);
+
+        var response = await _client.GetAsync("/buscar/01001000/coordenadas", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+        problem.GetProperty("code").GetString().ShouldBe("Coordenadas.NaoEncontradas");
+    }
+
+    [Fact]
+    public async Task Distance_ReturnsTheStraightLineDistanceInKm()
+    {
+        _factory.BrasilApi.RespondWith(request => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(
+                request.RequestUri!.AbsolutePath.EndsWith("01001000")
+                    ? ExternalResponses.BrasilApiWithLocation("-23.5475", "-46.63611")
+                    : ExternalResponses.BrasilApiWithLocation("-22.90642", "-43.18223"),
+                Encoding.UTF8,
+                "application/json")
+        });
+
+        var response = await _client.GetAsync("/distancia/01001-000/22010000", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+        body.GetProperty("distanciaKm").GetDouble().ShouldBe(360, tolerance: 5);
+        body.GetProperty("origem").GetProperty("cep").GetString().ShouldBe("01001000");
+        body.GetProperty("destino").GetProperty("cep").GetString().ShouldBe("22010000");
+    }
+
+    [Fact]
+    public async Task Distance_WhenOneZipCodeHasNoCoordinates_SaysWhichOne()
+    {
+        _factory.BrasilApi.RespondWith(request => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(
+                request.RequestUri!.AbsolutePath.EndsWith("01001000")
+                    ? ExternalResponses.BrasilApiWithLocation("-23.5475", "-46.63611")
+                    : ExternalResponses.BrasilApiPracaDaSe,
+                Encoding.UTF8,
+                "application/json")
+        });
+
+        var response = await _client.GetAsync("/distancia/01001000/22010000", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+        var problem = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+        problem.GetProperty("detail").GetString()!.ShouldContain("destino: 22010000");
+    }
+
+    [Fact]
     public async Task GetCities_WithUnknownState_Returns400WithoutCallingIbge()
     {
         var response = await _client.GetAsync("/buscar/cidades/XX", _ct);

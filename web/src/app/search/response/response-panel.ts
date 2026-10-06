@@ -1,18 +1,27 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { reasonPhrase } from '../../core/api/reason-phrase';
 import { AddressSearch } from '../address-search';
+import { MapPreview } from '../map/map-preview';
 import { jsonTokens } from './json-tokens';
 
 @Component({
   selector: 'app-response-panel',
   templateUrl: './response-panel.html',
   styleUrl: './response-panel.css',
+  imports: [MapPreview],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResponsePanel {
   private readonly search = inject(AddressSearch);
 
   readonly state = this.search.state;
+  readonly mapZipCodes = computed(() => {
+    const state = this.state();
+    const query = this.search.query();
+    if (state.status !== 'success' || state.addresses.length !== 1 || !query || !('cep' in query))
+      return [];
+    return [query.cep];
+  });
   readonly copied = signal<'json' | 'link' | null>(null);
 
   readonly response = computed(() => {

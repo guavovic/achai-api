@@ -1,0 +1,33 @@
+<form class="search-form" [formGroup]="form" (submit)="submit($event)" novalidate>
+  <div class="grid">
+    <div class="field">
+      <label for="origem">origem <span class="type">cep</span></label>
+      <input
+        id="origem"
+        formControlName="origin"
+        inputmode="numeric"
+        placeholder="00000-000"
+        [attr.aria-invalid]="showError('origin')"
+      />
+      @if (showError('origin')) {
+        <p class="field-error">Digite os 8 dígitos do CEP.</p>
+      }
+    </div>
+    <div class="field">
+      <label for="destino">destino <span class="type">cep</span></label>
+      <div class="inline">
+        <input
+          id="destino"
+          formControlName="destination"
+          inputmode="numeric"
+          placeholder="00000-000"
+          [attr.aria-invalid]="showError('destination')"
+        />
+        <button type="submit">Enviar</button>
+      </div>
+      @if (showError('destination')) {
+        <p class="field-error">Digite os 8 dígitos do CEP.</p>
+      }
+    </div>
+  </div>
+</form>
