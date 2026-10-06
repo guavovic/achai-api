@@ -3,6 +3,7 @@ using Achai.Api.Common.Results;
 using Achai.Api.Features.Addresses;
 using Achai.Api.Features.Cities;
 using Achai.Api.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Achai.Api.Tests.Unit.Features;
@@ -64,7 +65,7 @@ public class AddressFeaturesTests
         _addressProvider.SearchByStreetAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(new List<Address>());
 
-        await SearchAddressesByStreet.HandleAsync("sp", "São Paulo", "Paulista", _addressProvider, _ct);
+        await SearchAddressesByStreet.HandleAsync("sp", "São Paulo", "Paulista", _addressProvider, new DefaultHttpContext(), _ct);
 
         await _addressProvider.Received(1).SearchByStreetAsync("SP", "São Paulo", "Paulista", Arg.Any<CancellationToken>());
     }

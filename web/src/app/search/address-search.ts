@@ -5,11 +5,13 @@ import { AchaiApi, Address } from '../core/api/achai-api';
 import { problemMessage } from '../core/api/problem-message';
 
 export const SLOW_RESPONSE_MS = 3000;
+export const SEARCHED_STREET_HEADER = 'X-Logradouro-Buscado';
 
 export interface ApiResponse {
   status: number;
   ms: number;
   body: unknown;
+  searchedAs?: string;
 }
 
 export type SearchState =
@@ -60,7 +62,12 @@ export class AddressSearch {
           this.stateSignal.set({
             status: 'success',
             url,
-            response: { status: response.status, ms: elapsed(), body: response.body },
+            response: {
+              status: response.status,
+              ms: elapsed(),
+              body: response.body,
+              ...searchedAs(response.headers.get(SEARCHED_STREET_HEADER)),
+            },
             addresses: toAddresses(response.body as T),
           }),
         error: (error) =>
@@ -75,4 +82,8 @@ export class AddressSearch {
           }),
       });
   }
+}
+
+function searchedAs(header: string | null): Pick<ApiResponse, 'searchedAs'> {
+  return header ? { searchedAs: decodeURIComponent(header) } : {};
 }
