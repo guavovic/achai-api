@@ -24,6 +24,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/buscar/lote": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Busca vários CEPs de uma vez
+         * @description Recebe de 1 a 20 CEPs e devolve um item para cada um, na mesma ordem, com o status encontrado, nao_encontrado ou invalido. Usa o mesmo cache e o mesmo fallback da busca por CEP.
+         */
+        post: operations["GetAddressesByZipCodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/buscar/{uf}/{cidade}/{logradouro}": {
         parameters: {
             query?: never;
@@ -33,7 +53,7 @@ export interface paths {
         };
         /**
          * Busca endereços pelo logradouro
-         * @description Consulta o ViaCEP, que devolve até 50 endereços. Sem resultado, devolve uma lista vazia.
+         * @description Consulta o ViaCEP, que devolve até 50 endereços. Sem resultado, tenta variações do nome: abreviação por extenso (Av. vira Avenida), número romano ou arábico (XV e 15) e o nome sem o tipo (Rua). Quando uma variação encontra, o cabeçalho X-Logradouro-Buscado diz qual foi, com o texto codificado para URL. Sem nenhum resultado, devolve uma lista vazia.
          */
         get: operations["SearchAddressesByStreet"];
         put?: never;
@@ -81,6 +101,15 @@ export interface components {
             tipoLogradouro: null | string;
             nomeLogradouro: null | string;
             enderecoFormatado: string;
+        };
+        BatchItem: {
+            cep: string;
+            status: string;
+            endereco: null | components["schemas"]["AddressResponse"];
+        };
+        BatchRequest: {
+            /** @description De 1 a 20 CEPs, com ou sem traço. */
+            ceps: string[];
         };
         CityResponse: {
             nome: null | string;
@@ -150,6 +179,48 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetAddressesByZipCodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BatchRequest"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BatchItem"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
                 };
             };
             /** @description Too Many Requests */

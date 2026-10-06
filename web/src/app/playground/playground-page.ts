@@ -14,19 +14,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AchaiApi } from '../core/api/achai-api';
 import { RoutePath } from '../core/route-path/route-path';
 import { AddressSearch, SearchQuery } from '../search/address-search';
+import { BatchSearch } from '../search/batch/batch-search';
 import { STREET_EXAMPLES, ZIP_CODE_EXAMPLES, pickRandom } from '../search/examples';
 import { ResponsePanel } from '../search/response/response-panel';
-import { RecentSearches, isZipCodeQuery } from '../search/recent-searches';
+import { RecentSearches, isBatchQuery, isZipCodeQuery } from '../search/recent-searches';
 import { CodeSnippets } from '../search/snippets/code-snippets';
+import { BatchBody } from '../search/snippets/snippets';
 import { StreetSearch } from '../search/street/street-search';
 import { maskZipCode } from '../search/zip-code/zip-code-mask';
 import { ZipCodeSearch } from '../search/zip-code/zip-code-search';
 
-type Tab = 'zipCode' | 'street';
+type Tab = 'zipCode' | 'street' | 'batch';
 
 @Component({
   selector: 'app-playground-page',
-  imports: [ZipCodeSearch, StreetSearch, ResponsePanel, CodeSnippets, RoutePath],
+  imports: [ZipCodeSearch, StreetSearch, BatchSearch, ResponsePanel, CodeSnippets, RoutePath],
   templateUrl: './playground-page.html',
   styleUrl: './playground-page.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,27 +44,41 @@ export class PlaygroundPage {
   readonly uf = input<string>();
   readonly cidade = input<string>();
   readonly logradouro = input<string>();
+  readonly ceps = input<string>();
 
-  protected readonly tab = linkedSignal<Tab>(() =>
-    this.endpoint() === 'logradouro' || this.logradouro() ? 'street' : 'zipCode',
-  );
+  protected readonly tab = linkedSignal<Tab>(() => {
+    if (this.endpoint() === 'lote' || this.ceps()) return 'batch';
+    return this.endpoint() === 'logradouro' || this.logradouro() ? 'street' : 'zipCode';
+  });
   protected readonly baseUrl = inject(AchaiApi).baseUrl;
   protected readonly examples = {
     zipCode: pickRandom(ZIP_CODE_EXAMPLES),
     street: pickRandom(STREET_EXAMPLES),
+    batch: ZIP_CODE_EXAMPLES.slice(0, 3),
   };
 
   protected readonly requestUrl = computed(() => {
     const state = this.search.state();
     if (state.status !== 'idle') return state.url;
 
-    return this.tab() === 'zipCode'
-      ? `${this.baseUrl}/buscar/{cep}`
-      : `${this.baseUrl}/buscar/{uf}/{cidade}/{logradouro}`;
+    const paths: Record<Tab, string> = {
+      zipCode: '/buscar/{cep}',
+      street: '/buscar/{uf}/{cidade}/{logradouro}',
+      batch: '/buscar/lote',
+    };
+    return `${this.baseUrl}${paths[this.tab()]}`;
+  });
+
+  protected readonly requestBody = computed<BatchBody | undefined>(() => {
+    if (!this.requestUrl().endsWith('/buscar/lote')) return undefined;
+    const query = this.search.query();
+    const ceps = query && isBatchQuery(query) ? query.ceps.split(',') : [...this.examples.batch];
+    return { ceps };
   });
 
   private readonly zipCodeSearch = viewChild.required(ZipCodeSearch);
   private readonly streetSearch = viewChild.required(StreetSearch);
+  private readonly batchSearch = viewChild.required(BatchSearch);
 
   constructor() {
     afterNextRender(() => this.searchFromUrl());
@@ -85,13 +101,16 @@ export class PlaygroundPage {
   }
 
   protected recentLabel(query: SearchQuery): string {
-    return isZipCodeQuery(query)
-      ? maskZipCode(query.cep)
-      : `${query.logradouro}, ${query.cidade}/${query.uf}`;
+    if (isZipCodeQuery(query)) return maskZipCode(query.cep);
+    if (isBatchQuery(query)) return `lote de ${query.ceps.split(',').length} CEPs`;
+    return `${query.logradouro}, ${query.cidade}/${query.uf}`;
   }
 
   protected searchRecent(query: SearchQuery): void {
-    if (isZipCodeQuery(query)) {
+    if (isBatchQuery(query)) {
+      this.tab.set('batch');
+      this.batchSearch().searchFor(query.ceps.split(','));
+    } else if (isZipCodeQuery(query)) {
       this.tab.set('zipCode');
       this.zipCodeSearch().searchFor(query.cep);
     } else {
@@ -102,13 +121,19 @@ export class PlaygroundPage {
 
   private searchFromUrl(): void {
     const [cep, uf, cidade, logradouro] = [this.cep(), this.uf(), this.cidade(), this.logradouro()];
+    const ceps = this.ceps();
 
-    if (cep) this.zipCodeSearch().searchFor(cep);
+    if (ceps) this.batchSearch().searchFor(ceps.split(','));
+    else if (cep) this.zipCodeSearch().searchFor(cep);
     else if (uf && cidade && logradouro) this.streetSearch().searchFor(uf, cidade, logradouro);
   }
 
   protected searchZipCodeExample(): void {
     this.zipCodeSearch().searchFor(this.examples.zipCode);
+  }
+
+  protected searchBatchExample(): void {
+    this.batchSearch().searchFor([...this.examples.batch]);
   }
 
   protected searchStreetExample(): void {

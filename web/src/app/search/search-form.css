@@ -44,7 +44,8 @@ label {
 }
 
 input,
-select {
+select,
+textarea {
   flex: 1;
   min-width: 0;
   font: inherit;
@@ -60,14 +61,16 @@ select option {
 }
 
 input:focus-visible,
-select:focus-visible {
+select:focus-visible,
+textarea:focus-visible {
   outline: 2px solid var(--gv-color-focus);
   outline-offset: 1px;
   border-color: var(--gv-color-focus);
 }
 
 input[aria-invalid='true'],
-select[aria-invalid='true'] {
+select[aria-invalid='true'],
+textarea[aria-invalid='true'] {
   border-color: var(--gv-color-danger);
 }
 
@@ -135,4 +138,14 @@ button:focus-visible {
   font-weight: var(--gv-weight-bold);
   color: var(--gv-color-accent);
   background: none;
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
 }
