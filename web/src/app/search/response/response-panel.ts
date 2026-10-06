@@ -14,7 +14,7 @@ export class ResponsePanel {
   private readonly search = inject(AddressSearch);
 
   readonly state = this.search.state;
-  readonly copied = signal(false);
+  readonly copied = signal<'json' | 'link' | null>(null);
 
   readonly response = computed(() => {
     const state = this.state();
@@ -49,12 +49,18 @@ export class ResponsePanel {
 
   async copyJson(): Promise<void> {
     const response = this.response();
-    if (!response) return;
+    if (response) await this.copy('json', JSON.stringify(response.body, null, 2));
+  }
 
+  async copyLink(): Promise<void> {
+    await this.copy('link', location.href);
+  }
+
+  private async copy(what: 'json' | 'link', text: string): Promise<void> {
     try {
-      await navigator.clipboard.writeText(JSON.stringify(response.body, null, 2));
-      this.copied.set(true);
-      setTimeout(() => this.copied.set(false), 2000);
+      await navigator.clipboard.writeText(text);
+      this.copied.set(what);
+      setTimeout(() => this.copied.set(null), 2000);
     } catch {}
   }
 }
