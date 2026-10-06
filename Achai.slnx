@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/sdk/">
+    <Project Path="sdk/dotnet/Achai.Client/Achai.Client.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/api/Achai.Api.csproj" />
   </Folder>

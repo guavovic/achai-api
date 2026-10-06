@@ -1,0 +1,56 @@
+name: Publicar SDKs
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Versão dos pacotes (sem o v)
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publicar no NuGet e no npm
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version || github.event.release.tag_name }}
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+
+      - name: Versão sem o v
+        run: echo "VERSION=${VERSION#v}" >> "$GITHUB_ENV"
+
+      - name: Empacotar o cliente .NET
+        run: dotnet pack sdk/dotnet/Achai.Client --configuration Release -p:Version=$VERSION --output artifacts
+
+      - name: Publicar no NuGet
+        if: env.NUGET_API_KEY != ''
+        run: dotnet nuget push "artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Publicar no npm
+        if: env.NODE_AUTH_TOKEN != ''
+        working-directory: sdk/typescript
+        run: |
+          npm ci
+          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npm publish --access public
+
+      - name: Avisar quando faltam as chaves
+        if: env.NUGET_API_KEY == '' || env.NODE_AUTH_TOKEN == ''
+        run: echo "::warning::Sem NUGET_API_KEY ou NPM_TOKEN nos secrets do repositório; o pacote correspondente não foi publicado."
