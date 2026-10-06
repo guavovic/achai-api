@@ -2,7 +2,7 @@ namespace Achai.Api.Tests.Integration;
 
 public class CorsTests
 {
-    private const string FrontOrigin = "https://achai-app.vercel.app";
+    private const string FrontOrigin = "https://achai-api.vercel.app";
     private const string OtherOrigin = "https://site-qualquer.com";
 
     private readonly CancellationToken _ct = TestContext.Current.CancellationToken;

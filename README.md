@@ -2,7 +2,7 @@
 
 Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
-**Demo:** [achai-app.vercel.app](https://achai-app.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
+**Demo:** [achai-api.vercel.app](https://achai-api.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
 <p align="center">
   <img src="docs/assets/achai-busca-por-endereco.gif" alt="Busca pela Rua XV de Novembro, em Curitiba, que lista 12 endereços" width="560">
