@@ -74,8 +74,8 @@ select[aria-invalid='true'] {
 button {
   font: inherit;
   font-weight: var(--gv-weight-bold);
-  color: var(--gv-color-bg);
-  background: var(--gv-color-text);
+  color: var(--gv-color-on-accent);
+  background: var(--gv-color-accent);
   border: 0;
   border-radius: var(--gv-radius-sm);
   padding: var(--gv-space-2) var(--gv-space-4);
@@ -83,7 +83,7 @@ button {
 }
 
 button:hover {
-  opacity: 0.85;
+  background: var(--gv-color-accent-hover);
 }
 
 button:focus-visible {

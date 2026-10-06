@@ -1,3 +1,22 @@
+/* Paleta Açaí: valores próprios da achaí-API por cima dos tokens do guavovic-ui. */
+html:root {
+  --gv-color-bg: #faf8f9;
+  --gv-color-surface: #ffffff;
+  --gv-color-surface-hover: #f3e9f0;
+  --gv-color-border: #ebe3e8;
+  --gv-color-border-strong: #d6c9d1;
+  --gv-color-text: #1f1420;
+  --gv-color-text-muted: #6c5c69;
+  --gv-color-accent: #5b1e4e;
+  --gv-color-accent-hover: #47163c;
+  --gv-color-on-accent: #ffffff;
+  --gv-color-focus: #5b1e4e;
+  --gv-color-success: #1d7a45;
+  --gv-color-warning: #8a6200;
+  --gv-color-danger: #b42318;
+  --achai-accent-soft: #f3e9f0;
+}
+
 *,
 *::before,
 *::after {
@@ -20,6 +39,23 @@ input,
 select,
 button {
   font-family: inherit;
+}
+
+.method {
+  flex: none;
+  display: inline-block;
+  margin-right: var(--gv-space-2);
+  padding: 0 var(--gv-space-1);
+  font-size: 0.75em;
+  font-weight: var(--gv-weight-bold);
+  line-height: 1.6;
+  color: var(--gv-color-on-accent);
+  background: var(--gv-color-accent);
+  border-radius: 3px;
+}
+
+a {
+  color: var(--gv-color-accent);
 }
 
 [hidden] {
