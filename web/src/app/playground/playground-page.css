@@ -95,6 +95,39 @@ h1 {
   color: var(--gv-color-text-muted);
 }
 
+.recent {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-1) var(--gv-space-3);
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text-muted);
+}
+
+.recent button {
+  font: inherit;
+  color: var(--gv-color-accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.recent button:hover {
+  text-decoration-style: solid;
+}
+
+.recent .clear {
+  color: var(--gv-color-text-muted);
+  text-decoration: none;
+}
+
+.recent .clear:hover {
+  color: var(--gv-color-text);
+  text-decoration: underline;
+}
+
 .example button {
   font: inherit;
   color: var(--gv-color-accent);

@@ -61,6 +61,15 @@
           </button>
         </p>
       </div>
+      @if (recent.list().length) {
+        <div class="recent">
+          <span>recentes:</span>
+          @for (query of recent.list(); track recentLabel(query)) {
+            <button type="button" (click)="searchRecent(query)">{{ recentLabel(query) }}</button>
+          }
+          <button type="button" class="clear" (click)="recent.clear()">limpar</button>
+        </div>
+      }
     </div>
 
     <app-code-snippets [url]="requestUrl()" />
