@@ -1,5 +1,6 @@
 using Achai.Api.Common.Http;
 using Achai.Api.Features;
+using Achai.Api.Features.Mcp;
 using Achai.Api.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddValidation();
 builder.Services.AddPortugueseProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddAchaiMcpServer();
 
 var app = builder.Build();
 
@@ -25,5 +27,6 @@ app.UseCors(CorsExtensions.FrontPolicy);
 app.UseRateLimiter();
 app.MapFeatureEndpoints();
 app.MapApiDocumentation();
+app.MapMcp(McpExtensions.Path);
 
 app.Run();
