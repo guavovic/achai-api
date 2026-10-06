@@ -15,19 +15,41 @@
 
     <div class="field">
       <label for="cidade">cidade <span class="type">string · 3+ letras</span></label>
-      <input
-        id="cidade"
-        formControlName="city"
-        list="cidades"
-        autocomplete="off"
-        [placeholder]="cities.isLoading() ? 'carregando cidades...' : 'Blumenau'"
-        [attr.aria-invalid]="showError('city')"
-      />
-      <datalist id="cidades">
-        @for (city of cities.value() ?? []; track city.nome) {
-          <option [value]="city.nome"></option>
+      <div class="combo">
+        <input
+          id="cidade"
+          formControlName="city"
+          autocomplete="off"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-controls="cidades"
+          [attr.aria-expanded]="showCityList()"
+          [attr.aria-activedescendant]="showCityList() ? 'cidade-' + activeCity() : null"
+          [placeholder]="cities.isLoading() ? 'carregando cidades...' : 'Blumenau'"
+          [attr.aria-invalid]="showError('city')"
+          (input)="openCities()"
+          (focus)="openCities()"
+          (blur)="closeCities()"
+          (keydown)="onCityKeydown($event)"
+        />
+        @if (showCityList()) {
+          <ul id="cidades" class="suggestions" role="listbox" aria-label="Cidades">
+            @for (city of citySuggestions(); track city.name; let index = $index) {
+              <li
+                role="option"
+                [id]="'cidade-' + index"
+                [attr.aria-selected]="index === activeCity()"
+                (mousedown)="$event.preventDefault()"
+                (mouseenter)="activeCity.set(index)"
+                (click)="chooseCity(city.name)"
+              >
+                {{ city.before }}<mark>{{ city.match }}</mark
+                >{{ city.after }}
+              </li>
+            }
+          </ul>
         }
-      </datalist>
+      </div>
       @if (showError('city')) {
         <p class="field-error">Digite pelo menos 3 letras da cidade.</p>
       }

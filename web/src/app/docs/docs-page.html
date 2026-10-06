@@ -6,7 +6,8 @@
         <p class="toc-group">{{ group.name }}</p>
         @for (operation of group.operations; track operation.id) {
           <a routerLink="/docs" [fragment]="operation.id">
-            <span class="method">{{ operation.method }}</span> {{ operation.path }}
+            <span class="method">{{ operation.method }}</span>
+            <app-route-path [path]="operation.path" />
           </a>
         }
       }
@@ -42,7 +43,8 @@
             <article class="block" [id]="operation.id">
               <header class="block-head">
                 <h3>
-                  <span class="method">{{ operation.method }}</span> {{ operation.path }}
+                  <span class="method">{{ operation.method }}</span>
+                  <app-route-path [path]="operation.path" />
                 </h3>
                 <p class="summary">{{ operation.summary }}</p>
               </header>
@@ -64,15 +66,17 @@
                       <tbody>
                         @for (parameter of operation.parameters; track parameter.name) {
                           <tr>
-                            <td class="strong">
+                            <td class="strong param">
                               {{ parameter.name }}
                               @if (parameter.required) {
                                 <span class="muted">obrigatório</span>
                               }
                             </td>
-                            <td>{{ parameter.location }}</td>
+                            <td [class.param]="parameter.location === 'rota'">
+                              {{ parameter.location }}
+                            </td>
                             <td>
-                              {{ parameter.type }}
+                              <app-type-label [type]="parameter.type" />
                               @for (rule of parameter.rules; track rule) {
                                 <span class="rule">{{ rule }}</span>
                               }
@@ -108,7 +112,7 @@
                                 response.schema
                               }}</a>
                             } @else {
-                              {{ response.schema }}
+                              <app-type-label [type]="response.schema" />
                             }
                             @if (response.contentType) {
                               <span class="rule">{{ response.contentType }}</span>
@@ -151,8 +155,8 @@
                   <tbody>
                     @for (field of schema.fields; track field.name) {
                       <tr>
-                        <td class="strong">{{ field.name }}</td>
-                        <td>{{ field.type }}</td>
+                        <td class="strong field">{{ field.name }}</td>
+                        <td><app-type-label [type]="field.type" /></td>
                         <td class="muted">{{ field.required ? 'sim' : 'não' }}</td>
                       </tr>
                     }

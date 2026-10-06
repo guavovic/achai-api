@@ -96,3 +96,43 @@ button:focus-visible {
   font-size: var(--gv-text-xs);
   color: var(--gv-color-danger);
 }
+
+.combo {
+  position: relative;
+  display: flex;
+}
+
+.suggestions {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% + var(--gv-space-1));
+  left: 0;
+  right: 0;
+  max-height: 15rem;
+  overflow-y: auto;
+  margin: 0;
+  padding: var(--gv-space-1) 0;
+  list-style: none;
+  background: var(--gv-color-surface);
+  border: 1px solid var(--gv-color-border-strong);
+  border-radius: var(--gv-radius-sm);
+  box-shadow: 0 8px 24px rgb(31 20 32 / 0.12);
+}
+
+.suggestions li {
+  padding: var(--gv-space-2) var(--gv-space-3);
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text);
+  cursor: pointer;
+}
+
+.suggestions li[aria-selected='true'] {
+  color: var(--gv-color-accent);
+  background: var(--achai-accent-soft);
+}
+
+.suggestions mark {
+  font-weight: var(--gv-weight-bold);
+  color: var(--gv-color-accent);
+  background: none;
+}

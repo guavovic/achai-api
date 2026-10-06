@@ -71,3 +71,16 @@ button:focus-visible {
   border: 1px solid var(--gv-color-border);
   border-radius: var(--gv-radius-sm);
 }
+
+.tok-keyword {
+  font-weight: var(--gv-weight-bold);
+  color: var(--gv-color-accent);
+}
+
+.tok-string {
+  color: var(--achai-kiwi);
+}
+
+.tok-call {
+  color: var(--achai-mirtilo);
+}

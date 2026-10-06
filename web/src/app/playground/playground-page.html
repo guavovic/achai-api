@@ -22,7 +22,7 @@
           [attr.aria-selected]="tab() === 'zipCode'"
           (click)="tab.set('zipCode')"
         >
-          <span class="method">GET</span> /buscar/&#123;cep&#125;
+          <span class="method">GET</span> <app-route-path path="/buscar/{cep}" />
         </button>
         <button
           type="button"
@@ -33,7 +33,7 @@
           (click)="tab.set('street')"
         >
           <span class="method">GET</span>
-          /buscar/&#123;uf&#125;/&#123;cidade&#125;/&#123;logradouro&#125;
+          <app-route-path path="/buscar/{uf}/{cidade}/{logradouro}" />
         </button>
       </div>
     </div>

@@ -17,5 +17,7 @@
       {{ copied() ? 'copiado' : 'copiar' }}
     </button>
   </div>
-  <pre class="code"><code>{{ code() }}</code></pre>
+  <pre
+    class="code"
+  ><code>@for (token of tokens(); track $index) {<span [class]="'tok-' + token.kind">{{ token.text }}</span>}</code></pre>
 </section>
