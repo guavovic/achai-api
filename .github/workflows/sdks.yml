@@ -67,6 +67,7 @@ jobs:
 
       - name: Publicar
         run: |
+          export NODE_AUTH_TOKEN="$(printf '%s' "$NODE_AUTH_TOKEN" | tr -d '[:space:]')"
           npm ci
           npm version "${VERSION#v}" --no-git-tag-version --allow-same-version
           npm publish --access public
