@@ -188,6 +188,48 @@ public class EndpointsTests : IDisposable
     }
 
     [Fact]
+    public async Task Consensus_WhenBothSourcesAgree_SaysSo()
+    {
+        _factory.ViaCep.RespondWith(HttpStatusCode.OK, ExternalResponses.ViaCepPracaDaSe);
+        _factory.BrasilApi.RespondWith(HttpStatusCode.OK, ExternalResponses.BrasilApiPracaDaSe);
+
+        var response = await _client.GetAsync("/buscar/01001-000/consenso", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+        body.GetProperty("concordam").GetBoolean().ShouldBeTrue();
+        body.GetProperty("divergencias").GetArrayLength().ShouldBe(0);
+        body.GetProperty("fontes").EnumerateArray().Select(source => source.GetProperty("status").GetString())
+            .ShouldBe(["encontrado", "encontrado"]);
+    }
+
+    [Fact]
+    public async Task Consensus_WhenOnlyOneSourceFinds_ReportsTheDifference()
+    {
+        _factory.ViaCep.RespondWith(HttpStatusCode.OK, ExternalResponses.ViaCepNotFound);
+        _factory.BrasilApi.RespondWith(HttpStatusCode.OK, ExternalResponses.BrasilApiPracaDaSe);
+
+        var response = await _client.GetAsync("/buscar/99999999/consenso", _ct);
+
+        var body = await response.Content.ReadFromJsonAsync<JsonElement>(_ct);
+        body.GetProperty("concordam").GetBoolean().ShouldBeFalse();
+        body.GetProperty("divergencias").EnumerateArray().Select(field => field.GetString()).ShouldBe(["encontrado"]);
+        body.GetProperty("fontes")[0].GetProperty("status").GetString().ShouldBe("nao_encontrado");
+    }
+
+    [Fact]
+    public async Task Consensus_ComparesTheFieldsIgnoringAccents()
+    {
+        _factory.ViaCep.RespondWith(HttpStatusCode.OK, ExternalResponses.ViaCepPracaDaSe);
+        _factory.BrasilApi.RespondWith(HttpStatusCode.OK, ExternalResponses.BrasilApiPracaDaSe
+            .Replace("Praça da Sé", "PRACA DA SE").Replace("\"Sé\"", "\"Centro\""));
+
+        var body = await (await _client.GetAsync("/buscar/01001000/consenso", _ct)).Content.ReadFromJsonAsync<JsonElement>(_ct);
+
+        body.GetProperty("divergencias").EnumerateArray().Select(field => field.GetString()).ShouldBe(["bairro"]);
+    }
+
+    [Fact]
     public async Task GetCities_WithUnknownState_Returns400WithoutCallingIbge()
     {
         var response = await _client.GetAsync("/buscar/cidades/XX", _ct);

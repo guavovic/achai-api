@@ -45,13 +45,23 @@
         >
           <span class="method">POST</span> <app-route-path path="/buscar/lote" />
         </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-consenso"
+          aria-controls="painel-consenso"
+          [attr.aria-selected]="tab() === 'consensus'"
+          (click)="tab.set('consensus')"
+        >
+          <span class="method">GET</span> <app-route-path path="/buscar/{cep}/consenso" />
+        </button>
       </div>
     </div>
 
     <div class="group">
       <h2 class="label">parâmetros</h2>
       <div id="painel-cep" role="tabpanel" aria-labelledby="tab-cep" [hidden]="tab() !== 'zipCode'">
-        <app-zip-code-search />
+        <app-zip-code-search #zipCodeSearch />
         <p class="example">
           exemplo:
           <button type="button" (click)="searchZipCodeExample()">{{ examples.zipCode }}</button>
@@ -78,6 +88,18 @@
           <button type="button" (click)="searchBatchExample()">
             {{ examples.batch.join(', ') }}
           </button>
+        </p>
+      </div>
+      <div
+        id="painel-consenso"
+        role="tabpanel"
+        aria-labelledby="tab-consenso"
+        [hidden]="tab() !== 'consensus'"
+      >
+        <app-zip-code-search #consensusSearch inputId="cep-consenso" [consensus]="true" />
+        <p class="example">
+          exemplo:
+          <button type="button" (click)="searchConsensusExample()">{{ examples.zipCode }}</button>
         </p>
       </div>
       @if (recent.list().length) {
