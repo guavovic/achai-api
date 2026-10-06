@@ -11,6 +11,8 @@ public static class HealthEndpoints
         app.MapHealthChecks("/health", new HealthCheckOptions { Predicate = _ => false })
             .DisableRateLimiting();
 
+        app.MapGetSourcesStatus();
+
         app.MapHealthChecks("/health/ready", new HealthCheckOptions
         {
             Predicate = check => check.Tags.Contains(HealthCheckTags.Ready),

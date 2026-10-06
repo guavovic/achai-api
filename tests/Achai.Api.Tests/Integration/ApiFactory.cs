@@ -27,6 +27,7 @@ public sealed class ApiFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(_environment);
+        builder.UseSetting("Status:Monitor", "false");
 
         foreach (var (key, value) in _settings)
             builder.UseSetting(key, value);
