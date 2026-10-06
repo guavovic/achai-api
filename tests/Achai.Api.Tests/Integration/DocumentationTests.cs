@@ -29,7 +29,7 @@ public class DocumentationTests : IDisposable
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         using var document = JsonDocument.Parse(await response.Content.ReadAsStringAsync(_ct));
         var root = document.RootElement;
-        root.GetProperty("info").GetProperty("title").GetString().ShouldBe("Achaí");
+        root.GetProperty("info").GetProperty("title").GetString().ShouldBe("Achaí API");
 
         var paths = root.GetProperty("paths");
         paths.EnumerateObject().Select(path => path.Name).ShouldBe(
@@ -47,6 +47,6 @@ public class DocumentationTests : IDisposable
 
         response.StatusCode.ShouldBe(HttpStatusCode.OK);
         response.Content.Headers.ContentType?.MediaType.ShouldBe("text/html");
-        (await response.Content.ReadAsStringAsync(_ct)).ShouldContain("<title>Achaí</title>");
+        (await response.Content.ReadAsStringAsync(_ct)).ShouldContain("<title>Achaí API</title>");
     }
 }
