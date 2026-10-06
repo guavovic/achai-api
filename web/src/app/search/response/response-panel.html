@@ -24,9 +24,14 @@
       }
     }
     @if (response()) {
-      <button type="button" class="copy" (click)="copyJson()">
-        {{ copied() ? 'copiado' : 'copiar json' }}
-      </button>
+      <span class="actions">
+        <button type="button" class="copy" (click)="copyLink()">
+          {{ copied() === 'link' ? 'link copiado' : 'copiar link' }}
+        </button>
+        <button type="button" class="copy" (click)="copyJson()">
+          {{ copied() === 'json' ? 'json copiado' : 'copiar json' }}
+        </button>
+      </span>
     }
   </div>
 

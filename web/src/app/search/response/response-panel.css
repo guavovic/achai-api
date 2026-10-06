@@ -56,8 +56,13 @@
   }
 }
 
-.copy {
+.actions {
+  display: flex;
+  gap: var(--gv-space-4);
   margin-left: auto;
+}
+
+.copy {
   font: inherit;
   color: var(--gv-color-text-muted);
   background: none;

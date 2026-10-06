@@ -38,6 +38,7 @@ describe('AddressSearch', () => {
   it('busca o CEP sem o traço e guarda o endereço', () => {
     search.byZipCode('01001-000');
     expect(search.state().status).toBe('loading');
+    expect(search.query()).toEqual({ cep: '01001000' });
 
     http.expectOne(`${environment.apiBaseUrl}/buscar/01001000`).flush(praçaDaSé);
 
@@ -51,6 +52,7 @@ describe('AddressSearch', () => {
 
   it('busca por logradouro com cada parte codificada na URL', () => {
     search.byStreet('SP', 'São Paulo', 'Paulista');
+    expect(search.query()).toEqual({ uf: 'SP', cidade: 'São Paulo', logradouro: 'Paulista' });
 
     http
       .expectOne(`${environment.apiBaseUrl}/buscar/SP/S%C3%A3o%20Paulo/Paulista`)

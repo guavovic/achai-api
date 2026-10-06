@@ -1,12 +1,15 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  afterNextRender,
   computed,
+  effect,
   inject,
   input,
   linkedSignal,
   viewChild,
 } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AchaiApi } from '../core/api/achai-api';
 import { AddressSearch } from '../search/address-search';
 import { STREET_EXAMPLES, ZIP_CODE_EXAMPLES, pickRandom } from '../search/examples';
@@ -26,11 +29,17 @@ type Tab = 'zipCode' | 'street';
 })
 export class PlaygroundPage {
   private readonly search = inject(AddressSearch);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   readonly endpoint = input<string>();
+  readonly cep = input<string>();
+  readonly uf = input<string>();
+  readonly cidade = input<string>();
+  readonly logradouro = input<string>();
 
   protected readonly tab = linkedSignal<Tab>(() =>
-    this.endpoint() === 'logradouro' ? 'street' : 'zipCode',
+    this.endpoint() === 'logradouro' || this.logradouro() ? 'street' : 'zipCode',
   );
   protected readonly baseUrl = inject(AchaiApi).baseUrl;
   protected readonly examples = {
@@ -49,6 +58,27 @@ export class PlaygroundPage {
 
   private readonly zipCodeSearch = viewChild.required(ZipCodeSearch);
   private readonly streetSearch = viewChild.required(StreetSearch);
+
+  constructor() {
+    afterNextRender(() => this.searchFromUrl());
+
+    effect(() => {
+      const query = this.search.query();
+      if (query)
+        void this.router.navigate([], {
+          relativeTo: this.route,
+          queryParams: query,
+          replaceUrl: true,
+        });
+    });
+  }
+
+  private searchFromUrl(): void {
+    const [cep, uf, cidade, logradouro] = [this.cep(), this.uf(), this.cidade(), this.logradouro()];
+
+    if (cep) this.zipCodeSearch().searchFor(cep);
+    else if (uf && cidade && logradouro) this.streetSearch().searchFor(uf, cidade, logradouro);
+  }
 
   protected searchZipCodeExample(): void {
     this.zipCodeSearch().searchFor(this.examples.zipCode);

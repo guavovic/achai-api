@@ -18,19 +18,25 @@ export type SearchState =
   | { status: 'success'; url: string; response: ApiResponse; addresses: Address[] }
   | { status: 'error'; url: string; response: ApiResponse | null; message: string };
 
+export type SearchQuery = { cep: string } | { uf: string; cidade: string; logradouro: string };
+
 @Injectable({ providedIn: 'root' })
 export class AddressSearch {
   private readonly api = inject(AchaiApi);
   private readonly stateSignal = signal<SearchState>({ status: 'idle' });
+  private readonly querySignal = signal<SearchQuery | null>(null);
   private running?: Subscription;
 
   readonly state = this.stateSignal.asReadonly();
+  readonly query = this.querySignal.asReadonly();
 
   byZipCode(zipCode: string): void {
+    this.querySignal.set({ cep: zipCode.replace('-', '') });
     this.run<Address>(this.api.zipCodeUrl(zipCode.replace('-', '')), (address) => [address]);
   }
 
   byStreet(state: string, city: string, street: string): void {
+    this.querySignal.set({ uf: state, cidade: city, logradouro: street });
     this.run<Address[]>(this.api.streetUrl(state, city, street), (addresses) => addresses);
   }
 

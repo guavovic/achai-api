@@ -1,2 +1,3 @@
 # Gerado pelo openapi-typescript (npm run api:types)
 src/app/core/api/schema.ts
+src/app/docs/openapi.fixture.json
