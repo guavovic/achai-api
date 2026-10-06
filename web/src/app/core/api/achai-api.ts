@@ -12,6 +12,7 @@ export class AchaiApi {
   private readonly http = inject(HttpClient);
 
   readonly baseUrl = environment.apiBaseUrl;
+  readonly openApiUrl = `${this.baseUrl}/openapi/v1.json`;
 
   zipCodeUrl(zipCode: string): string {
     return `${this.baseUrl}/buscar/${encodeURIComponent(zipCode)}`;

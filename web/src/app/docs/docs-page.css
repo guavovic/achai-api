@@ -1,0 +1,241 @@
+:host {
+  display: block;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 15rem minmax(0, 1fr);
+  gap: var(--gv-space-12);
+  align-items: start;
+}
+
+.toc {
+  position: sticky;
+  top: var(--gv-space-6);
+  display: grid;
+  gap: var(--gv-space-1);
+  font-size: var(--gv-text-sm);
+}
+
+.toc a {
+  color: var(--gv-color-text-muted);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.toc a:hover {
+  color: var(--gv-color-text);
+  text-decoration: underline;
+}
+
+.toc-group {
+  margin: var(--gv-space-4) 0 0;
+  font-size: var(--gv-text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gv-color-text-muted);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gv-space-12);
+}
+
+.intro {
+  display: grid;
+  gap: var(--gv-space-3);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--gv-text-2xl);
+  line-height: var(--gv-leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.intro p {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--gv-color-text-muted);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: var(--gv-space-1) var(--gv-space-4);
+  margin: 0;
+  font-size: var(--gv-text-sm);
+}
+
+.facts dt {
+  color: var(--gv-color-text-muted);
+}
+
+.facts dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gv-space-8);
+}
+
+.label {
+  margin: 0;
+  padding-bottom: var(--gv-space-2);
+  border-bottom: 1px solid var(--gv-color-border);
+  font-size: var(--gv-text-xs);
+  font-weight: var(--gv-weight-regular);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gv-color-text-muted);
+}
+
+.operation {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gv-space-3);
+  scroll-margin-top: var(--gv-space-6);
+}
+
+h3 {
+  margin: 0;
+  font-size: var(--gv-text-base);
+  overflow-wrap: anywhere;
+}
+
+.method {
+  margin-right: var(--gv-space-2);
+  font-weight: var(--gv-weight-bold);
+  color: var(--gv-color-success);
+}
+
+.summary {
+  margin: 0;
+}
+
+.muted {
+  color: var(--gv-color-text-muted);
+}
+
+p.muted {
+  margin: 0;
+  max-width: 72ch;
+  font-size: var(--gv-text-sm);
+}
+
+.sub {
+  margin: var(--gv-space-3) 0 0;
+  font-size: var(--gv-text-xs);
+  font-weight: var(--gv-weight-regular);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gv-color-text-muted);
+}
+
+.table {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--gv-text-sm);
+}
+
+th,
+td {
+  padding: var(--gv-space-2) var(--gv-space-3) var(--gv-space-2) 0;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--gv-color-border);
+}
+
+th {
+  font-weight: var(--gv-weight-regular);
+  color: var(--gv-color-text-muted);
+}
+
+.strong {
+  font-weight: var(--gv-weight-bold);
+  white-space: nowrap;
+}
+
+.strong .muted {
+  display: block;
+  font-weight: var(--gv-weight-regular);
+  font-size: var(--gv-text-xs);
+}
+
+.rule {
+  display: block;
+  font-size: var(--gv-text-xs);
+  color: var(--gv-color-text-muted);
+  overflow-wrap: anywhere;
+}
+
+.ok {
+  color: var(--gv-color-success);
+}
+
+.fail {
+  color: var(--gv-color-danger);
+}
+
+td a,
+.facts a,
+.note a {
+  color: var(--gv-color-text);
+  text-underline-offset: 4px;
+}
+
+.try {
+  justify-self: start;
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text);
+  text-underline-offset: 4px;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text-muted);
+}
+
+.note.fail {
+  color: var(--gv-color-danger);
+}
+
+.cursor {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
+a:focus-visible {
+  outline: 2px solid var(--gv-color-focus);
+  outline-offset: 2px;
+}
+
+@media (max-width: 56rem) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .toc {
+    position: static;
+  }
+}
