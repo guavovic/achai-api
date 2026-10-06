@@ -1,5 +1,7 @@
 # achaí-API
 
+[![NuGet](https://img.shields.io/nuget/v/Achai.Client?label=NuGet&color=5b1e4e)](https://www.nuget.org/packages/Achai.Client) [![npm](https://img.shields.io/npm/v/achai-api?label=npm&color=5b1e4e)](https://www.npmjs.com/package/achai-api)
+
 Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
 **Demo:** [achai-api.vercel.app](https://achai-api.vercel.app) · **Documentação da API:** [achai-api.vercel.app/docs](https://achai-api.vercel.app/docs)
