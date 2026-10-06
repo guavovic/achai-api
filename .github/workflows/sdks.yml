@@ -13,13 +13,14 @@ permissions:
   contents: read
 
 jobs:
-  publish:
-    name: Publicar no NuGet e no npm
+  nuget:
+    name: Publicar no NuGet
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     env:
       VERSION: ${{ inputs.version || github.event.release.tag_name }}
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     steps:
       - uses: actions/checkout@v7
@@ -28,29 +29,44 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Empacotar o cliente .NET
+        run: dotnet pack sdk/dotnet/Achai.Client -c Release -p:Version="${VERSION#v}" -o nupkg
+
+      - name: Entrar no NuGet com Trusted Publishing
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Enviar o pacote
+        run: dotnet nuget push nupkg/*.nupkg --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+  npm:
+    name: Publicar no npm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      VERSION: ${{ inputs.version || github.event.release.tag_name }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    defaults:
+      run:
+        working-directory: sdk/typescript
+
+    steps:
+      - uses: actions/checkout@v7
+
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
 
-      - name: Versão sem o v
-        run: echo "VERSION=${VERSION#v}" >> "$GITHUB_ENV"
+      - name: Atualizar o npm (Trusted Publishing pede 11.5.1 ou mais)
+        run: npm install -g npm@latest
 
-      - name: Empacotar o cliente .NET
-        run: dotnet pack sdk/dotnet/Achai.Client --configuration Release -p:Version=$VERSION --output artifacts
-
-      - name: Publicar no NuGet
-        if: env.NUGET_API_KEY != ''
-        run: dotnet nuget push "artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
-
-      - name: Publicar no npm
-        if: env.NODE_AUTH_TOKEN != ''
-        working-directory: sdk/typescript
+      - name: Publicar
         run: |
           npm ci
-          npm version "$VERSION" --no-git-tag-version --allow-same-version
+          npm version "${VERSION#v}" --no-git-tag-version --allow-same-version
           npm publish --access public
-
-      - name: Avisar quando faltam as chaves
-        if: env.NUGET_API_KEY == '' || env.NODE_AUTH_TOKEN == ''
-        run: echo "::warning::Sem NUGET_API_KEY ou NPM_TOKEN nos secrets do repositório; o pacote correspondente não foi publicado."
