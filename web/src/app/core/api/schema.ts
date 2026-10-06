@@ -113,7 +113,7 @@ export interface paths {
         };
         /**
          * Coordenadas do CEP
-         * @description Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: em geral apontam para a rua ou o bairro, não para o número. CEP sem coordenadas devolve 404.
+         * @description Latitude e longitude do CEP, vindas da BrasilAPI. São aproximadas: na maioria dos CEPs, apontam para o centro da cidade, não para a rua. CEP sem coordenadas devolve 404.
          */
         get: operations["GetCoordinatesByZipCode"];
         put?: never;
@@ -133,9 +133,29 @@ export interface paths {
         };
         /**
          * Distância entre dois CEPs
-         * @description Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.
+         * @description Distância em linha reta, em quilômetros, entre as coordenadas dos dois CEPs (fórmula de haversine). Como as coordenadas costumam ser o centro da cidade, serve para distância entre cidades, não dentro da mesma cidade. Não é a distância de carro. Se um dos CEPs não tiver coordenadas, devolve 404 dizendo qual.
          */
         get: operations["GetDistanceBetweenZipCodes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Disponibilidade das fontes
+         * @description Histórico das verificações do ViaCEP, da BrasilAPI e do IBGE, feitas a cada 5 minutos e guardadas em memória por até 24 horas. O servidor dorme quando fica sem uso, e o histórico recomeça quando ele acorda: o campo desde diz a partir de quando há dados. Disponibilidade é a porcentagem de verificações saudáveis.
+         */
+        get: operations["GetSourcesStatus"];
         put?: never;
         post?: never;
         delete?: never;
@@ -213,10 +233,33 @@ export interface components {
             detail?: null | string;
             instance?: null | string;
         };
+        SampleResponse: {
+            /** Format: date-time */
+            em: string;
+            status: string;
+            /** Format: int32 */
+            ms: number | string;
+        };
         SourceResult: {
             fonte: string;
             status: string;
             endereco: null | components["schemas"]["AddressResponse"];
+        };
+        SourceStatusResponse: {
+            fonte: string;
+            /** Format: double */
+            disponibilidade: number | string;
+            /** Format: int32 */
+            latenciaMediaMs: number | string;
+            ultimoStatus: string;
+            amostras: components["schemas"]["SampleResponse"][];
+        };
+        StatusResponse: {
+            /** Format: date-time */
+            desde: string;
+            /** Format: int32 */
+            intervaloMinutos: number | string;
+            fontes: components["schemas"]["SourceStatusResponse"][];
         };
     };
     responses: never;
@@ -544,6 +587,26 @@ export interface operations {
                 };
                 content: {
                     "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    GetSourcesStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StatusResponse"];
                 };
             };
         };

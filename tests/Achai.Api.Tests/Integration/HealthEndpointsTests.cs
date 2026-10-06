@@ -1,7 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Achai.Api.Infrastructure.HealthChecks;
 using Achai.Api.Tests.Fakes;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Achai.Api.Tests.Integration;
 
@@ -81,4 +84,23 @@ public class HealthEndpointsTests : IDisposable
         report.GetProperty("checks").EnumerateArray()
             .Single(entry => entry.GetProperty("name").GetString() == check)
             .GetProperty("status").GetString();
+
+    [Fact]
+    public async Task Status_SummarizesTheSamplesOfEachSource()
+    {
+        var history = _factory.Services.GetRequiredService<SourceStatusHistory>();
+        var now = DateTimeOffset.UtcNow;
+        history.Add("viacep", new StatusSample(now, HealthStatus.Healthy, 100));
+        history.Add("viacep", new StatusSample(now, HealthStatus.Degraded, 300));
+        history.Add("ibge", new StatusSample(now, HealthStatus.Healthy, 50));
+
+        var response = await _client.GetAsync("/status", _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var sources = (await response.Content.ReadFromJsonAsync<JsonElement>(_ct)).GetProperty("fontes").EnumerateArray().ToList();
+        sources.Select(source => source.GetProperty("fonte").GetString()).ShouldBe(["ViaCEP", "IBGE"]);
+        sources[0].GetProperty("disponibilidade").GetDouble().ShouldBe(50);
+        sources[0].GetProperty("latenciaMediaMs").GetInt32().ShouldBe(200);
+        sources[0].GetProperty("ultimoStatus").GetString().ShouldBe("fora");
+    }
 }

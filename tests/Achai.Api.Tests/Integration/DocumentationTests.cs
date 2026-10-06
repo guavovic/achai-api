@@ -34,7 +34,7 @@ public class DocumentationTests : IDisposable
 
         var paths = root.GetProperty("paths");
         paths.EnumerateObject().Select(path => path.Name).ShouldBe(
-            ["/buscar/{cep}", "/buscar/lote", "/buscar/{cep}/consenso", "/buscar/{cep}/coordenadas", "/distancia/{origem}/{destino}", "/buscar/{uf}/{cidade}/{logradouro}", "/buscar/cidades/{uf}"],
+            ["/buscar/{cep}", "/buscar/lote", "/buscar/{cep}/consenso", "/buscar/{cep}/coordenadas", "/distancia/{origem}/{destino}", "/status", "/buscar/{uf}/{cidade}/{logradouro}", "/buscar/cidades/{uf}"],
             ignoreOrder: true);
 
         var zipCodeResponses = paths.GetProperty("/buscar/{cep}").GetProperty("get").GetProperty("responses");

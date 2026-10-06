@@ -10,6 +10,7 @@ export type BatchItem = components['schemas']['BatchItem'];
 export type Consensus = components['schemas']['ConsensusResponse'];
 export type CoordinatesResponse = components['schemas']['CoordinatesResponse'];
 export type Distance = components['schemas']['DistanceResponse'];
+export type StatusResponse = components['schemas']['StatusResponse'];
 
 @Injectable({ providedIn: 'root' })
 export class AchaiApi {
@@ -17,6 +18,7 @@ export class AchaiApi {
 
   readonly baseUrl = environment.apiBaseUrl;
   readonly openApiUrl = `${this.baseUrl}/openapi/v1.json`;
+  readonly statusUrl = `${this.baseUrl}/status`;
 
   zipCodeUrl(zipCode: string): string {
     return `${this.baseUrl}/buscar/${encodeURIComponent(zipCode)}`;

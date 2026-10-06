@@ -1,0 +1,68 @@
+<section class="intro">
+  <h1>Status das fontes</h1>
+  <p>
+    A achaí-API depende do ViaCEP, da BrasilAPI e do IBGE. Ela verifica cada um a cada
+    {{ report()?.intervaloMinutos ?? 5 }} minutos e guarda as últimas 24 horas em memória.
+  </p>
+  @if (report(); as report) {
+    <p class="since">
+      dados desde {{ dateTime(report.desde) }} · o servidor dorme sem uso, e o histórico recomeça
+      quando ele acorda
+    </p>
+  }
+</section>
+
+@if (report(); as report) {
+  <div class="sources">
+    @for (source of report.fontes ?? []; track source.fonte) {
+      <article class="source">
+        <header class="source-head">
+          <h2>{{ source.fonte }}</h2>
+          <span
+            class="chip"
+            [class.ok]="source.ultimoStatus === 'ok'"
+            [class.fail]="source.ultimoStatus === 'fora'"
+          >
+            {{ source.ultimoStatus }}
+          </span>
+        </header>
+        <dl class="numbers">
+          <div>
+            <dt>disponibilidade</dt>
+            <dd>{{ source.disponibilidade }}%</dd>
+          </div>
+          <div>
+            <dt>latência média</dt>
+            <dd>{{ source.latenciaMediaMs }} ms</dd>
+          </div>
+          <div>
+            <dt>verificações</dt>
+            <dd>{{ source.amostras?.length ?? 0 }}</dd>
+          </div>
+        </dl>
+        <ol class="timeline" aria-label="Verificações, da mais antiga para a mais recente">
+          @for (sample of source.amostras ?? []; track $index) {
+            <li
+              [class.ok]="sample.status === 'ok'"
+              [title]="time(sample.em) + ' · ' + sample.status + ' · ' + sample.ms + ' ms'"
+            ></li>
+          }
+        </ol>
+      </article>
+    } @empty {
+      <p class="note">
+        // ainda não há verificações. A primeira acontece logo que o servidor acorda.
+      </p>
+    }
+  </div>
+  <button type="button" class="reload" (click)="status.reload()">atualizar</button>
+} @else if (status.error()) {
+  <p class="note fail" role="alert">
+    // não foi possível falar com a API. Tente de novo em instantes.
+  </p>
+} @else {
+  <p class="note">
+    // carregando<span class="cursor">_</span> se o servidor estiver dormindo, isso pode levar até
+    um minuto.
+  </p>
+}
