@@ -1,7 +1,5 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Text;
 using System.Text.Json.Serialization;
 using Achai.Api.Common;
 using Achai.Api.Common.Results;
@@ -64,7 +62,7 @@ public static class CompareZipCodeSources
         var found = results.Where(result => result.Address is not null).Select(result => result.Address!).ToList();
         var differences = found.Count switch
         {
-            2 => ComparedFields.Where(field => Fold(field.Value(found[0])) != Fold(field.Value(found[1]))).Select(field => field.Name).ToList(),
+            2 => ComparedFields.Where(field => TextFolding.Fold(field.Value(found[0])) != TextFolding.Fold(field.Value(found[1]))).Select(field => field.Name).ToList(),
             1 => ["encontrado"],
             _ => [],
         };
@@ -90,11 +88,5 @@ public static class CompareZipCodeSources
         {
             return (new SourceResult(name, "indisponivel", null), null);
         }
-    }
-
-    private static string Fold(string? text)
-    {
-        var decomposed = (text ?? "").Trim().ToLowerInvariant().Normalize(NormalizationForm.FormD);
-        return new string(decomposed.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).ToArray());
     }
 }

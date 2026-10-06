@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Achai.Api.Common;
@@ -8,8 +7,6 @@ public sealed record StreetParts(string? Type, string? Name);
 
 public static partial class AddressFormatting
 {
-    private static readonly CultureInfo PtBr = CultureInfo.GetCultureInfo("pt-BR");
-
     private static readonly Dictionary<string, string> StreetTypes = new()
     {
         ["rua"] = "Rua", ["r"] = "Rua",
@@ -62,23 +59,19 @@ public static partial class AddressFormatting
         if (hasUpper && hasLower)
             return text;
 
-        var words = text.ToLower(PtBr).Split(' ');
+        var words = text.ToLowerInvariant().Split(' ');
         for (var i = 0; i < words.Length; i++)
         {
             if (RomanNumeral().IsMatch(words[i]))
                 words[i] = words[i].ToUpperInvariant();
             else if (i == 0 || !LowercaseWords.Contains(words[i]))
-                words[i] = PtBr.TextInfo.ToTitleCase(words[i]);
+                words[i] = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(words[i]);
         }
 
         return string.Join(' ', words);
     }
 
-    private static string Key(string word)
-    {
-        var decomposed = word.TrimEnd('.').ToLowerInvariant().Normalize(NormalizationForm.FormD);
-        return new string(decomposed.Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).ToArray());
-    }
+    private static string Key(string word) => TextFolding.Fold(word.TrimEnd('.'));
 
     private static string Join(string separator, params string?[] parts) =>
         string.Join(separator, parts.Where(part => !string.IsNullOrWhiteSpace(part)));
