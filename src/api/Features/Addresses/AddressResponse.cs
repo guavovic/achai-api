@@ -12,16 +12,27 @@ public sealed record AddressResponse(
     [property: JsonPropertyName("localidade")] string? City,
     [property: JsonPropertyName("uf")] string? State,
     [property: JsonPropertyName("estado")] string? StateName,
-    [property: JsonPropertyName("regiao")] string? Region)
+    [property: JsonPropertyName("regiao")] string? Region,
+    [property: JsonPropertyName("tipoLogradouro")] string? StreetType,
+    [property: JsonPropertyName("nomeLogradouro")] string? StreetName,
+    [property: JsonPropertyName("enderecoFormatado")] string FormattedAddress)
 {
-    public static AddressResponse From(Address address) => new(
-        address.ZipCode,
-        address.Street,
-        address.Complement,
-        address.Unit,
-        address.Neighborhood,
-        address.City,
-        address.State,
-        address.StateName,
-        address.Region);
+    public static AddressResponse From(Address address)
+    {
+        var street = AddressFormatting.SplitStreet(address.Street);
+
+        return new(
+            address.ZipCode,
+            address.Street,
+            address.Complement,
+            address.Unit,
+            address.Neighborhood,
+            address.City,
+            address.State,
+            address.StateName,
+            address.Region,
+            street.Type,
+            street.Name,
+            AddressFormatting.Format(address));
+    }
 }

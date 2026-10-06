@@ -16,6 +16,10 @@ const copacabana: Address = {
   uf: 'RJ',
   estado: 'Rio de Janeiro',
   regiao: 'Sudeste',
+  tipoLogradouro: 'Avenida',
+  nomeLogradouro: 'Atlântica',
+  enderecoFormatado:
+    'Avenida Atlântica, até 1020 - lado par - Copacabana, Rio de Janeiro/RJ, CEP 22010-000',
 };
 
 describe('ResponsePanel', () => {
@@ -53,7 +57,9 @@ describe('ResponsePanel', () => {
 
     expect(element.querySelector('.status')?.textContent).toContain('200 OK');
     expect(element.textContent).toContain('48 ms');
-    expect(element.textContent).toContain('Avenida Atlântica, Copacabana, Rio de Janeiro/RJ');
+    expect(element.textContent).toContain(
+      'Avenida Atlântica, até 1020 - lado par - Copacabana, Rio de Janeiro/RJ, CEP 22010-000',
+    );
     expect(element.querySelector('.json .key')?.textContent).toBe('"cep"');
   });
 
