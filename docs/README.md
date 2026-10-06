@@ -10,7 +10,7 @@ Como a API funciona hoje.
 
 ## Referência da API
 
-A lista de rotas, parâmetros e respostas fica na documentação interativa, gerada a partir do código: [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs). Rodando localmente, ela abre em `http://localhost:5010/docs`.
+A lista de rotas, parâmetros, respostas e modelos fica na página de documentação do front, montada a partir do documento OpenAPI da API: [achai-api.vercel.app/docs](https://achai-api.vercel.app/docs). O documento em si fica em [`/openapi/v1.json`](https://achai-api.onrender.com/openapi/v1.json), e o `/docs` da API redireciona para a página do front.
 
 ## Decisões de arquitetura
 
