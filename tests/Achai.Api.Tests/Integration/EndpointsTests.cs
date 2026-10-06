@@ -151,6 +151,43 @@ public class EndpointsTests : IDisposable
     }
 
     [Fact]
+    public async Task Batch_ReturnsOneItemPerZipCodeInTheSameOrder()
+    {
+        _factory.ViaCep.RespondWith(request => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(
+                request.RequestUri!.AbsolutePath.Contains("01001000")
+                    ? ExternalResponses.ViaCepPracaDaSe
+                    : ExternalResponses.ViaCepNotFound,
+                Encoding.UTF8,
+                "application/json")
+        });
+
+        var response = await _client.PostAsJsonAsync("/buscar/lote", new { ceps = new[] { "01001-000", "99999999", "123" } }, _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.OK);
+        var items = (await response.Content.ReadFromJsonAsync<JsonElement>(_ct)).EnumerateArray().ToList();
+        items.Select(item => item.GetProperty("status").GetString()).ShouldBe(["encontrado", "nao_encontrado", "invalido"]);
+        items[0].GetProperty("cep").GetString().ShouldBe("01001-000");
+        items[0].GetProperty("endereco").GetProperty("logradouro").GetString().ShouldBe("Praça da Sé");
+        items[1].GetProperty("endereco").ValueKind.ShouldBe(JsonValueKind.Null);
+        _factory.ViaCep.Requests.Count.ShouldBe(2);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(21)]
+    public async Task Batch_WithoutZipCodesOrWithTooMany_Returns400(int count)
+    {
+        var ceps = Enumerable.Repeat("01001000", count).ToArray();
+
+        var response = await _client.PostAsJsonAsync("/buscar/lote", new { ceps }, _ct);
+
+        response.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+        _factory.ViaCep.Requests.ShouldBeEmpty();
+    }
+
+    [Fact]
     public async Task GetCities_WithUnknownState_Returns400WithoutCallingIbge()
     {
         var response = await _client.GetAsync("/buscar/cidades/XX", _ct);

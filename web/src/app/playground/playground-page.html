@@ -35,6 +35,16 @@
           <span class="method">GET</span>
           <app-route-path path="/buscar/{uf}/{cidade}/{logradouro}" />
         </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-lote"
+          aria-controls="painel-lote"
+          [attr.aria-selected]="tab() === 'batch'"
+          (click)="tab.set('batch')"
+        >
+          <span class="method">POST</span> <app-route-path path="/buscar/lote" />
+        </button>
       </div>
     </div>
 
@@ -61,6 +71,15 @@
           </button>
         </p>
       </div>
+      <div id="painel-lote" role="tabpanel" aria-labelledby="tab-lote" [hidden]="tab() !== 'batch'">
+        <app-batch-search />
+        <p class="example">
+          exemplo:
+          <button type="button" (click)="searchBatchExample()">
+            {{ examples.batch.join(', ') }}
+          </button>
+        </p>
+      </div>
       @if (recent.list().length) {
         <div class="recent">
           <span>recentes:</span>
@@ -72,7 +91,7 @@
       }
     </div>
 
-    <app-code-snippets [url]="requestUrl()" />
+    <app-code-snippets [url]="requestUrl()" [body]="requestBody()" />
   </section>
 
   <app-response-panel />
