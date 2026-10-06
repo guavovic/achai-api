@@ -85,14 +85,8 @@ h1 {
 
 .endpoints button[aria-selected='true'] {
   color: var(--gv-color-text);
-  background: var(--gv-color-surface);
+  background: var(--achai-accent-soft);
   border-left-color: var(--gv-color-accent);
-}
-
-.method {
-  margin-right: var(--gv-space-2);
-  font-weight: var(--gv-weight-bold);
-  color: var(--gv-color-success);
 }
 
 .example {
@@ -103,7 +97,7 @@ h1 {
 
 .example button {
   font: inherit;
-  color: var(--gv-color-text);
+  color: var(--gv-color-accent);
   background: none;
   border: 0;
   padding: 0;

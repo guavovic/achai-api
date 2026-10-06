@@ -1,9 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-  <style>
-    g { fill: #1d4ed8; }
-    @media (prefers-color-scheme: dark) { g { fill: #60a5fa; } }
-  </style>
-  <g>
+  <g fill="#5b1e4e">
     <rect x="9.6" y="12" width="4.8" height="10.4" rx="2.4" />
     <path
       fill-rule="evenodd"
