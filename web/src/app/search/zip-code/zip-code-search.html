@@ -1,20 +1,24 @@
 <form class="search-form" (submit)="submit($event)" novalidate>
   <div class="field">
-    <label for="cep">cep <span class="type">string · 8 dígitos, o traço entra sozinho</span></label>
+    <label [for]="inputId()"
+      >cep <span class="type">string · 8 dígitos, o traço entra sozinho</span></label
+    >
     <div class="inline">
       <input
-        id="cep"
+        [id]="inputId()"
         [formControl]="zipCode"
         inputmode="numeric"
         autocomplete="postal-code"
         placeholder="00000-000"
         [attr.aria-invalid]="showError()"
-        [attr.aria-describedby]="showError() ? 'cep-erro' : null"
+        [attr.aria-describedby]="showError() ? inputId() + '-erro' : null"
       />
       <button type="submit">Enviar</button>
     </div>
     @if (showError()) {
-      <p id="cep-erro" class="field-error">Digite os 8 dígitos do CEP, com ou sem traço.</p>
+      <p [id]="inputId() + '-erro'" class="field-error">
+        Digite os 8 dígitos do CEP, com ou sem traço.
+      </p>
     }
   </div>
 </form>

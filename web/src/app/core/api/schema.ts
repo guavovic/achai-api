@@ -44,6 +44,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/buscar/{cep}/consenso": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Compara o CEP no ViaCEP e na BrasilAPI
+         * @description Consulta as duas fontes ao mesmo tempo, sem cache, e diz se concordam. Compara logradouro, bairro, localidade e UF, sem diferença de acentos e maiúsculas. Quando uma fonte acha o CEP e a outra não, a divergência é "encontrado".
+         */
+        get: operations["CompareZipCodeSources"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/buscar/{uf}/{cidade}/{logradouro}": {
         parameters: {
             query?: never;
@@ -114,6 +134,12 @@ export interface components {
         CityResponse: {
             nome: null | string;
         };
+        ConsensusResponse: {
+            cep: string;
+            concordam: boolean;
+            divergencias: string[];
+            fontes: components["schemas"]["SourceResult"][];
+        };
         HttpValidationProblemDetails: {
             type?: null | string;
             title?: null | string;
@@ -132,6 +158,11 @@ export interface components {
             status?: null | number | string;
             detail?: null | string;
             instance?: null | string;
+        };
+        SourceResult: {
+            fonte: string;
+            status: string;
+            endereco: null | components["schemas"]["AddressResponse"];
         };
     };
     responses: never;
@@ -212,6 +243,47 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BatchItem"][];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["HttpValidationProblemDetails"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ProblemDetails"];
+                };
+            };
+        };
+    };
+    CompareZipCodeSources: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description CEP com 8 dígitos, com ou sem traço. Exemplo: 01001000. */
+                cep: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConsensusResponse"];
                 };
             };
             /** @description Bad Request */

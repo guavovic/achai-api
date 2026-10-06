@@ -37,7 +37,7 @@ export interface OpenApiDocument {
   components?: { schemas?: Record<string, OpenApiSchema> };
 }
 
-export type PlaygroundEndpoint = 'cep' | 'logradouro' | 'lote';
+export type PlaygroundEndpoint = 'cep' | 'logradouro' | 'lote' | 'consenso';
 
 export interface DocsParameter {
   name: string;
@@ -90,6 +90,7 @@ const PLAYGROUND_ENDPOINTS: Record<string, PlaygroundEndpoint> = {
   '/buscar/{cep}': 'cep',
   '/buscar/{uf}/{cidade}/{logradouro}': 'logradouro',
   '/buscar/lote': 'lote',
+  '/buscar/{cep}/consenso': 'consenso',
 };
 
 const LOCATIONS: Record<string, string> = {

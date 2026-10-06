@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Observable, Subscription, finalize, timer } from 'rxjs';
-import { AchaiApi, Address, BatchItem } from '../core/api/achai-api';
+import { AchaiApi, Address, BatchItem, Consensus } from '../core/api/achai-api';
 import { problemMessage } from '../core/api/problem-message';
 
 export const SLOW_RESPONSE_MS = 3000;
@@ -22,7 +22,10 @@ export type SearchState =
   | { status: 'error'; url: string; response: ApiResponse | null; message: string };
 
 export type SearchQuery =
-  { cep: string } | { uf: string; cidade: string; logradouro: string } | { ceps: string };
+  | { cep: string }
+  | { uf: string; cidade: string; logradouro: string }
+  | { ceps: string }
+  | { consenso: string };
 
 @Injectable({ providedIn: 'root' })
 export class AddressSearch {
@@ -44,6 +47,19 @@ export class AddressSearch {
     this.querySignal.set({ uf: state, cidade: city, logradouro: street });
     const url = this.api.streetUrl(state, city, street);
     this.run<Address[]>(url, this.api.get(url), (addresses) => addresses);
+  }
+
+  byConsensus(zipCode: string): void {
+    const digits = zipCode.replace('-', '');
+    this.querySignal.set({ consenso: digits });
+    const url = this.api.consensusUrl(digits);
+    this.run<Consensus>(
+      url,
+      this.api.get(url),
+      (consensus) =>
+        (consensus.fontes ?? []).flatMap((source) => (source.endereco ? [source.endereco] : [])),
+      consensusNote,
+    );
   }
 
   byZipCodes(zipCodes: string[]): void {
@@ -121,4 +137,12 @@ function batchNote(items: BatchItem[]): string {
     return `${count} ${count === 1 ? one : many}`;
   });
   return `${items.length} CEPs: ${parts.join(', ')}`;
+}
+
+function consensusNote(consensus: Consensus): string {
+  if (consensus.concordam) return 'as duas fontes concordam';
+  const differences = consensus.divergencias ?? [];
+  if (differences.includes('encontrado')) return 'só uma das fontes encontrou o CEP';
+  if (differences.length === 0) return 'nenhuma fonte encontrou o CEP';
+  return `as fontes divergem em: ${differences.join(', ')}`;
 }

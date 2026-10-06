@@ -121,4 +121,24 @@ describe('AddressSearch', () => {
 
     expect(search.state()).toMatchObject({ response: { searchedAs: '15 de Novembro' } });
   });
+
+  it('compara as fontes e resume se concordam', () => {
+    search.byConsensus('01001-000');
+    expect(search.query()).toEqual({ consenso: '01001000' });
+
+    http.expectOne(`${environment.apiBaseUrl}/buscar/01001000/consenso`).flush({
+      cep: '01001000',
+      concordam: false,
+      divergencias: ['bairro'],
+      fontes: [
+        { fonte: 'ViaCEP', status: 'encontrado', endereco: praçaDaSé },
+        { fonte: 'BrasilAPI', status: 'encontrado', endereco: { ...praçaDaSé, bairro: 'Centro' } },
+      ],
+    });
+
+    expect(search.state()).toMatchObject({
+      status: 'success',
+      note: 'as fontes divergem em: bairro',
+    });
+  });
 });

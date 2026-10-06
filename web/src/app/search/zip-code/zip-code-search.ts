@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AddressSearch } from '../address-search';
@@ -15,6 +15,9 @@ export class ZipCodeSearch {
   private readonly search = inject(AddressSearch);
   private readonly submitted = signal(false);
   private lastSearched = '';
+
+  readonly inputId = input('cep');
+  readonly consensus = input(false);
 
   readonly zipCode = new FormControl('', {
     nonNullable: true,
@@ -39,7 +42,8 @@ export class ZipCodeSearch {
     if (this.zipCode.invalid) return;
 
     this.lastSearched = this.zipCode.value;
-    this.search.byZipCode(this.zipCode.value);
+    if (this.consensus()) this.search.byConsensus(this.zipCode.value);
+    else this.search.byZipCode(this.zipCode.value);
   }
 
   searchFor(zipCode: string): void {
