@@ -1,4 +1,4 @@
-# Achaí-API
+# achaí-API
 
 Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
