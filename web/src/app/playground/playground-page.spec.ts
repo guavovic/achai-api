@@ -9,6 +9,7 @@ describe('PlaygroundPage', () => {
   let http: HttpTestingController;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       imports: [PlaygroundPage],
       providers: [provideHttpClient(), provideHttpClientTesting(), provideRouter([])],
@@ -66,5 +67,18 @@ describe('PlaygroundPage', () => {
       [],
       expect.objectContaining({ queryParams: { cep: '01001000' }, replaceUrl: true }),
     );
+  });
+
+  it('guarda a busca que deu certo nos recentes', async () => {
+    const fixture = TestBed.createComponent(PlaygroundPage);
+    fixture.componentRef.setInput('cep', '01001000');
+    await fixture.whenStable();
+
+    http.expectOne(`${environment.apiBaseUrl}/buscar/01001000`).flush({ cep: '01001-000' });
+    await fixture.whenStable();
+
+    const recent = (fixture.nativeElement as HTMLElement).querySelector('.recent');
+    expect(recent?.textContent).toContain('01001-000');
+    expect(recent?.textContent).toContain('limpar');
   });
 });

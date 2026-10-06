@@ -7,15 +7,18 @@ import {
   inject,
   input,
   linkedSignal,
+  untracked,
   viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AchaiApi } from '../core/api/achai-api';
-import { AddressSearch } from '../search/address-search';
+import { AddressSearch, SearchQuery } from '../search/address-search';
 import { STREET_EXAMPLES, ZIP_CODE_EXAMPLES, pickRandom } from '../search/examples';
 import { ResponsePanel } from '../search/response/response-panel';
+import { RecentSearches, isZipCodeQuery } from '../search/recent-searches';
 import { CodeSnippets } from '../search/snippets/code-snippets';
 import { StreetSearch } from '../search/street/street-search';
+import { maskZipCode } from '../search/zip-code/zip-code-mask';
 import { ZipCodeSearch } from '../search/zip-code/zip-code-search';
 
 type Tab = 'zipCode' | 'street';
@@ -31,6 +34,7 @@ export class PlaygroundPage {
   private readonly search = inject(AddressSearch);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  protected readonly recent = inject(RecentSearches);
 
   readonly endpoint = input<string>();
   readonly cep = input<string>();
@@ -71,6 +75,28 @@ export class PlaygroundPage {
           replaceUrl: true,
         });
     });
+
+    effect(() => {
+      if (this.search.state().status !== 'success') return;
+      const query = untracked(this.search.query);
+      if (query) this.recent.add(query);
+    });
+  }
+
+  protected recentLabel(query: SearchQuery): string {
+    return isZipCodeQuery(query)
+      ? maskZipCode(query.cep)
+      : `${query.logradouro}, ${query.cidade}/${query.uf}`;
+  }
+
+  protected searchRecent(query: SearchQuery): void {
+    if (isZipCodeQuery(query)) {
+      this.tab.set('zipCode');
+      this.zipCodeSearch().searchFor(query.cep);
+    } else {
+      this.tab.set('street');
+      this.streetSearch().searchFor(query.uf, query.cidade, query.logradouro);
+    }
   }
 
   private searchFromUrl(): void {
