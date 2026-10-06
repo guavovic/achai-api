@@ -5,6 +5,7 @@ using Achai.Api.Infrastructure.HealthChecks;
 using Achai.Api.Infrastructure.Ibge;
 using Achai.Api.Infrastructure.ViaCep;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Http.Resilience;
 
@@ -12,7 +13,7 @@ namespace Achai.Api.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration? configuration = null)
     {
         services.AddHttpClient<ViaCepClient>(client => client.BaseAddress = ViaCepClient.BaseAddress)
             .AddStandardResilienceHandler(ConfigureResilience);
@@ -44,6 +45,11 @@ public static class DependencyInjection
             .AddCheck<ZipCodeProviderHealthCheck<ViaCepClient>>("viacep", HealthStatus.Degraded, ready, timeout)
             .AddCheck<ZipCodeProviderHealthCheck<BrasilApiClient>>("brasilapi", HealthStatus.Degraded, ready, timeout)
             .AddCheck<CityProviderHealthCheck<IbgeClient>>("ibge", HealthStatus.Degraded, ready, timeout);
+
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddSingleton<SourceStatusHistory>();
+        if (configuration?.GetValue("Status:Monitor", true) ?? true)
+            services.AddHostedService<SourceStatusMonitor>();
 
         return services;
     }

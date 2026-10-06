@@ -1,0 +1,156 @@
+:host {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gv-space-8);
+}
+
+.intro {
+  display: grid;
+  gap: var(--gv-space-3);
+}
+
+h1 {
+  margin: 0;
+  font-size: var(--gv-text-2xl);
+  line-height: var(--gv-leading-tight);
+  letter-spacing: -0.02em;
+}
+
+.intro p {
+  margin: 0;
+  max-width: 68ch;
+  color: var(--gv-color-text-muted);
+}
+
+.intro .since {
+  font-size: var(--gv-text-sm);
+}
+
+.sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: var(--gv-space-6);
+}
+
+.source {
+  display: grid;
+  gap: var(--gv-space-4);
+  padding: var(--gv-space-4) var(--gv-space-6) var(--gv-space-6);
+  border: 1px solid var(--gv-color-border-strong);
+  border-radius: var(--gv-radius-sm);
+  background: var(--gv-color-surface);
+}
+
+.source-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gv-space-3);
+}
+
+h2 {
+  margin: 0;
+  font-size: var(--gv-text-lg);
+}
+
+.chip {
+  padding: 0 var(--gv-space-2);
+  font-size: var(--gv-text-xs);
+  font-weight: var(--gv-weight-bold);
+  border-radius: 3px;
+  color: var(--gv-color-text-muted);
+  background: var(--gv-color-bg);
+}
+
+.chip.ok {
+  color: var(--gv-color-on-accent);
+  background: var(--achai-kiwi);
+}
+
+.chip.fail {
+  color: var(--gv-color-on-accent);
+  background: var(--achai-morango);
+}
+
+.numbers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gv-space-6);
+  margin: 0;
+}
+
+.numbers dt {
+  font-size: var(--gv-text-xs);
+  color: var(--gv-color-text-muted);
+}
+
+.numbers dd {
+  margin: 0;
+  font-size: var(--gv-text-lg);
+  font-weight: var(--gv-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  width: 6px;
+  height: 18px;
+  border-radius: 1px;
+  background: var(--achai-morango);
+}
+
+.timeline li.ok {
+  background: var(--achai-kiwi);
+}
+
+.reload {
+  justify-self: start;
+  font: inherit;
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-accent);
+  background: none;
+  border: 0;
+  padding: 0;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--gv-text-sm);
+  color: var(--gv-color-text-muted);
+}
+
+.note.fail {
+  color: var(--gv-color-danger);
+}
+
+.cursor {
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor {
+    animation: none;
+  }
+}
+
+button:focus-visible {
+  outline: 2px solid var(--gv-color-focus);
+  outline-offset: 2px;
+}
