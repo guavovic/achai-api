@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { Address } from '../../core/api/achai-api';
 import { reasonPhrase } from '../../core/api/reason-phrase';
 import { AddressSearch } from '../address-search';
 import { jsonTokens } from './json-tokens';
@@ -40,7 +39,7 @@ export class ResponsePanel {
     if (addresses.length === 0)
       return 'nenhum endereço encontrado. confira o nome da rua e da cidade';
     if (addresses.length > 1) return `${addresses.length} endereços`;
-    return oneLine(addresses[0]);
+    return addresses[0].enderecoFormatado;
   });
 
   reason(status: number): string {
@@ -63,14 +62,4 @@ export class ResponsePanel {
       setTimeout(() => this.copied.set(null), 2000);
     } catch {}
   }
-}
-
-function oneLine(address: Address): string {
-  return [
-    address.logradouro || 'CEP geral da cidade',
-    address.bairro,
-    `${address.localidade}/${address.uf}`,
-  ]
-    .filter(Boolean)
-    .join(', ');
 }

@@ -78,6 +78,9 @@ export interface components {
             uf: null | string;
             estado: null | string;
             regiao: null | string;
+            tipoLogradouro: null | string;
+            nomeLogradouro: null | string;
+            enderecoFormatado: string;
         };
         CityResponse: {
             nome: null | string;
