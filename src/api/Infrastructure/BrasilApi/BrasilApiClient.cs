@@ -4,7 +4,7 @@ using Achai.Api.Common.Results;
 
 namespace Achai.Api.Infrastructure.BrasilApi;
 
-public sealed class BrasilApiClient : IZipCodeProvider
+public sealed class BrasilApiClient : IZipCodeProvider, ICoordinatesProvider
 {
     public static readonly Uri BaseAddress = new("https://brasilapi.com.br/api/");
 
@@ -16,6 +16,21 @@ public sealed class BrasilApiClient : IZipCodeProvider
     }
 
     public async Task<Result<Address>> GetByZipCodeAsync(string zipCode, CancellationToken cancellationToken = default)
+    {
+        var result = await GetAsync(zipCode, cancellationToken);
+        return result.Map(address => address.ToAddress());
+    }
+
+    public async Task<Result<Coordinates>> GetCoordinatesAsync(string zipCode, CancellationToken cancellationToken = default)
+    {
+        var result = await GetAsync(zipCode, cancellationToken);
+        if (!result.IsSuccess)
+            return result.Error!;
+
+        return result.Value.ToCoordinates() is { } coordinates ? coordinates : CoordinatesErrors.NotFound;
+    }
+
+    private async Task<Result<BrasilApiAddress>> GetAsync(string zipCode, CancellationToken cancellationToken)
     {
         using var response = await _httpClient.GetAsync($"cep/v2/{zipCode}", cancellationToken);
 
@@ -32,6 +47,6 @@ public sealed class BrasilApiClient : IZipCodeProvider
         if (address is null)
             return AddressErrors.ZipCodeNotFound;
 
-        return address.ToAddress();
+        return address;
     }
 }
