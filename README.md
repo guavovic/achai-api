@@ -17,7 +17,7 @@ O projeto começou como uma API simples que repassava as respostas do ViaCEP e f
 - **Robustez nas fontes externas:** cache em memória, timeout, retry e circuit breaker em cada chamada, e a BrasilAPI assume quando o ViaCEP falha numa busca por CEP.
 - **Contrato compartilhado:** o front usa tipos gerados a partir do documento OpenAPI da API, então uma mudança na API quebra o build do front, e não a tela.
 - **Testes em camadas:** unitários e de integração sem rede em todo pull request, e testes de contrato semanais contra as APIs reais, que abrem uma issue quando algo muda.
-- **Interface:** um playground da API, com a escolha do endpoint, o exemplo de chamada em curl, fetch e C# e a resposta com status, tempo e JSON, em tema claro e escuro e com as cores vindas dos tokens do [guavovic-ui](https://github.com/guavovic/guavovic-ui).
+- **Interface:** um playground da API, com a escolha do endpoint, o exemplo de chamada em curl, fetch e C# e a resposta com status, tempo e JSON, e uma página de documentação gerada do OpenAPI, em tema claro e com as cores vindas dos tokens do [guavovic-ui](https://github.com/guavovic/guavovic-ui).
 
 ## Tecnologias
 

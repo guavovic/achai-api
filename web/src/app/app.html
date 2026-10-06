@@ -3,15 +3,12 @@
     <a class="brand" routerLink="/"
       ><app-logo [size]="22" /><span>achaí<span class="product">-API</span></span></a
     >
-    <nav class="links" aria-label="Navegação e tema">
+    <nav class="links" aria-label="Navegação">
       <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="playgroundActive"
         >playground</a
       >
       <a routerLink="/docs" routerLinkActive="active">docs</a>
       <a href="https://github.com/guavovic/achai-api">github</a>
-      <button type="button" (click)="theme.toggle()" [attr.aria-label]="themeAction()">
-        tema: {{ theme.mode() === 'dark' ? 'escuro' : 'claro' }}
-      </button>
     </nav>
   </header>
 
