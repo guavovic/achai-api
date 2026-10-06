@@ -9,9 +9,17 @@ body {
   min-height: 100vh;
   background: var(--gv-color-bg);
   color: var(--gv-color-text);
-  font-family: var(--gv-font-body);
+  font-family: 'JetBrains Mono', var(--gv-font-mono);
   font-size: var(--gv-text-base);
   line-height: var(--gv-leading-normal);
+}
+
+pre,
+code,
+input,
+select,
+button {
+  font-family: inherit;
 }
 
 [hidden] {

@@ -41,7 +41,12 @@ describe('AddressSearch', () => {
 
     http.expectOne(`${environment.apiBaseUrl}/buscar/01001000`).flush(praçaDaSé);
 
-    expect(search.state()).toEqual({ status: 'success', addresses: [praçaDaSé] });
+    expect(search.state()).toEqual({
+      status: 'success',
+      url: `${environment.apiBaseUrl}/buscar/01001000`,
+      response: { status: 200, ms: expect.any(Number), body: praçaDaSé },
+      addresses: [praçaDaSé],
+    });
   });
 
   it('busca por logradouro com cada parte codificada na URL', () => {
@@ -51,7 +56,7 @@ describe('AddressSearch', () => {
       .expectOne(`${environment.apiBaseUrl}/buscar/SP/S%C3%A3o%20Paulo/Paulista`)
       .flush([praçaDaSé]);
 
-    expect(search.state()).toEqual({ status: 'success', addresses: [praçaDaSé] });
+    expect(search.state()).toMatchObject({ status: 'success', addresses: [praçaDaSé] });
   });
 
   it('mostra a mensagem de erro da API', () => {
@@ -66,8 +71,24 @@ describe('AddressSearch', () => {
 
     expect(search.state()).toEqual({
       status: 'error',
+      url: `${environment.apiBaseUrl}/buscar/99999998`,
       message: 'Nenhum endereço encontrado para o CEP informado.',
+      response: {
+        status: 404,
+        ms: expect.any(Number),
+        body: { detail: 'Nenhum endereço encontrado para o CEP informado.' },
+      },
     });
+  });
+
+  it('fica sem resposta quando a API não responde', () => {
+    search.byZipCode('01001000');
+
+    http
+      .expectOne(`${environment.apiBaseUrl}/buscar/01001000`)
+      .error(new ProgressEvent('error'), { status: 0 });
+
+    expect(search.state()).toMatchObject({ status: 'error', response: null });
   });
 
   it('uma busca nova cancela a anterior', () => {
@@ -80,7 +101,7 @@ describe('AddressSearch', () => {
       .flush({ ...praçaDaSé, cep: '22010-000' });
 
     expect(first.cancelled).toBe(true);
-    expect(search.state()).toEqual({
+    expect(search.state()).toMatchObject({
       status: 'success',
       addresses: [{ ...praçaDaSé, cep: '22010-000' }],
     });
