@@ -1,11 +1,11 @@
-# Achaí API
+# Achaí-API
 
 Aplicação web que busca endereços brasileiros pelo CEP ou pelo nome da rua. O back-end é uma API em C#/.NET, e o front é um app em Angular.
 
 **Demo:** [achai-api.vercel.app](https://achai-api.vercel.app) · **Documentação da API:** [achai-api.onrender.com/docs](https://achai-api.onrender.com/docs)
 
 <p align="center">
-  <img src="docs/assets/achai-busca-por-endereco.gif" alt="No playground, a busca pela Rua XV de Novembro, em Curitiba, devolve 200 OK com 12 endereços em JSON" width="560">
+  <img src="docs/assets/achai-busca-por-endereco.gif" alt="No playground, a busca pela Rua XV de Novembro, em Curitiba, devolve 200 OK com 12 endereços em JSON" width="100%">
 </p>
 
 ## Como foi feito

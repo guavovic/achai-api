@@ -1,4 +1,4 @@
-# 19. Nome Achaí API
+# 19. Nome Achaí-API
 
 Data: 06/10/2026
 
@@ -10,7 +10,7 @@ O foco do projeto é a API, e o front virou um playground dela (ADR 0018). O nom
 
 ## Decisão
 
-- O produto passa a se chamar **Achaí API**: no README, no título da página, no cabeçalho do front e no título da documentação (OpenAPI e Scalar).
+- O produto passa a se chamar **Achaí-API**: no README, no título da página, no cabeçalho do front e no título da documentação (OpenAPI e Scalar).
 - O repositório vira `guavovic/achai-api`. O endereço antigo continua redirecionando.
 - Não mudam: os nomes no código (`Achai.Api`, `Achai.slnx`) e o serviço do Render (`achai-api.onrender.com`). O domínio do front passou de `achai-app.vercel.app` para `achai-api.vercel.app`, e o CORS acompanhou.
 
