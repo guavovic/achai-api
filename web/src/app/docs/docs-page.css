@@ -101,7 +101,7 @@ h1 {
   display: grid;
   gap: var(--gv-space-1);
   padding: var(--gv-space-4) var(--gv-space-6);
-  background: var(--gv-color-surface);
+  background: var(--achai-accent-soft);
   border-bottom: 1px solid var(--gv-color-border-strong);
 }
 
@@ -116,12 +116,6 @@ h3 {
   margin: 0;
   font-size: var(--gv-text-lg);
   overflow-wrap: anywhere;
-}
-
-.method {
-  margin-right: var(--gv-space-2);
-  font-weight: var(--gv-weight-bold);
-  color: var(--gv-color-success);
 }
 
 .summary {
@@ -200,14 +194,15 @@ th {
 td a,
 .facts a,
 .note a {
-  color: var(--gv-color-text);
+  color: var(--gv-color-accent);
   text-underline-offset: 4px;
 }
 
 .try {
   justify-self: start;
   font-size: var(--gv-text-sm);
-  color: var(--gv-color-text);
+  font-weight: var(--gv-weight-bold);
+  color: var(--gv-color-accent);
   text-underline-offset: 4px;
 }
 

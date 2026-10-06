@@ -57,7 +57,9 @@ router-outlet {
 
 .links a.active {
   text-decoration: underline;
-  text-underline-offset: 4px;
+  text-decoration-color: var(--gv-color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
 }
 
 a:focus-visible {
