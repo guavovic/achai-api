@@ -20,7 +20,7 @@ Quem usa a achaí-API escreve à mão as chamadas HTTP e os tipos das respostas.
 - **.NET**: pacote `Achai.Client`, gerado pelo Kiota, com `AchaiClient.Create()` para começar.
 - **TypeScript**: pacote `achai-api`, com os tipos do openapi-typescript e `createAchaiClient()` em cima do openapi-fetch.
 - O CI gera tudo de novo a cada pull request e falha se algo mudou sem ser commitado. Um teste usa o cliente .NET gerado contra a API em memória.
-- A cada release, um workflow publica os dois pacotes com a versão da tag, por **Trusted Publishing** (OIDC do GitHub Actions), sem chave de API guardada. No npm, a primeira publicação usa o secret `NPM_TOKEN`, porque o Trusted Publishing só pode ser ligado num pacote que já existe; depois disso o token pode ser apagado.
+- A cada release, um workflow publica os dois pacotes com a versão da tag, por **Trusted Publishing** (OIDC do GitHub Actions), sem chave de API guardada. No npm, a primeira publicação (2.0.0) usou um token, porque o Trusted Publishing só pode ser ligado num pacote que já existe; da 2.0.1 em diante, os dois pacotes saem só por Trusted Publishing, sem chave guardada.
 
 ## Consequências
 
