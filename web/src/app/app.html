@@ -1,9 +1,9 @@
 <div class="page">
   <header class="top">
-    <a class="brand" href="/"><app-logo [size]="22" /> achaí</a>
+    <a class="brand" href="/"><app-logo [size]="22" /> achaí <span class="product">api</span></a>
     <nav class="links" aria-label="Links e tema">
       <a [href]="docsUrl">docs</a>
-      <a href="https://github.com/guavovic/achai">github</a>
+      <a href="https://github.com/guavovic/achai-api">github</a>
       <button type="button" (click)="theme.toggle()" [attr.aria-label]="themeAction()">
         tema: {{ theme.mode() === 'dark' ? 'escuro' : 'claro' }}
       </button>

@@ -14,6 +14,11 @@
   gap: var(--gv-space-4);
 }
 
+.product {
+  font-weight: var(--gv-weight-regular);
+  color: var(--gv-color-text-muted);
+}
+
 .brand {
   display: inline-flex;
   align-items: center;
