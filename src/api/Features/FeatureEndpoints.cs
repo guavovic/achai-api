@@ -9,6 +9,7 @@ public static class FeatureEndpoints
     public static IEndpointRouteBuilder MapFeatureEndpoints(this IEndpointRouteBuilder app) =>
         app.MapGetAddressByZipCode()
             .MapGetAddressesByZipCodes()
+            .MapCompareZipCodeSources()
             .MapSearchAddressesByStreet()
             .MapGetCitiesByState()
             .MapHealthEndpoints();

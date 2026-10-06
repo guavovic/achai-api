@@ -7,6 +7,7 @@ import type { components } from './schema';
 export type Address = components['schemas']['AddressResponse'];
 export type City = components['schemas']['CityResponse'];
 export type BatchItem = components['schemas']['BatchItem'];
+export type Consensus = components['schemas']['ConsensusResponse'];
 
 @Injectable({ providedIn: 'root' })
 export class AchaiApi {
@@ -22,6 +23,10 @@ export class AchaiApi {
   streetUrl(state: string, city: string, street: string): string {
     const path = [state, city, street].map(encodeURIComponent).join('/');
     return `${this.baseUrl}/buscar/${path}`;
+  }
+
+  consensusUrl(zipCode: string): string {
+    return `${this.baseUrl}/buscar/${encodeURIComponent(zipCode)}/consenso`;
   }
 
   batchUrl(): string {

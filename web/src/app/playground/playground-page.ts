@@ -17,14 +17,19 @@ import { AddressSearch, SearchQuery } from '../search/address-search';
 import { BatchSearch } from '../search/batch/batch-search';
 import { STREET_EXAMPLES, ZIP_CODE_EXAMPLES, pickRandom } from '../search/examples';
 import { ResponsePanel } from '../search/response/response-panel';
-import { RecentSearches, isBatchQuery, isZipCodeQuery } from '../search/recent-searches';
+import {
+  RecentSearches,
+  isBatchQuery,
+  isConsensusQuery,
+  isZipCodeQuery,
+} from '../search/recent-searches';
 import { CodeSnippets } from '../search/snippets/code-snippets';
 import { BatchBody } from '../search/snippets/snippets';
 import { StreetSearch } from '../search/street/street-search';
 import { maskZipCode } from '../search/zip-code/zip-code-mask';
 import { ZipCodeSearch } from '../search/zip-code/zip-code-search';
 
-type Tab = 'zipCode' | 'street' | 'batch';
+type Tab = 'zipCode' | 'street' | 'batch' | 'consensus';
 
 @Component({
   selector: 'app-playground-page',
@@ -45,9 +50,11 @@ export class PlaygroundPage {
   readonly cidade = input<string>();
   readonly logradouro = input<string>();
   readonly ceps = input<string>();
+  readonly consenso = input<string>();
 
   protected readonly tab = linkedSignal<Tab>(() => {
     if (this.endpoint() === 'lote' || this.ceps()) return 'batch';
+    if (this.endpoint() === 'consenso' || this.consenso()) return 'consensus';
     return this.endpoint() === 'logradouro' || this.logradouro() ? 'street' : 'zipCode';
   });
   protected readonly baseUrl = inject(AchaiApi).baseUrl;
@@ -65,6 +72,7 @@ export class PlaygroundPage {
       zipCode: '/buscar/{cep}',
       street: '/buscar/{uf}/{cidade}/{logradouro}',
       batch: '/buscar/lote',
+      consensus: '/buscar/{cep}/consenso',
     };
     return `${this.baseUrl}${paths[this.tab()]}`;
   });
@@ -76,9 +84,10 @@ export class PlaygroundPage {
     return { ceps };
   });
 
-  private readonly zipCodeSearch = viewChild.required(ZipCodeSearch);
+  private readonly zipCodeSearch = viewChild.required<ZipCodeSearch>('zipCodeSearch');
   private readonly streetSearch = viewChild.required(StreetSearch);
   private readonly batchSearch = viewChild.required(BatchSearch);
+  private readonly consensusSearch = viewChild.required<ZipCodeSearch>('consensusSearch');
 
   constructor() {
     afterNextRender(() => this.searchFromUrl());
@@ -103,6 +112,7 @@ export class PlaygroundPage {
   protected recentLabel(query: SearchQuery): string {
     if (isZipCodeQuery(query)) return maskZipCode(query.cep);
     if (isBatchQuery(query)) return `lote de ${query.ceps.split(',').length} CEPs`;
+    if (isConsensusQuery(query)) return `consenso ${maskZipCode(query.consenso)}`;
     return `${query.logradouro}, ${query.cidade}/${query.uf}`;
   }
 
@@ -110,6 +120,9 @@ export class PlaygroundPage {
     if (isBatchQuery(query)) {
       this.tab.set('batch');
       this.batchSearch().searchFor(query.ceps.split(','));
+    } else if (isConsensusQuery(query)) {
+      this.tab.set('consensus');
+      this.consensusSearch().searchFor(query.consenso);
     } else if (isZipCodeQuery(query)) {
       this.tab.set('zipCode');
       this.zipCodeSearch().searchFor(query.cep);
@@ -123,13 +136,20 @@ export class PlaygroundPage {
     const [cep, uf, cidade, logradouro] = [this.cep(), this.uf(), this.cidade(), this.logradouro()];
     const ceps = this.ceps();
 
+    const consenso = this.consenso();
+
     if (ceps) this.batchSearch().searchFor(ceps.split(','));
+    else if (consenso) this.consensusSearch().searchFor(consenso);
     else if (cep) this.zipCodeSearch().searchFor(cep);
     else if (uf && cidade && logradouro) this.streetSearch().searchFor(uf, cidade, logradouro);
   }
 
   protected searchZipCodeExample(): void {
     this.zipCodeSearch().searchFor(this.examples.zipCode);
+  }
+
+  protected searchConsensusExample(): void {
+    this.consensusSearch().searchFor(this.examples.zipCode);
   }
 
   protected searchBatchExample(): void {
