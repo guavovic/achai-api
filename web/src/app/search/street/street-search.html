@@ -1,5 +1,5 @@
 <form class="search-form" [formGroup]="form" (submit)="submit($event)" novalidate>
-  <div class="grid">
+  <div class="grid grid-state">
     <div class="field">
       <label for="uf">uf <span class="type">sigla</span></label>
       <select id="uf" formControlName="state" [attr.aria-invalid]="showError('state')">
