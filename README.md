@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/icone.svg" alt="" width="160">
+  <img src="docs/assets/icone.svg" alt="" width="64">
 </p>
 
 <h1 align="center">achaí-API</h1>
