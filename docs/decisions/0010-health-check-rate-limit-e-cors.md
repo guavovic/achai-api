@@ -6,10 +6,10 @@ Status: Aceito
 
 ## Contexto
 
-A API vai ser publicada (front na Vercel, API no Render ou no Azure). Faltavam três coisas que uma API pública precisa:
+A API vai ser publicada (front na Vercel, API em outra hospedagem). Faltavam três coisas que uma API pública precisa:
 
 - Um endereço para a hospedagem saber se a API está de pé.
-- Proteção contra quem faz requisições demais, que consumiria o plano gratuito e as cotas do ViaCEP e da BrasilAPI.
+- Proteção contra quem faz requisições demais, que consumiria as cotas do ViaCEP e da BrasilAPI.
 - Um CORS coerente. O de antes era contraditório: `WithOrigins("http://localhost:3000")` seguido de `AllowAnyOrigin()`, que anulava o primeiro.
 
 ## Opções consideradas
@@ -23,13 +23,13 @@ A API vai ser publicada (front na Vercel, API no Render ou no Azure). Faltavam t
 - **`/health` (liveness)**: não roda nenhuma checagem, só responde se o processo está de pé. É o endereço que a hospedagem vai consultar. Fica fora do rate limit.
 - **`/health/ready` (readiness)**: testa o ViaCEP e a BrasilAPI buscando o CEP da Praça da Sé, e o IBGE buscando as cidades do Acre, com 3 segundos de limite cada. Uma fonte fora deixa o status `Degraded`, não `Unhealthy`, porque a API continua respondendo. A resposta em JSON traz só nome, status e duração de cada fonte; a mensagem de erro fica no log.
 - **Rate limit nativo**, sem biblioteca: 60 requisições por minuto por IP, em janela fixa. Quem passa do limite recebe `429` (o padrão do middleware é `503`, que estaria errado) com `ProblemDetails` em português e o cabeçalho `Retry-After`, que o middleware não manda sozinho.
-- **`ForwardedHeaders`**: atrás do proxy da hospedagem, o IP da conexão é o do proxy, e o limite "por IP" viraria um limite único para todo mundo. O `X-Forwarded-For` passa a valer. Nenhum proxy é fixado, porque o IP dele muda; o `ForwardLimit` padrão usa só a entrada que o próprio proxy acrescenta, que o cliente não consegue forjar.
-- **CORS por lista**: em produção, só as origens de `Cors:AllowedOrigins` no `appsettings.json` (hoje, o front na Vercel). Em desenvolvimento, qualquer origem, para o `index.html` aberto direto do disco continuar funcionando. Só o método `GET` é liberado, porque a API só tem consultas.
+- **`ForwardedHeaders`**: atrás do proxy da hospedagem, o IP da conexão é o do proxy, e o limite "por IP" viraria um limite único para todo mundo. A API passa a usar o IP original do visitante, informado pelo proxy. Nenhum proxy é fixado, porque o IP dele muda, e só vale a informação que o próprio proxy acrescenta, que o cliente não consegue forjar.
+- **CORS por lista**: em produção, só o front publicado (hoje, na Vercel) pode chamar a API pelo navegador. Em desenvolvimento, qualquer origem, para o `index.html` aberto direto do disco continuar funcionando. Só o método `GET` é liberado, porque a API só tem consultas.
 - O CORS roda antes do rate limit, para o front conseguir ler a resposta `429`.
 
 ## Consequências
 
 - A hospedagem não reinicia a API quando uma fonte externa cai.
 - Medido localmente em produção: `/health/ready` respondeu as três fontes saudáveis em menos de 600 ms; a 61ª requisição do mesmo IP no mesmo minuto voltou `429` com `Retry-After: 60`.
-- Os links de preview da Vercel, que mudam a cada PR, ainda não estão na lista de origens. Isso entra no item de deploy.
+- Os links de preview da Vercel, que mudam a cada PR, ainda não são aceitos. Isso entra no item de deploy.
 - Se a API rodar em várias instâncias, cada uma terá o próprio contador. Para um limite global seria preciso guardar o contador fora do processo (Redis, por exemplo).

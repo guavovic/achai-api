@@ -18,9 +18,7 @@
   &nbsp;•&nbsp;
   <a href="https://achai-api.vercel.app/docs">Documentação da API</a>
   &nbsp;•&nbsp;
-  <a href="https://www.nuget.org/packages/Achai.Client">NuGet</a>
-  &nbsp;•&nbsp;
-  <a href="https://www.npmjs.com/package/achai-api">npm</a>
+  <a href="docs">Guias</a>
   &nbsp;•&nbsp;
   <a href="docs/decisions">Decisões de arquitetura</a>
 </p>
@@ -54,17 +52,10 @@ O projeto começou como uma API simples que repassava as respostas do ViaCEP e f
 
 ## Tecnologias
 
-- **API:** .NET 10, ASP.NET Core Minimal APIs, HybridCache, Microsoft.Extensions.Http.Resilience (Polly), OpenAPI.
-- **Front:** Angular 22 (componentes standalone, signals, sem zone.js), JetBrains Mono.
+- **API:** .NET 10 e ASP.NET Core.
+- **Front:** Angular.
 - **Fontes de dados:** ViaCEP, BrasilAPI e IBGE.
-- **Testes:** xUnit v3, NSubstitute e Shouldly na API; Vitest no front.
-- **Entrega:** Docker, GitHub Actions e deploy contínuo.
-
-## Documentação
-
-- [Guias](docs): arquitetura, tratamento de erros, cache e resiliência.
-- [Decisões de arquitetura](docs/decisions): o porquê de cada escolha, com as alternativas consideradas.
-- [Referência da API](https://achai-api.vercel.app/docs): rotas, parâmetros, respostas e modelos, gerada a partir do OpenAPI, com link para testar no playground.
+- **Entrega:** Docker e GitHub Actions.
 
 ---
 

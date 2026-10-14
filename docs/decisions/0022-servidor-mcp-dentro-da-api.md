@@ -12,7 +12,7 @@ Assistentes de IA (Claude, Cursor e outros) usam ferramentas pelo protocolo MCP.
 
 - **Dentro da própria API, em `/mcp`**: reaproveita os provedores, o cache, o fallback e o limite de requisições; nada novo para hospedar.
 - **Processo separado (stdio), publicado como pacote**: roda na máquina de quem usa, mas precisa de instalação e de chamar a API pela rede de qualquer jeito.
-- **Serviço separado no Render**: isola o MCP, mas duplica a hospedagem e dorme do mesmo jeito.
+- **Serviço separado**: isola o MCP, mas duplica a hospedagem.
 
 ## Decisão
 
@@ -22,5 +22,5 @@ Assistentes de IA (Claude, Cursor e outros) usam ferramentas pelo protocolo MCP.
 
 ## Consequências
 
-- Como as outras rotas, o `/mcp` passa pelo limite de 60 requisições por minuto por IP e dorme junto com o servidor.
+- Como as outras rotas, o `/mcp` passa pelo limite de 60 requisições por minuto por IP.
 - O SDK do MCP é uma dependência nova, que muda rápido; o Dependabot acompanha as versões.

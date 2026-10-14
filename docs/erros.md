@@ -36,13 +36,13 @@ return result.Match(
 
 | Status | Quando | `code` |
 |---|---|---|
-| 400 | Parâmetro fora do formato (CEP sem 8 dígitos, UF que não existe, cidade ou logradouro com menos de 3 caracteres). A resposta traz `errors`, com as mensagens por campo | — |
+| 400 | Parâmetro fora do formato (CEP sem 8 dígitos, UF que não existe, cidade ou logradouro com menos de 3 caracteres). A resposta traz `errors`, com as mensagens por campo | - |
 | 400 | O ViaCEP recusou o CEP ou a busca, mesmo depois da validação | `Endereco.CepInvalido`, `Endereco.BuscaInvalida` |
 | 404 | O CEP tem o formato certo, mas não existe | `Endereco.CepNaoEncontrado` |
 | 404 | O IBGE não tem cidades para a UF | `Cidade.UfNaoEncontrada` |
-| 404 | A rota não existe | — |
-| 429 | O IP passou do limite de requisições. Vem com o cabeçalho `Retry-After`, que diz em quantos segundos tentar de novo | — |
-| 500 | Erro inesperado | — |
+| 404 | A rota não existe | - |
+| 429 | O IP passou do limite de requisições. Vem com o cabeçalho `Retry-After`, que diz em quantos segundos tentar de novo | - |
+| 500 | Erro inesperado | - |
 
 Uma busca por logradouro **sem resultados** não é erro: responde `200` com uma lista vazia.
 
