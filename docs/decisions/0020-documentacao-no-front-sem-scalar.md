@@ -18,7 +18,7 @@ A documentação em `/docs` era o Scalar, gerado a partir do OpenAPI. Funcionava
 
 - **Página `docs` no front**, que lê o `/openapi/v1.json` da API e mostra os endpoints por grupo, os parâmetros com tipo e regras, as respostas com o corpo de cada status e os modelos com os campos.
 - Cada endpoint que o playground cobre tem um link "testar no playground", que abre o playground já nele (`/?endpoint=cep` ou `/?endpoint=logradouro`).
-- Sai o `Scalar.AspNetCore`. O documento OpenAPI nativo continua, e o `/docs` da API passa a redirecionar para a página do front (`Docs:Url` no `appsettings.json`).
+- Sai o `Scalar.AspNetCore`. O documento OpenAPI nativo continua, e o `/docs` da API passa a redirecionar para a página do front.
 - O front ganha rotas (`/` e `/docs`), com a página de documentação carregada sob demanda.
 
 ## Consequências
