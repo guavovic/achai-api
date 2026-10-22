@@ -10,6 +10,7 @@ if (builder.Configuration["PORT"] is { Length: > 0 } port)
 
 builder.Services.AddFrontCors(builder.Configuration, builder.Environment);
 builder.Services.AddPerIpRateLimiting();
+builder.Services.AddSecurityHeaders();
 builder.Services.AddApiDocumentation();
 builder.Services.AddValidation();
 builder.Services.AddPortugueseProblemDetails();
@@ -20,6 +21,7 @@ builder.Services.AddAchaiMcpServer();
 var app = builder.Build();
 
 app.UseForwardedHeaders();
+app.UseSecurityHeaders();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
